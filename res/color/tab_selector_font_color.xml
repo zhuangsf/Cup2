@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 字体颜色 -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+ 
+    <item android:state_checked="true" android:color="@drawable/cup_pink"/>
+    <item android:state_checked="false" android:color="@android:color/white"/>
+    <item android:color="@android:color/holo_blue_bright"/>
+ 
+</selector>

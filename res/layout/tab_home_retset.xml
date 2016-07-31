@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cup_light_gray"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@layout/header_gradient"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <!-- Logo Start -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toStartOf="@+id/title"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
+        <!-- Logo Ends -->
+
+        <TextView
+            android:id="@id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="恢复出厂设置"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/white"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/showInfo"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:background="@android:color/white"
+                android:gravity="center_vertical"
+                android:text="Clc29"
+                android:textSize="7pt" >
+            </TextView>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/showInfo2"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:background="@null"
+            android:gravity="center_horizontal"
+            android:text="恢复出厂设置将会清空所有数据\n删除当前账号绑定关系\n是否继续操作？"
+            android:textSize="7pt" >
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <Button
+                android:id="@+id/reset_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/long_button_selector"
+                android:text="继续" />
+
+            <Button
+                android:id="@+id/reset_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/long_button_selector"
+                android:text="取消" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

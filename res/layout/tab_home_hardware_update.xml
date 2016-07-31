@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/cup_light_gray"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@layout/header_gradient"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <Button
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="back"
+            android:visibility="gone" />
+        <!-- Logo Start -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toStartOf="@+id/title"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
+        <!-- Logo Ends -->
+
+        <TextView
+            android:id="@id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="固件升级"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_marginBottom="50dp"
+        android:layout_marginTop="20dp"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@android:color/white"
+             >
+
+            <TextView
+                android:id="@+id/hardware_info"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:layout_marginLeft="20dp"
+                android:gravity="center_vertical"
+                android:background="@android:color/white"
+                android:textSize="7pt"
+                android:text="Clc29\n序列号：WC2536546582555856332" >
+            </TextView>
+        </LinearLayout>
+        
+        
+          <Button
+                android:id="@+id/btn_hardware_update"
+                android:layout_width="fill_parent"
+                android:layout_height="40dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:textColor="@drawable/white"
+                android:background="@drawable/long_button_selector"
+                android:text="升级" />
+    </LinearLayout>
+
+</LinearLayout>

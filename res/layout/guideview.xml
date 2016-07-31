@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+    
+     <LinearLayout
+        android:id="@+id/linearLayout01"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+	<!--     <include android:id="@+id/item_header"
+	        	layout="@layout/item_header" /> -->
+	    <android.support.v4.view.ViewPager
+	        android:id="@+id/guidePages"
+	        android:layout_width="fill_parent"
+	        android:layout_height="fill_parent"/>
+    	
+	   </LinearLayout>
+	   
+      <LinearLayout  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_marginBottom="30dp" 
+        android:gravity="center_horizontal" 
+        android:layout_gravity="bottom" 
+        android:orientation="horizontal"
+         >  
+  
+         <Button
+                android:id="@+id/buttonGo"
+                android:visibility="gone"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:background="@drawable/long_button_selector"
+			    android:gravity="center"
+			    android:text="		健康生活由此开始		"
+			      />
+         </LinearLayout>  
+         
+    <LinearLayout  
+        android:id="@+id/viewGroup"  
+        android:layout_width="fill_parent"  
+        android:layout_height="wrap_content"  
+        android:layout_marginBottom="10dp" 
+        android:gravity="center_horizontal" 
+        android:layout_gravity="bottom" 
+        android:orientation="horizontal" >  
+        
+    </LinearLayout>  
+    
+</FrameLayout>

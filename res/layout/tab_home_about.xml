@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@layout/header_gradient"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <Button
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:text="back" 
+            android:visibility="gone"
+            />
+        <!-- Logo Start -->
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_toStartOf="@+id/title"
+            android:src="@drawable/ic_launcher" 
+            android:visibility="gone"
+            />
+        <!-- Logo Ends -->
+
+        <TextView
+            android:id="@id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="关于我们"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                 android:src="@drawable/login_logo" >
+            </ImageView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center" >
+            
+            <!-- draw line by myself -->
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:background="@drawable/cup_light_gray"
+                android:visibility="visible" />
+
+            <ListView
+                android:id="@+id/about_list_view"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/cup_light_gray"
+                android:dividerHeight="1dp"
+                android:footerDividersEnabled="true"
+                android:headerDividersEnabled="true" >
+            </ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:background="@drawable/cup_light_gray" >
+
+            <TextView
+                android:id="@+id/pair_info"
+                android:layout_width="fill_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/cup_light_gray"
+                android:gravity="center"
+                android:text="杭州未蓝智能科技有限公司"
+                android:textSize="7pt" >
+            </TextView>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
