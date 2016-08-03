@@ -210,6 +210,7 @@ public class MainActivity extends Activity {
 			//		 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
 			//	 }
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
+            	try {
                 // Show all the supported services and characteristics on the user interface.
 //                displayGattServices(mBluetoothLeService.getSupportedGattServices());
                 // after discovered  set
@@ -225,6 +226,10 @@ public class MainActivity extends Activity {
   					Utils.Log(" mHandler.removeMessages="+mHandler.hasMessages(MSG_STOP_WAIT_BT));
   					mHandler.removeMessages(MSG_STOP_WAIT_BT);//connect success remove the hint
   				}
+                //TODO  if receiver ACTION_GATT_SERVICES_DISCOVERED not my btdevice. i dont want to handle it now.
+            	} catch (Exception e) {
+            		Utils.Log(TAG,"ACTION_GATT_SERVICES_DISCOVERED   e="+e.toString());
+            	}
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             	try {
