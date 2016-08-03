@@ -360,7 +360,6 @@ public class FragmentHomePerson extends Fragment {
 		@Override
 		public void onClick(View v) {
 
-			
 			switch (mPosition) {
 			case 1:
 				String sexString = (String) personList1.get(mPosition).get("info");
