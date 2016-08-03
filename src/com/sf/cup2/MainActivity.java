@@ -368,7 +368,8 @@ public class MainActivity extends Activity {
 			return;
 		}
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
-		if (true) {
+//		if (true) {
+		if(false){   //先关闭蓝牙搜索
 			Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 //			finish();
@@ -407,8 +408,8 @@ public class MainActivity extends Activity {
 		super.onResume();
 		registerReceiver(mGattUpdateReceiver, makeGattUpdateIntentFilter());
 		
-		 boolean result=reConnect();
- 		Utils.Log("onResume reConnect result=" + result);
+	//	 boolean result=reConnect();    先注释掉,等硬件来了再打开
+ 	//	Utils.Log("onResume reConnect result=" + result);
 		/*
 		if (mBluetoothLeService != null) {
 			final boolean result = mBluetoothLeService.connect(mDeviceAddress);

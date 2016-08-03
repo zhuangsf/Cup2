@@ -11,11 +11,6 @@ import java.util.TimerTask;
 
 import org.json.JSONObject;
 
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.sf.cup2.utils.Utils;
-import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
-
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
@@ -55,6 +50,11 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
+import com.sf.cup2.utils.Utils;
 
 public class FragmentWater extends Fragment {
 	private final static String TAG = FragmentWater.class.getPackage().getName() + "."

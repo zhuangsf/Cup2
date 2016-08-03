@@ -3,12 +3,15 @@ package com.sf.cup2;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONObject;
 
 import com.sf.cup2.utils.Utils;
 
+import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.Fragment;
 import android.app.PendingIntent;
@@ -25,10 +28,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -64,6 +69,10 @@ public class FragmentTime extends Fragment {
 	ImageView time_logo;
 	boolean alarmEnable=true;
 
+	
+	private ListView mAlarmsList;
+	private AlarmsListAdapter alarmsListAdapter;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -77,7 +86,11 @@ public class FragmentTime extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.tab_time, null);
 		c = Calendar.getInstance();
-
+		
+		mAlarmsList = (ListView) v.findViewById(R.id.alarm_listview);
+		alarmsListAdapter = new AlarmsListAdapter(getActivity());
+		mAlarmsList.setAdapter(alarmsListAdapter);
+		
 		alarm1 = (TextView) v.findViewById(R.id.alarm1);
 		switch1 = (Switch) v.findViewById(R.id.switch1);
 		alarm2 = (TextView) v.findViewById(R.id.alarm2);
@@ -163,11 +176,31 @@ public class FragmentTime extends Fragment {
 		return v;
 	}
 	
+	/*
+	private List<Map<String, Object>> getData() {
+		
+		SharedPreferences p;
+		p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);		
+		
+		Map<String, Boolean> map;
+		for (int i = 0; i < listTitle.length; i++) {
+			map = new HashMap<String, Boolean>();
+			map.put("time", listTitle[i]);
+			map.put("status", "");
+			list.add(map);
+		}
+
+       
+        return list;
+    }
+	*/
 	//get the setting from preferrence
 	private void initAlarm(){
 		 //SharedPreferences 初始化界面
 			SharedPreferences p;
 			p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
+			
+			
 			
 			for(int i=0;i<9;i++){
 				boolean checked=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
@@ -423,4 +456,53 @@ public class FragmentTime extends Fragment {
 		}
 
 	}
+	
+	
+	private class AlarmsListAdapter extends BaseAdapter {
+        
+
+        private Context mContext;
+        private LayoutInflater mInflator;
+        HashMap<String, Boolean> states = new HashMap<String, Boolean>();
+        public AlarmsListAdapter(Context context) {
+        	mContext = context;
+        	mInflator = getActivity().getLayoutInflater();
+        }
+
+            @Override
+            public int getCount() {
+                    // TODO Auto-generated method stub
+                    return 9;
+            }
+
+            @Override
+            public Object getItem(int position) {
+                    // TODO Auto-generated method stub
+                    return "test";
+            }
+
+            @Override
+            public long getItemId(int position) {
+                    // TODO Auto-generated method stub
+                    return position;
+            }
+
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                    // TODO Auto-generated method stub
+            	 
+            	 if(convertView == null)
+            	 {
+            		 convertView=mInflator.inflate(R.layout.listview_item, null);
+            	 }
+                 return convertView;
+            }
+        
+}         	
+	
+	
+	
+	
+	
+	
 }

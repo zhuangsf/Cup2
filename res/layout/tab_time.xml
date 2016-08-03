@@ -55,6 +55,13 @@
         android:layout_weight="3"
         android:background="@drawable/cup_light_gray" >
 
+        
+        <ListView  
+	        android:id="@+id/alarm_listview"  
+	        android:layout_width="fill_parent"  
+	        android:layout_height="fill_parent" >  
+        </ListView>  
+        
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
