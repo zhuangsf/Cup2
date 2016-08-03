@@ -88,7 +88,7 @@ public class FragmentTime extends Fragment {
 		c = Calendar.getInstance();
 		
 		mAlarmsList = (ListView) v.findViewById(R.id.alarm_listview);
-		alarmsListAdapter = new AlarmsListAdapter(getActivity());
+		alarmsListAdapter = new AlarmsListAdapter(getData());
 		mAlarmsList.setAdapter(alarmsListAdapter);
 		
 		alarm1 = (TextView) v.findViewById(R.id.alarm1);
@@ -176,24 +176,33 @@ public class FragmentTime extends Fragment {
 		return v;
 	}
 	
-	/*
+
 	private List<Map<String, Object>> getData() {
 		
 		SharedPreferences p;
 		p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);		
-		
-		Map<String, Boolean> map;
-		for (int i = 0; i < listTitle.length; i++) {
-			map = new HashMap<String, Boolean>();
-			map.put("time", listTitle[i]);
-			map.put("status", "");
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		Map<String, Object> map;
+		for (int i = 0; i < 20; i++) {
+			
+
+			boolean checked=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
+			String time=p.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, "00:00");
+			boolean bVisable=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+i, i>3?false:true);
+	
+			if(bVisable)
+			{
+			map = new HashMap<String, Object>();
+			map.put("time", (String)time);
+			map.put("status", (boolean)checked);
 			list.add(map);
+			}
 		}
 
        
         return list;
     }
-	*/
+
 	//get the setting from preferrence
 	private void initAlarm(){
 		 //SharedPreferences 初始化界面
@@ -460,25 +469,24 @@ public class FragmentTime extends Fragment {
 	
 	private class AlarmsListAdapter extends BaseAdapter {
         
-
-        private Context mContext;
         private LayoutInflater mInflator;
-        HashMap<String, Boolean> states = new HashMap<String, Boolean>();
-        public AlarmsListAdapter(Context context) {
-        	mContext = context;
+        private List<Map<String, Object>> alarmData;
+        public AlarmsListAdapter(List<Map<String, Object>> data) {
+ 
         	mInflator = getActivity().getLayoutInflater();
+        	alarmData = data;
         }
 
             @Override
             public int getCount() {
                     // TODO Auto-generated method stub
-                    return 9;
+                    return alarmData.size();
             }
 
             @Override
             public Object getItem(int position) {
                     // TODO Auto-generated method stub
-                    return "test";
+                    return alarmData.get(position);
             }
 
             @Override
