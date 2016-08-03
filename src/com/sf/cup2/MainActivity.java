@@ -397,7 +397,7 @@ public class MainActivity extends Activity {
 
 	
 		//add bugly
-		CrashReport.initCrashReport(getApplicationContext(), "900029797", false);
+		CrashReport.initCrashReport(getApplicationContext(), "3aad7025f9", false);
 	}
 
 	@Override
