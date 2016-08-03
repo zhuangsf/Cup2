@@ -345,6 +345,8 @@ public class MainActivity extends Activity {
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		
+		
 		// 1,is first open app start guide
 		SharedPreferences p = Utils.getSharedPpreference(this);
 		SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
@@ -727,7 +729,7 @@ public class MainActivity extends Activity {
 	      return;
 	    }
 		}
-	   
+//		CrashReport.testJavaCrash();
 		super.onBackPressed();
 	    
 	  }
