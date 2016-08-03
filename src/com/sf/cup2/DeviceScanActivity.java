@@ -80,16 +80,16 @@ public class DeviceScanActivity extends Activity {
 				case 1:
 					if (alertDialog == null) {
 						alertDialog=new AlertDialog.Builder(DeviceScanActivity.this)
-								.setTitle("��ܰ��ʾ")
-								.setMessage("�Ҳ��������豸")
+								.setTitle("温馨提示")
+								.setMessage("找不到蓝牙设备")
 								.setCancelable(false)
-								.setPositiveButton("����", new DialogInterface.OnClickListener() {
+								.setPositiveButton("重试", new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										scanLeDevice(true);
 									}
 								})
-								.setNegativeButton("�˳�", new DialogInterface.OnClickListener() {
+								.setNegativeButton("退出", new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										Intent intent = new Intent();
@@ -328,7 +328,7 @@ public class DeviceScanActivity extends Activity {
         @Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
-			device_status_text.setText("�豸��");
+			device_status_text.setText("设备：");
 			device_circle_wave_view.setVisibility(View.GONE);
 			isFindBtDevices=true;
 		}

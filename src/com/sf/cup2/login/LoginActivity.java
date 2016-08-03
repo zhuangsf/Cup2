@@ -1,4 +1,4 @@
-package com.sf.cup2.login;
+﻿package com.sf.cup2.login;
 
 import java.io.File;
 import java.util.HashMap;
@@ -72,13 +72,13 @@ public class LoginActivity extends Activity {
 			public void onClick(View v) {
 				//1 network connect
 				if(Utils.getNetWorkType(LoginActivity.this)==-1){
-					Toast.makeText(LoginActivity.this, "�������", Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, "请打开网络", Toast.LENGTH_SHORT).show();
 					return ;
 				}
 				
-				//2�������Ƿ���ȷ
+				//2检查号码是否正确
 				
-				//3�����÷���֤��ӿ�
+				//3，调用发验证码接口
 				phoneNumString=phone_num.getText().toString();
 				if (!TextUtils.isEmpty(phoneNumString)) {
 					SMSSDK.getVerificationCode("86", phoneNumString);
@@ -95,7 +95,7 @@ public class LoginActivity extends Activity {
 					countDownThread.start();
 
 				}else {
-					Toast.makeText(LoginActivity.this, "�绰����Ϊ��", Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, "电话不能为空", Toast.LENGTH_SHORT).show();
 				}
 				Utils.Log("verification phone ==>>"+phoneNumString);
 			}
@@ -157,7 +157,7 @@ public class LoginActivity extends Activity {
 				if(!TextUtils.isEmpty(check_code.getText().toString())){
 					SMSSDK.submitVerificationCode("86", phoneNumString, check_code.getText().toString());
 				}else {
-					Toast.makeText(LoginActivity.this, "��֤�벻��Ϊ��",Toast.LENGTH_SHORT).show();
+					Toast.makeText(LoginActivity.this, "验证码不能为空",Toast.LENGTH_SHORT).show();
 				}
 			}
 		});
@@ -173,8 +173,8 @@ public class LoginActivity extends Activity {
 			Object data = msg.obj;
 			Log.e("event", "event="+event);
 			if (result == SMSSDK.RESULT_COMPLETE) {
-				//����ע��ɹ��󣬷���MainActivity,Ȼ����ʾ�º���
-				if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//�ύ��֤��ɹ�
+				//短信注册成功后，返回MainActivity,然后提示新好友
+				if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {//提交验证码成功
 					final  HashMap<String,Object>  phoneMap = (HashMap<String, Object>) data;
 	                new Thread(new Runnable() {
 						@Override
@@ -183,23 +183,23 @@ public class LoginActivity extends Activity {
 						}
 					}).start();
 	                
-//					Toast.makeText(getApplicationContext(), "�ύ��֤��ɹ�", Toast.LENGTH_SHORT).show();
-//					textView2.setText("�ύ��֤��ɹ�");
+//					Toast.makeText(getApplicationContext(), "提交验证码成功", Toast.LENGTH_SHORT).show();
+//					textView2.setText("提交验证码成功");
 				} else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE){
-					boolean issmart=(Boolean)data;//������֤�� trueΪ������֤��falseΪ��ͨ�·�����
-					//������������֤����
-					Toast.makeText(getApplicationContext(), "��֤���Ѿ�����", Toast.LENGTH_SHORT).show();
-//					textView2.setText("��֤���Ѿ�����");
+					boolean issmart=(Boolean)data;//发送验证码 true为智能验证，false为普通下发短信
+					//不考虑智能验证的了
+					Toast.makeText(getApplicationContext(), "验证码已经发送", Toast.LENGTH_SHORT).show();
+//					textView2.setText("验证码已经发送");
 					Utils.Log("verification VERIFICATION_CODE send ok,issmart:"+issmart);
-				}else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//����֧�ַ�����֤��Ĺ����б�
-					Toast.makeText(getApplicationContext(), "��ȡ�����б�ɹ�", Toast.LENGTH_SHORT).show();
+				}else if (event ==SMSSDK.EVENT_GET_SUPPORTED_COUNTRIES){//返回支持发送验证码的国家列表
+					Toast.makeText(getApplicationContext(), "获取国家列表成功", Toast.LENGTH_SHORT).show();
 //					countryTextView.setText(data.toString());
 					
 				}
 			} else {
 				((Throwable) data).printStackTrace();
 				//#if def{lang} == cn
-				// ���ݷ��������ص�������󣬸�toast��ʾ
+				// 根据服务器返回的网络错误，给toast提示
 				//#elif def{lang} == en
 				// show toast according to the error code
 				//#endif
@@ -207,8 +207,8 @@ public class LoginActivity extends Activity {
 				     Throwable throwable = (Throwable) data;
 				     throwable.printStackTrace();
 				     JSONObject object = new JSONObject(throwable.getMessage());
-				     String des = object.optString("detail");//��������
-				     int status = object.optInt("status");//�������
+				     String des = object.optString("detail");//错误描述
+				     int status = object.optInt("status");//错误代码
 				     if (status > 0 && !TextUtils.isEmpty(des)) {
 					Toast.makeText(LoginActivity.this, des, Toast.LENGTH_SHORT).show();
 					Utils.Log(TAG,"verification error status:"+status+" des:"+des);
@@ -229,20 +229,20 @@ public class LoginActivity extends Activity {
             if(msg.what ==Utils.COUNT_DOWN_MSG) {  
             	int lefttime=msg.arg1;
             	if(msg.arg1>0){
-            	send_code.setText(lefttime+"�������·���");
+            	send_code.setText(lefttime+"秒后可重新发送");
             	}else
             	{
-            		send_code.setText("������֤��");
+            		send_code.setText("发送验证码");
             		send_code.setEnabled(true);
             		send_code.setBackgroundResource(R.drawable.long_button_selector);
             	}
             }else if(msg.what ==Utils.GET_SUCCESS_MSG){
             	JSONObject jsonObject=(JSONObject)msg.obj;
-            	//1,������Ҫ����Щ��д��preferrence �������Ľ�����ʾ���á�
+            	//1,这里需要把这些都写入preferrence 方便后面的界面显示调用。
             	Utils.Log("login success jsonObject:"+jsonObject);
             	final String avatar=saveAccountImfo(jsonObject);
             	
-            	//2,Ȼ����Ҫȥ���ظ�ͷ��
+            	//2,然后需要去下载个头像
             	SharedPreferences p=Utils.getSharedPpreference(LoginActivity.this);
             	final String avatarPath=p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
             	if(!TextUtils.isEmpty(avatar)&&TextUtils.isEmpty(avatarPath)){
@@ -257,11 +257,11 @@ public class LoginActivity extends Activity {
 					}).start();
             	}
             	
-            	//3,����Ӧ��
+            	//3,启动应用
             	Intent i = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(i);
             	
-            	//4�����鶼������֮�� ���Լ�ɾ�ˡ�
+            	//4，事情都做完了之后 把自己删了。
             	finish();
             }
         }  	

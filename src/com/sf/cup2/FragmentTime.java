@@ -132,9 +132,9 @@ public class FragmentTime extends Fragment {
 			public void onClick(View v) {
 				alarmEnable=!alarmEnable;
 				if(alarmEnable){
-					Toast.makeText(getActivity(), "�������ӹ���", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "启用闹钟功能", Toast.LENGTH_SHORT).show();
 				}else{
-					Toast.makeText(getActivity(), "�������ӹ���", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), "禁用闹钟功能", Toast.LENGTH_SHORT).show();
 				}
 				
 				//1,update ui
@@ -165,7 +165,7 @@ public class FragmentTime extends Fragment {
 	
 	//get the setting from preferrence
 	private void initAlarm(){
-		 //SharedPreferences ��ʼ������
+		 //SharedPreferences 初始化界面
 			SharedPreferences p;
 			p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
 			
@@ -249,7 +249,7 @@ public class FragmentTime extends Fragment {
 						c.add(Calendar.DAY_OF_MONTH, 1);
 					}
 					long tmpMills = c.getTimeInMillis() - System.currentTimeMillis();
-					Toast.makeText(getActivity(), "����"+(index+1)+" ����:" + Utils.formatTime(tmpMills) + "��", Toast.LENGTH_LONG).show();
+					Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后", Toast.LENGTH_LONG).show();
 					AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 					am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),AlarmManager.INTERVAL_DAY,getPendingIntent(index));
 				} else {
@@ -257,7 +257,7 @@ public class FragmentTime extends Fragment {
 					am.cancel(getPendingIntent(index));
 				}
 				
-				 //SharedPreferences��������
+				 //SharedPreferences保存数据
 				SharedPreferences p;
 				SharedPreferences.Editor e;
 				p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
@@ -274,7 +274,7 @@ public class FragmentTime extends Fragment {
 		alarmList.get(index).setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				//ѡ�е�ʱ���������ĳ�ʼֵ
+				//选中的时候设置他的初始值
 				String timeString=alarmList.get(index).getText().toString();
 				String[] timeArray=timeString.split(":");
 				c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
@@ -298,7 +298,7 @@ public class FragmentTime extends Fragment {
 							swtichList.get(index).setChecked(true);
 						} else {
 							long tmpMills = c.getTimeInMillis() - System.currentTimeMillis();
-							Toast.makeText(getActivity(), "����"+(index+1)+" ����:" + Utils.formatTime(tmpMills) + "��",Toast.LENGTH_LONG).show();
+							Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后",Toast.LENGTH_LONG).show();
 							AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 							am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),AlarmManager.INTERVAL_DAY, getPendingIntent(index));
 						}
@@ -309,13 +309,13 @@ public class FragmentTime extends Fragment {
 					isTimePickerOk=true;
 				}else{
 					Utils.Log("android version older than KK");
-					tpd.setButton(DialogInterface.BUTTON_POSITIVE, "ȷ��", new DialogInterface.OnClickListener() {
+					tpd.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							isTimePickerOk=true;
 						}
 					});
-					tpd.setButton(DialogInterface.BUTTON_NEGATIVE, "ȡ��", new DialogInterface.OnClickListener() {
+					tpd.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							isTimePickerOk=false;
@@ -339,14 +339,14 @@ public class FragmentTime extends Fragment {
 		c.set(Calendar.MILLISECOND, 0);
 		Utils.Log("xxxxxxxxx edit alarm :" + hourOfDay + ":" + minute + ":" + c.getTimeInMillis() + ":"
 				+ Calendar.getInstance().getTimeInMillis());
-		// ��������ʱ��ȵ�ǰʱ��Сʱ ������Ӧ���������
+		// 避免设置时间比当前时间小时 马上响应的情况发生
 		if (c.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
 			// c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);
 			c.add(Calendar.DAY_OF_MONTH, 1);
 			Utils.Log("xxxxxxxxx edit alarm 2:" + (c.get(Calendar.MONTH) + 1) + ":" + c.get(Calendar.DAY_OF_MONTH));
 		}
 		
-		 //SharedPreferences��������
+		 //SharedPreferences保存数据
 		SharedPreferences p;
 		SharedPreferences.Editor e;
 		p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);

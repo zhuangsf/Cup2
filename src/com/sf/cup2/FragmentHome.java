@@ -266,9 +266,9 @@ public class FragmentHome extends Fragment {
 				Utils.Log(" httpGet status " + httpResponse.getStatusLine());
 				Utils.Log(" xxxxxxxxxxxxxxxxxxxxx http httpGet start output 2");
 				String result=EntityUtils.toString(entity, "UTF-8");
-				// �������ַ�ʽд�����򵥣�����û���С�
+				// 下面这种方式写法更简单，可是没换行。
 				Utils.Log("httpGet 2" + result);
-				// ���� JSON ����
+				// 生成 JSON 对象
 //				JSONArray jsonArray= new JSONArray(result);
 				JSONObject jsonObject=new JSONObject(result);
 				Message msg=new Message();

@@ -37,6 +37,7 @@ import android.provider.MediaStore;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -68,10 +69,10 @@ public class FragmentHomePerson extends Fragment {
 
 	List<Map<String, Object>> personList1 = new ArrayList<Map<String, Object>>(); // list
 																					// view
-																					// ����һֱ��Ū���
+																					// 就是一直玩弄这个
 	List<Map<String, Object>> personList2 = new ArrayList<Map<String, Object>>(); // list
 																					// view
-																					// ����һֱ��Ū���
+																					// 就是一直玩弄这个
 
 	EditText person_info;
 
@@ -79,14 +80,14 @@ public class FragmentHomePerson extends Fragment {
 
 	LinearLayout avatar_layout;
 	ImageView avatar_image;
-	private SelectPicPopupWindow menuWindow; // �Զ����ͷ��༭������
-	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// ͷ���ļ�����
-	private String urlpath; // ͼƬ����·��
-	private String resultStr = ""; // ����˷��ؽ����
-	private static ProgressDialog pd;// �ȴ�����Ȧ
-	private static final int REQUESTCODE_PICK = 0; // ���ѡͼ���
-	private static final int REQUESTCODE_TAKE = 1; // ������ձ��
-	private static final int REQUESTCODE_CUTTING = 2; // ͼƬ���б��
+	private SelectPicPopupWindow menuWindow; // 自定义的头像编辑弹出框
+	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
+	private String urlpath; // 图片本地路径
+	private String resultStr = ""; // 服务端返回结果集
+	private static ProgressDialog pd;// 等待进度圈
+	private static final int REQUESTCODE_PICK = 0; // 相册选图标记
+	private static final int REQUESTCODE_TAKE = 1; // 相机拍照标记
+	private static final int REQUESTCODE_CUTTING = 2; // 图片裁切标记
 
 	Handler mHandler = new Handler() {
 		@Override
@@ -140,7 +141,7 @@ public class FragmentHomePerson extends Fragment {
 		String sex=p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "");
 		if(TextUtils.isEmpty(sex)){
 			SharedPreferences.Editor e=Utils.getSharedPpreferenceEdit(getActivity());
-			e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "Ů");
+			e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "女");
 			e.commit();
 		}
 
@@ -196,23 +197,23 @@ public class FragmentHomePerson extends Fragment {
 		return Uri.fromFile(new File(Environment.getExternalStorageDirectory()+"/8CUP", IMAGE_FILE_NAME));
 	}
 
-	// Ϊ��������ʵ�ּ�����
+	// 为弹出窗口实现监听类
 	private OnClickListener itemsOnClick = new OnClickListener() {
 		@Override
 		public void onClick(View v) {
 			menuWindow.dismiss();
 			switch (v.getId()) {
-			// ����
+			// 拍照
 			case R.id.takePhotoBtn:
 				Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-				// �������ָ������������պ����Ƭ�洢��·��
+				// 下面这句指定调用相机拍照后的照片存储的路径
 				takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,getTakePicSaveUri());
 				startActivityForResult(takeIntent, REQUESTCODE_TAKE);
 				break;
-			// ���ѡ��ͼƬ
+			// 相册选择图片
 			case R.id.pickPhotoBtn:
 				Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
-				// ���������Ҫ�����ϴ�����������ͼƬ����ʱ����ֱ��д�磺"image/jpeg �� image/png�ȵ�����"
+				// 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
 				pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 				startActivityForResult(pickIntent, REQUESTCODE_PICK);
 				break;
@@ -225,21 +226,21 @@ public class FragmentHomePerson extends Fragment {
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
-		case REQUESTCODE_PICK:// ֱ�Ӵ�����ȡ
+		case REQUESTCODE_PICK:// 直接从相册获取
 			try {
 				startPhotoZoom(data.getData());
 			} catch (NullPointerException e) {
-				e.printStackTrace();// �û����ȡ������
+				e.printStackTrace();// 用户点击取消操作
 			}
 			break;
-		case REQUESTCODE_TAKE:// �����������
+		case REQUESTCODE_TAKE:// 调用相机拍照
 			startPhotoZoom(getTakePicSaveUri());
 			break;
-		case REQUESTCODE_CUTTING:// ȡ�òü����ͼƬ
+		case REQUESTCODE_CUTTING:// 取得裁剪后的图片
 			try {
 				setPicToView(data);
 			} catch (Exception e) {
-				e.printStackTrace();// �û����ȡ������
+				e.printStackTrace();// 用户点击取消操作
 			}
 			break;
 		}
@@ -247,20 +248,20 @@ public class FragmentHomePerson extends Fragment {
 	}
 
 	/**
-	 * �ü�ͼƬ����ʵ��
+	 * 裁剪图片方法实现
 	 * 
 	 * @param uri
 	 */
 	public void startPhotoZoom(Uri uri) {
 		Intent intent = new Intent("com.android.camera.action.CROP");
 		intent.setDataAndType(uri, "image/*");
-		// crop=true�������ڿ�����Intent��������ʾ��VIEW�ɲü�
+		// crop=true是设置在开启的Intent中设置显示的VIEW可裁剪
 		intent.putExtra("crop", "true");
-		intent.putExtra("scale", true);// ȥ�ڱ�
-		// aspectX aspectY �ǿ�ߵı���
+		intent.putExtra("scale", true);// 去黑边
+		// aspectX aspectY 是宽高的比例
 		intent.putExtra("aspectX", 1);
 		intent.putExtra("aspectY", 1);
-		// outputX outputY �ǲü�ͼƬ���
+		// outputX outputY 是裁剪图片宽高
 		intent.putExtra("outputX", 300);
 		intent.putExtra("outputY", 300);
 		// the return data  true   may waste logs of mem
@@ -272,14 +273,14 @@ public class FragmentHomePerson extends Fragment {
 	}
 
 	/**
-	 * ����ü�֮���ͼƬ����
+	 * 保存裁剪之后的图片数据
 	 * 
 	 * @param picdata
 	 */
 	private void setPicToView(Intent picdata) {
 		Bundle extras = picdata.getExtras();
 		if (extras != null) {
-			// ȡ��SDCardͼƬ·������ʾ
+			// 取得SDCard图片路径做显示
 			//Bitmap photo = extras.getParcelable("data");
 			Bitmap photo =getBitmapFromUri(getCropPicSaveUri(),getActivity());
 			Drawable drawable = new BitmapDrawable(null, photo);
@@ -311,8 +312,8 @@ public class FragmentHomePerson extends Fragment {
 				Utils.Log(TAG,"xxxxxxxxxxxxxxxxxx httpPut error:" + ee);
 				ee.printStackTrace();
 			}
-			// ���̺߳�̨�ϴ������
-			// pd = ProgressDialog.show(mContext, null, "�����ϴ�ͼƬ�����Ժ�...");
+			// 新线程后台上传服务端
+			// pd = ProgressDialog.show(mContext, null, "正在上传图片，请稍候...");
 			// new Thread(uploadImageRunnable).start();
 		}
 	}
@@ -322,7 +323,7 @@ public class FragmentHomePerson extends Fragment {
 	 {
 	  try
 	  {
-	   // ��ȡuri���ڵ�ͼƬ
+	   // 读取uri所在的图片
 	   Bitmap bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(uri));
 	   bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
 	   return bitmap;
@@ -362,14 +363,14 @@ public class FragmentHomePerson extends Fragment {
 			switch (mPosition) {
 			case 1:
 				String sexString = (String) personList1.get(mPosition).get("info");
-				int initSexCheck = "��".equals(sexString) ? 0 : 1;
+				int initSexCheck = "男".equals(sexString) ? 0 : 1;
 				//TODO    display null at first time         !!!!!!!!!!!!!!!!!!!!!!   fix: init female oncreate
 				ad = new AlertDialog.Builder(getActivity()).setTitle((String) personList1.get(mPosition).get("title"))
-						.setSingleChoiceItems(new String[] { "��", "Ů" }, initSexCheck,
+						.setSingleChoiceItems(new String[] { "男", "女" }, initSexCheck,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										String sex = which == 0 ? "��" : "Ů";
+										String sex = which == 0 ? "男" : "女";
 										personList1.get(mPosition).put("info", sex);
 										SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 										e.putString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[mPosition], sex);
@@ -377,11 +378,11 @@ public class FragmentHomePerson extends Fragment {
 										doUpdate1();
 									}
 								})
-						.setNegativeButton("ȷ��", null).show();
+						.setNegativeButton("确定", null).show();
 				break;
 			case 2:
 				// could not change the phone number
-				Toast.makeText(getActivity(), "�ֻ�����󶨣��޷��޸�", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), "手机号码绑定，无法修改", Toast.LENGTH_SHORT).show();
 				break;
 			case 0:
 				LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -393,7 +394,7 @@ public class FragmentHomePerson extends Fragment {
 				person_info.setText((String) personList1.get(mPosition).get("info"));
 				person_title.setText(list1Title[mPosition]);
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList1.get(mPosition).put("info", person_info.getText().toString());
@@ -403,8 +404,8 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate1();
 							}
-						}).setNegativeButton("ȡ��", null).create();
-				ad.setTitle("������Ϣ����");
+						}).setNegativeButton("取消", null).create();
+				ad.setTitle("个人信息设置");
 				ad.setView(layout);
 				ad.show();
 				Message msg = new Message();
@@ -457,7 +458,7 @@ public class FragmentHomePerson extends Fragment {
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList2.get(mPosition).put("info", person_info.getText().toString());
@@ -467,8 +468,8 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate2();
 							}
-						}).setNegativeButton("ȡ��", null).create();
-				ad.setTitle("������Ϣ����");
+						}).setNegativeButton("取消", null).create();
+				ad.setTitle("个人信息设置");
 				ad.setView(layout);
 				ad.show();
 				msg = new Message();
@@ -479,24 +480,24 @@ public class FragmentHomePerson extends Fragment {
 			case 0:
 			case 1:
 				if (mPosition == 0) {
-					person_info.setHint("��˾");
+					person_info.setHint("公司");
 					LinearLayout pd = (LinearLayout) layout.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton("�칫��"));
-					pd.addView(addPredefineButton("����"));
-					pd.addView(addPredefineButton("����"));
-					pd.addView(addPredefineButton("����"));
+					pd.addView(addPredefineButton("办公室"));
+					pd.addView(addPredefineButton("家里"));
+					pd.addView(addPredefineButton("户外"));
+					pd.addView(addPredefineButton("车载"));
 
 				}else if(mPosition==1)
 				{
-					person_info.setHint("����");
+					person_info.setHint("健康");
 					LinearLayout pd = (LinearLayout) layout.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton("�׳���"));
-					pd.addView(addPredefineButton("�ٳ���"));
-					pd.addView(addPredefineButton("����"));
+					pd.addView(addPredefineButton("易出汗"));
+					pd.addView(addPredefineButton("少出汗"));
+					pd.addView(addPredefineButton("正常"));
 				}
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList2.get(mPosition).put("info", person_info.getText().toString());
@@ -506,9 +507,9 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate2();
 							}
-						}).setNegativeButton("ȡ��", null).create();
+						}).setNegativeButton("取消", null).create();
 
-				ad.setTitle("������Ϣ����");
+				ad.setTitle("个人信息设置");
 				ad.setView(layout);
 				ad.show();
 				msg = new Message();
@@ -525,8 +526,8 @@ public class FragmentHomePerson extends Fragment {
 				DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 					@Override
 					public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
-						// et.setText("��ѡ���ˣ�" + year + "��" + (month+1) + "��" +
-						// dayOfMonth + "��");
+						// et.setText("您选择了：" + year + "年" + (month+1) + "月" +
+						// dayOfMonth + "日");
 						String dateFormat = year + "-" + (month+1) + "-" + dayOfMonth;
 						personList2.get(mPosition).put("info", dateFormat);
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
@@ -534,9 +535,9 @@ public class FragmentHomePerson extends Fragment {
 						e.commit();
 						doUpdate2();
 					}
-				}, Integer.parseInt(dateSpilt[0]), // �������
-						Integer.parseInt(dateSpilt[1])-1, // �����·�
-						Integer.parseInt(dateSpilt[2]) // ��������
+				}, Integer.parseInt(dateSpilt[0]), // 传入年份
+						Integer.parseInt(dateSpilt[1])-1, // 传入月份
+						Integer.parseInt(dateSpilt[2]) // 传入天数
 				);
 				dialog.show();
 				break;

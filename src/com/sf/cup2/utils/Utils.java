@@ -211,9 +211,9 @@ public class Utils {
 					Utils.Log(" httpGet status " + httpResponse.getStatusLine());
 					Utils.Log(" xxxxxxxxxxxxxxxxxxxxx http httpGet start output 2");
 					String result=EntityUtils.toString(entity, "UTF-8");
-					// �������ַ�ʽд�����򵥣�����û���С�
+					// 下面这种方式写法更简单，可是没换行。
 					Utils.Log("httpGet 2" + result);
-					// ���� JSON ����
+					// 生成 JSON 对象
 //					JSONArray jsonArray= new JSONArray(result);
 					JSONObject jsonObject=new JSONObject(result);
 					if (mHandler != null) {
@@ -243,7 +243,7 @@ public class Utils {
 		HttpPost httpPost = new HttpPost(url);
 		long timestamp = System.currentTimeMillis();
 		try {
-			// ���ò���
+			// 设置参数
 //			httpPost.setEntity(new StringEntity(DesEncrypt.encrypt(jsonObj.toString(), DesEncrypt.KEY), HTTP.UTF_8));
 			httpPost.setEntity(new StringEntity(jsonObj.toString(), HTTP.UTF_8));
 			httpPost.addHeader("content-type", "application/json");
@@ -287,7 +287,7 @@ public class Utils {
 		HttpPut httpPut = new HttpPut(url);
 		long timestamp = System.currentTimeMillis();
 		try {
-			// ���ò���
+			// 设置参数
 //			httpPost.setEntity(new StringEntity(DesEncrypt.encrypt(jsonObj.toString(), DesEncrypt.KEY), HTTP.UTF_8));
 			httpPut.setEntity(new StringEntity(jsonObj.toString(), HTTP.UTF_8));
 //			httpPut.setHeader("accountid",accountid);
@@ -334,7 +334,7 @@ public class Utils {
 		long timestamp = System.currentTimeMillis();
 		try {
 			Utils.Log(" httpPostFile filePath " + filePath);
-			// ���ò���
+			// 设置参数
 			MultipartEntity me=new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE);
 			me.addPart("file", new FileBody(new File(filePath)));
 			
@@ -376,41 +376,41 @@ public class Utils {
 		long timestamp = System.currentTimeMillis();
 		Utils.Log("httpUpload start url:"+url+",file:"+fileUrlString);
 		try {
-			// ����һ��URL����
+			// 创建一个URL对象
 			URL u = new URL(url);
 			textParams = new HashMap<String, String>();
 			fileparams = new HashMap<String, File>();
-			// Ҫ�ϴ���ͼƬ�ļ�
+			// 要上传的图片文件
 			File file = new File(fileUrlString);
 			fileparams.put("image", file);
-			// ����HttpURLConnection����������л�ȡ��ҳ����
+			// 利用HttpURLConnection对象从网络中获取网页数据
 			HttpURLConnection conn = (HttpURLConnection) u.openConnection();
-			// �������ӳ�ʱ���ǵ��������ӳ�ʱ,������粻��,Androidϵͳ�ڳ���Ĭ��ʱ����ջ���Դ�жϲ�����
+			// 设置连接超时（记得设置连接超时,如果网络不好,Android系统在超过默认时间会收回资源中断操作）
 			conn.setConnectTimeout(5000);
-			// �����������������POST��������������������
+			// 设置允许输出（发送POST请求必须设置允许输出）
 			conn.setDoOutput(true);
-			// ����ʹ��POST�ķ�ʽ����
+			// 设置使用POST的方式发送
 			conn.setRequestMethod("POST");
-			// ���ò�ʹ�û��棨���׳������⣩
+			// 设置不使用缓存（容易出现问题）
 			conn.setUseCaches(false);
-			conn.setRequestProperty("Charset", "UTF-8");//���ñ���   
-			// �ڿ�ʼ��HttpURLConnection�����setRequestProperty()����,��������HTML�ļ�ͷ
+			conn.setRequestProperty("Charset", "UTF-8");//设置编码   
+			// 在开始用HttpURLConnection对象的setRequestProperty()设置,就是生成HTML文件头
 			conn.setRequestProperty("ser-Agent", "Fiddler");
-			// ����contentType
+			// 设置contentType
 			conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + NetUtil.BOUNDARY);
 			OutputStream os = conn.getOutputStream();
 			DataOutputStream ds = new DataOutputStream(os);
 			NetUtil.writeStringParams(textParams, ds);
 			NetUtil.writeFileParams(fileparams, ds);
 			NetUtil.paramsEnd(ds);
-			// ���ļ���������,Ҫ�ǵü�ʱ�ر�
+			// 对文件流操作完,要记得及时关闭
 			os.close();
-			// ���������ص���Ӧ��
-			int code = conn.getResponseCode(); // ��Internet��ȡ��ҳ,��������,����ҳ��������ʽ������
+			// 服务器返回的响应吗
+			int code = conn.getResponseCode(); // 从Internet获取网页,发送请求,将网页以流的形式读回来
 			Utils.Log(" httpUpload status " +code);
-			// ����Ӧ������ж�
-			if (code == 200) {// ���ص���Ӧ��200,�ǳɹ�
-				// �õ����緵�ص�������
+			// 对响应码进行判断
+			if (code == 200) {// 返回的响应码200,是成功
+				// 得到网络返回的输入流
 				InputStream is = conn.getInputStream();
 				if (mHandler != null) {
 				Message msg=new Message();
@@ -421,7 +421,7 @@ public class Utils {
 				mHandler.sendMessage(msg);
 				}
 			} else {
-//				Toast.makeText(mContext, "����URLʧ�ܣ�", Toast.LENGTH_SHORT).show();
+//				Toast.makeText(mContext, "请求URL失败！", Toast.LENGTH_SHORT).show();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -435,11 +435,11 @@ public class Utils {
 	
 	
 	/**
-	 * ����Key��ȡֵ.
+	 * 根据Key获取值.
 	 * 
-	 * @return ���key������, �������def��Ϊ���򷵻�def���򷵻ؿ��ַ���
+	 * @return 如果key不存在, 并且如果def不为空则返回def否则返回空字符串
 	 * @throws IllegalArgumentException
-	 *             ���key����32���ַ����׳����쳣
+	 *             如果key超过32个字符则抛出该异常
 	 */
 	public static String getSystemProperties(Context context, String key,
 			String def) throws IllegalArgumentException {
@@ -449,14 +449,14 @@ public class Utils {
 			@SuppressWarnings("rawtypes")
 			Class SystemProperties = cl
 					.loadClass("android.os.SystemProperties");
-			// ��������
+			// 参数类型
 			@SuppressWarnings("rawtypes")
 			Class[] paramTypes = new Class[2];
 			paramTypes[0] = String.class;
 			paramTypes[1] = String.class;
 			@SuppressWarnings("unchecked")
 			Method get = SystemProperties.getMethod("get", paramTypes);
-			// ����
+			// 参数
 			Object[] params = new Object[2];
 			params[0] = new String(key);
 			params[1] = new String(def);
@@ -472,7 +472,7 @@ public class Utils {
 	
 	
 	/**
-	 * ��ȡ���ӷ�ʽ
+	 * 获取连接方式
 	 * none:-1 mobile:0 wifi:1    
 	 * @param context
 	 * @return
@@ -497,7 +497,7 @@ public class Utils {
 		return isScreenOn;
 	}
 	/**
-	 * ɾ��ָ���ļ�
+	 * 删除指定文件
 	 * @param file
 	 */
 	public static void deleteFile(File file) {
@@ -508,15 +508,15 @@ public class Utils {
 		}
 	}
 	/** 
-     * �ж�ָ�����ļ��Ƿ���ڡ� 
-     * @param fileName Ҫ�жϵ��ļ����ļ��� 
-     * @return ����ʱ����true�����򷵻�false�� 
+     * 判断指定的文件是否存在。 
+     * @param fileName 要判断的文件的文件名 
+     * @return 存在时返回true，否则返回false。 
      */  
     public static boolean isFileExist(String fileName) {  
       return new File(fileName).isFile();  
     }  
     /**
-     * �ж�apk�Ƿ��Ѵ���
+     * 判断apk是否已存在
      * @param context
      * @param packageName
      * @return
@@ -537,10 +537,10 @@ public class Utils {
 	
 	
 	 /**
-     *����δ��װapk �ķ���
-     *������manifest�е�һ��activity �� service ��type��TARGET_ACTIVITY��TARGET_SERVICE ����
-     *Ŀǰ��δ������������
-     *��ڽ���onCreate  
+     *调用未安装apk 的方法
+     *仅处理manifest中第一个activity 或 service 由type：TARGET_ACTIVITY，TARGET_SERVICE 决定
+     *目前还未处理生命周期
+     *入口仅限onCreate  
      */
 	public static void launchTargetAPK(Context context, final String apkFilePath,
 			int type) throws Exception {
@@ -561,14 +561,14 @@ public class Utils {
 					apkFilePath, PackageManager.GET_ACTIVITIES);
 			if ((packageInfo != null) && (packageInfo.activities != null)
 					&& (packageInfo.activities.length > 0)) {
-				activityName = packageInfo.activities[0].name;// ������manifest�е�һ��activity
+				activityName = packageInfo.activities[0].name;// 仅处理manifest中第一个activity
 			}
 		} else if (type == TARGET_SERVICE) {
 			packageInfo = context.getPackageManager().getPackageArchiveInfo(
 					apkFilePath, PackageManager.GET_SERVICES);
 			if ((packageInfo != null) && (packageInfo.services != null)
 					&& (packageInfo.services.length > 0)) {
-				activityName = packageInfo.services[0].name;// ������manifest�е�һ��services
+				activityName = packageInfo.services[0].name;// 仅处理manifest中第一个services
 			}
 		}
 		Utils.Log("launchTargetAPK 3:" + activityName);
@@ -592,14 +592,14 @@ public class Utils {
 					onCreate.setAccessible(true);
 					onCreate.invoke(instance, new Object[] { bundle });
 				}else if(type == TARGET_SERVICE){
-					//service �ĳ������£�����עdomission����
+					//service 的抽象了下，仅关注domission即可
 					onCreate= localClass.getDeclaredMethod("doMission",
 							new Class[] {});
 					onCreate.setAccessible(true);
 					onCreate.invoke(instance, new Object[] {});	
 				}
 			} catch (InvocationTargetException ite) {
-				Throwable t = ite.getTargetException();// ��ȡĿ���쳣
+				Throwable t = ite.getTargetException();// 获取目标异常
 				t.printStackTrace();
 			} catch (Exception e) {
 				Utils.Log(TAG, "launchTargetAPK Exception:" + e);
@@ -610,7 +610,7 @@ public class Utils {
 	/**
 	 * 
 	 * @param httpUrl
-	 * @param id �ļ�������Ψһ��ʶ
+	 * @param id 文件命名的唯一标识
 	 * @return
 	 */
 	public static File downLoadFile(String httpUrl,String dirPath,String fileName) {
@@ -664,7 +664,7 @@ public class Utils {
 	
 	
 	  /*
-     * ����ת��ʱ�������
+     * 毫秒转化时分秒毫秒
      */
     public static String formatTime(Long ms) {
         Integer ss = 1000;
@@ -680,23 +680,23 @@ public class Utils {
         
         StringBuffer sb = new StringBuffer();
         if(day > 0) {
-            sb.append(day+"��");
+            sb.append(day+"天");
         }
         if(hour > 0) {
-            sb.append(hour+"Сʱ");
+            sb.append(hour+"小时");
         }
         if(minute > 0) {
-            sb.append(minute+"����");
+            sb.append(minute+"分钟");
         }
         if(second > 0) {
-            sb.append(second+"��");
+            sb.append(second+"秒");
         }
 //        if(milliSecond > 0) {
-//            sb.append(milliSecond+"����");
+//            sb.append(milliSecond+"毫秒");
 //        }
         
         if(TextUtils.isEmpty(sb.toString())){
-            sb.append("1��");
+            sb.append("1秒");
         }
         return sb.toString();
     }

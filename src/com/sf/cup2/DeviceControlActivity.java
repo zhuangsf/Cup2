@@ -146,12 +146,12 @@ public class DeviceControlActivity extends Activity {
     }
     public static byte[] hex2byte(byte[] b) {
         if ((b.length % 2) != 0) {
-            throw new IllegalArgumentException("���Ȳ���ż��");
+            throw new IllegalArgumentException("长度不是偶数");
         }
         byte[] b2 = new byte[b.length / 2];
         for (int n = 0; n < b.length; n += 2) {
             String item = new String(b, n, 2);
-            // ��λһ�飬��ʾһ���ֽ�,��������ʾ��16�����ַ�������ԭ��һ�������ֽ�
+            // 两位一组，表示一个字节,把这样表示的16进制字符串，还原成一个进制字节
             b2[n / 2] = (byte) Integer.parseInt(item, 16);
         }
         b = null;
@@ -166,21 +166,21 @@ public class DeviceControlActivity extends Activity {
                 @Override
                 public boolean onChildClick(ExpandableListView parent, View v, int groupPosition,
                                             int childPosition, long id) {
-                    final EditText et ;  //��������
+                    final EditText et ;  //申明变量
 
-                    et = new EditText(parent.getContext()); //��������
-                    et.setSingleLine(true);  //��������
+                    et = new EditText(parent.getContext()); //创建对象
+                    et.setSingleLine(true);  //设置属性
 
-                    final EditText etHex ;  //��������
-                    etHex = new EditText(parent.getContext()); //��������
-                    etHex.setSingleLine(true);  //��������
+                    final EditText etHex ;  //申明变量
+                    etHex = new EditText(parent.getContext()); //创建对象
+                    etHex.setSingleLine(true);  //设置属性
 
                     if (mGattCharacteristics != null) {
                         final BluetoothGattCharacteristic characteristic =
                                 mGattCharacteristics.get(groupPosition).get(childPosition);
                         final int charaProp = characteristic.getProperties();
 
-                        //�����char��д
+                        //如果该char可写
                         if ((charaProp | BluetoothGattCharacteristic.PROPERTY_WRITE) > 0) {
 
                         	Utils.Log("xxxxxxxxxxxxxxxxxx charaProp:"+charaProp+",permission:"+characteristic.getPermissions());
@@ -191,7 +191,7 @@ public class DeviceControlActivity extends Activity {
                             AlertDialog.Builder ad1 = new AlertDialog.Builder(parent.getContext());
                             ad1.setTitle("WriteCharacteristic");
                             ad1.setView(textEntryView);
-                            ad1.setPositiveButton("ȷ��", new DialogInterface.OnClickListener() {
+                            ad1.setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
 								public void onClick(DialogInterface dialog, int i) {
                                     byte[] value = new byte[20];
@@ -210,7 +210,7 @@ public class DeviceControlActivity extends Activity {
                                     mBluetoothLeService.writeCharacteristic(characteristic);
                                 }
                             });
-                            ad1.setNegativeButton("ȡ��", new DialogInterface.OnClickListener() {
+                            ad1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
                                 @Override
 								public void onClick(DialogInterface dialog, int i) {
 

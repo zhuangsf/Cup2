@@ -40,9 +40,9 @@ public class FragmentHomeHardwareUpdate extends Fragment {
 			@Override
 			public void onClick(View v) {
 				new AlertDialog.Builder(getActivity())
-						.setMessage("������ʹ�õ�Ϊ���°汾ϵͳ")
-				    	.setTitle("��ܰ��ʾ")
-						.setPositiveButton("ȷ��", null)
+						.setMessage("您现在使用的为最新版本系统")
+				    	.setTitle("温馨提示")
+						.setPositiveButton("确定", null)
 						.create()
 						.show();
 			}

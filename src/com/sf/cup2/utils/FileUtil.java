@@ -17,11 +17,11 @@ public class FileUtil {
 
     
     /**
-     * ��Bitmap ͼƬ���浽����·����������·��
+     * 将Bitmap 图片保存到本地路径，并返回路径
      * @param c
-     * @param mType ��Դ���ͣ�����  MultimediaContentType ö�٣����ݴ����ͣ�����ʱ���Զ�����
-     * @param fileName �ļ�����
-     * @param bitmap ͼƬ
+     * @param mType 资源类型，参照  MultimediaContentType 枚举，根据此类型，保存时可自动归类
+     * @param fileName 文件名称
+     * @param bitmap 图片
      * @return
      */
 	public static String saveFile(Context c, String fileName, Bitmap bitmap) {

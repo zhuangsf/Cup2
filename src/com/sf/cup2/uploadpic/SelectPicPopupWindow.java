@@ -28,26 +28,26 @@ public class SelectPicPopupWindow extends PopupWindow {
 		takePhotoBtn = (Button) mMenuView.findViewById(R.id.takePhotoBtn);
 		pickPhotoBtn = (Button) mMenuView.findViewById(R.id.pickPhotoBtn);
 		cancelBtn = (Button) mMenuView.findViewById(R.id.cancelBtn);
-		// ���ð�ť����
+		// 设置按钮监听
 		cancelBtn.setOnClickListener(itemsOnClick);
 		pickPhotoBtn.setOnClickListener(itemsOnClick);
 		takePhotoBtn.setOnClickListener(itemsOnClick);
 		
-		// ����SelectPicPopupWindow��View
+		// 设置SelectPicPopupWindow的View
 		this.setContentView(mMenuView);
-		// ����SelectPicPopupWindow��������Ŀ�
+		// 设置SelectPicPopupWindow弹出窗体的宽
 		this.setWidth(LayoutParams.MATCH_PARENT);
-		// ����SelectPicPopupWindow��������ĸ�
+		// 设置SelectPicPopupWindow弹出窗体的高
 		this.setHeight(LayoutParams.WRAP_CONTENT);
-		// ����SelectPicPopupWindow��������ɵ��
+		// 设置SelectPicPopupWindow弹出窗体可点击
 		this.setFocusable(true);
-		// ����SelectPicPopupWindow�������嶯��Ч��
+		// 设置SelectPicPopupWindow弹出窗体动画效果
 		this.setAnimationStyle(R.style.PopupAnimation);
-		// ʵ����һ��ColorDrawable��ɫΪ��͸��
+		// 实例化一个ColorDrawable颜色为半透明
 		ColorDrawable dw = new ColorDrawable(0x80000000);
-		// ����SelectPicPopupWindow��������ı���
+		// 设置SelectPicPopupWindow弹出窗体的背景
 		this.setBackgroundDrawable(dw);
-		// mMenuView���OnTouchListener�����жϻ�ȡ����λ�������ѡ������������ٵ�����
+		// mMenuView添加OnTouchListener监听判断获取触屏位置如果在选择框外面则销毁弹出框
 		mMenuView.setOnTouchListener(new OnTouchListener() {
 
 			@Override

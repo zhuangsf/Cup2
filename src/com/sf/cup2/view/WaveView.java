@@ -29,26 +29,26 @@ public class WaveView extends View
 	private int mViewHeight;
 
 	/**
-	 * ˮλ��
+	 * 水位线
 	 */
 	private float mLevelLine;
 
 	/**
-	 * �����������
+	 * 波浪起伏幅度
 	 */
 	private float mWaveHeight = 30;//80;
 	/**
-	 * ����
+	 * 波长
 	 */
 	private float mWaveWidth = 80;//200;
 	/**
-	 * �����ص�����ߵĲ���
+	 * 被隐藏的最左边的波形
 	 */
 	private float mLeftSide;
 
 	private float mMoveLen;
 	/**
-	 * ˮ��ƽ���ٶ�
+	 * 水波平移速度
 	 */
 	public static final float SPEED = 2.1f;//1.7f;
 
@@ -66,14 +66,14 @@ public class WaveView extends View
 		@Override
 		public void handleMessage(Message msg)
 		{
-			// ��¼ƽ����λ��
+			// 记录平移总位移
 			mMoveLen += SPEED;
-			// ˮλ����
+			// 水位上升
 			//mLevelLine -= 1f;
 			if (mLevelLine < 0)
 				mLevelLine = 0;
 			mLeftSide += SPEED;
-			// ����ƽ��
+			// 波形平移
 			for (int i = 0; i < mPointsList.size(); i++)
 			{
 				mPointsList.get(i).setX(mPointsList.get(i).getX() + SPEED);
@@ -93,7 +93,7 @@ public class WaveView extends View
 			}
 			if (mMoveLen >= mWaveWidth)
 			{
-				// ����ƽ�Ƴ���һ���������κ�λ
+				// 波形平移超过一个完整波形后复位
 				mMoveLen = 0;
 				resetPoints();
 			}
@@ -103,7 +103,7 @@ public class WaveView extends View
 	};
 
 	/**
-	 * ���е��x���궼��ԭ����ʼ״̬��Ҳ����һ������ǰ��״̬
+	 * 所有点的x坐标都还原到初始状态，也就是一个周期前的状态
 	 */
 	private void resetPoints()
 	{
@@ -157,7 +157,7 @@ public class WaveView extends View
 	{
 		Utils.Log("waveview  onWindowFocusChanged:");
 		super.onWindowFocusChanged(hasWindowFocus);
-		// ��ʼ����
+		// 开始波动
 		start();
 	}
 
@@ -182,35 +182,35 @@ public class WaveView extends View
 			mViewHeight = 100;//getMeasuredHeight();
 			mViewWidth = getMeasuredWidth();
 			Utils.Log("waveview  mViewHeight:"+mViewHeight+"   mViewWidth"+mViewWidth);
-			// ˮλ�ߴ�����¿�ʼ����
+			// 水位线从最底下开始上升
 			mLevelLine = mViewHeight;
-			// ����View��ȼ��㲨�η�ֵ
+			// 根据View宽度计算波形峰值
 			mWaveHeight = mViewWidth / 2.5f;
-			// ���������ı�View���Ҳ����View��ֻ�ܿ����ķ�֮һ�����Σ���������ʹ���������
+			// 波长等于四倍View宽度也就是View中只能看到四分之一个波形，这样可以使起伏更明显
 			mWaveWidth = mViewWidth * 4;
-			// ������صľ���Ԥ��һ������
+			// 左边隐藏的距离预留一个波形
 			mLeftSide = -mWaveWidth;
-			// ��������ڿɼ���View����������ɼ������Σ�ע��n��ȡ��
+			// 这里计算在可见的View宽度中能容纳几个波形，注意n上取整
 			int n = (int) Math.round(mViewWidth / mWaveWidth + 0.5);
-			// n��������Ҫ4n+1���㣬��������ҪԤ��һ�������������������������Ҫ4n+5����
+			// n个波形需要4n+1个点，但是我们要预留一个波形在左边隐藏区域，所以需要4n+5个点
 			for (int i = 0; i < (4 * n + 5); i++)
 			{
-				// ��P0��ʼ��ʼ����P4n+4���ܹ�4n+5����
+				// 从P0开始初始化到P4n+4，总共4n+5个点
 				float x = i * mWaveWidth / 4 - mWaveWidth;
 				float y = 0;
 				switch (i % 4)
 				{
 				case 0:
 				case 2:
-					// ���λ��ˮλ����
+					// 零点位于水位线上
 					y = mLevelLine;
 					break;
 				case 1:
-					// ���²����Ŀ��Ƶ�
+					// 往下波动的控制点
 					y = mLevelLine + mWaveHeight;
 					break;
 				case 3:
-					// ���ϲ����Ŀ��Ƶ�
+					// 往上波动的控制点
 					y = mLevelLine - mWaveHeight;
 					break;
 				}
@@ -236,9 +236,9 @@ public class WaveView extends View
 		mWavePath.moveTo(mLeftSide, mViewHeight);
 		mWavePath.close();
 
-		// mPaint��Style��FILL�����������Path����
+		// mPaint的Style是FILL，会填充整个Path区域
 		canvas.drawPath(mWavePath, mPaint);
-		// ���ưٷֱ�
+		// 绘制百分比
 //		canvas.drawText("" + ((int) ((1 - mLevelLine / mViewHeight) * 100))
 //				+ "%", mViewWidth / 2, mLevelLine + mWaveHeight
 //				+ (mViewHeight - mLevelLine - mWaveHeight) / 2, mTextPaint);
