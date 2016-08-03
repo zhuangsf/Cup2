@@ -45,16 +45,16 @@ public class FragmentHomeReset extends Fragment {
 			@Override
 			public void onClick(View v) {
 				new AlertDialog.Builder(getActivity())
-				.setMessage("确定要恢复出厂设置？")
-		    	.setTitle("温馨提示")
-				.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+				.setMessage(R.string.ask_reset)
+		    	.setTitle(R.string.tips)
+				.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
 						//显示等待
 						clearAll();
 					}
 				})
-				.setNegativeButton("取消", null)
+				.setNegativeButton(R.string.cancel, null)
 				.create()
 				.show();
 			}
@@ -72,9 +72,9 @@ public class FragmentHomeReset extends Fragment {
 		
 		
 		new AlertDialog.Builder(getActivity())
-		.setMessage("恢复出厂后，请重新登陆")
-    	.setTitle("温馨提示")
-		.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+		.setMessage(R.string.login_again)
+    	.setTitle(R.string.tips)
+		.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
 				getActivity().finish();

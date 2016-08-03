@@ -80,16 +80,16 @@ public class DeviceScanActivity extends Activity {
 				case 1:
 					if (alertDialog == null) {
 						alertDialog=new AlertDialog.Builder(DeviceScanActivity.this)
-								.setTitle("温馨提示")
-								.setMessage("找不到蓝牙设备")
+								.setTitle(R.string.tips)
+								.setMessage(R.string.not_find_device)
 								.setCancelable(false)
-								.setPositiveButton("重试", new DialogInterface.OnClickListener() {
+								.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										scanLeDevice(true);
 									}
 								})
-								.setNegativeButton("退出", new DialogInterface.OnClickListener() {
+								.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										Intent intent = new Intent();

@@ -146,7 +146,7 @@ public class DeviceControlActivity extends Activity {
     }
     public static byte[] hex2byte(byte[] b) {
         if ((b.length % 2) != 0) {
-            throw new IllegalArgumentException("长度不是偶数");
+            throw new IllegalArgumentException("Length is not even");
         }
         byte[] b2 = new byte[b.length / 2];
         for (int n = 0; n < b.length; n += 2) {
@@ -191,7 +191,7 @@ public class DeviceControlActivity extends Activity {
                             AlertDialog.Builder ad1 = new AlertDialog.Builder(parent.getContext());
                             ad1.setTitle("WriteCharacteristic");
                             ad1.setView(textEntryView);
-                            ad1.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            ad1.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
 								public void onClick(DialogInterface dialog, int i) {
                                     byte[] value = new byte[20];
@@ -210,7 +210,7 @@ public class DeviceControlActivity extends Activity {
                                     mBluetoothLeService.writeCharacteristic(characteristic);
                                 }
                             });
-                            ad1.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                            ad1.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
 								public void onClick(DialogInterface dialog, int i) {
 

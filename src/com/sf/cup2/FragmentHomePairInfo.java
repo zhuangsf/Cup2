@@ -25,7 +25,7 @@ public class FragmentHomePairInfo extends Fragment {
     	View v=inflater.inflate(R.layout.tab_home_pair_info, null);
     	pair_info= (TextView)v.findViewById(R.id.pair_info);
     	if(true){//获取蓝牙配对信息
-    		pair_info.setText("水杯1号");
+    		pair_info.setText(R.string.cup_number1);
     	}
     	
         return v; 

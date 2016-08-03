@@ -30,9 +30,36 @@
     <string name="menu_disconnect">Disconnect</string>
     <string name="menu_scan">Scan</string>
     <string name="menu_stop">Stop</string>
-    
-    
-    
+
+
+    <string name="ok">"确定"</string>
+	<string name="cancel">"取消"</string>
+	<string name="tips">"温馨提示"</string>
+    <string name="not_find_device">"找不到蓝牙设备"</string>
+	<string name="retry">"重试"</string>
+	<string name="quit">"退出"</string>
+    <string name="newest_version">"您现在使用的为最新版本系统"</string>
+    <string name="cup_number1">"水杯1号"</string>
+	<string name="male">"男"</string>
+	<string name="female">"女"</string>
+	<string name="phone_bind">"手机号码绑定，无法修改"</string>
+    <string name="personal_setting">"个人信息设置"</string>
+    <string name="company">"公司"</string>
+	<string name="home">"家里"</string>
+	<string name="office">"办公室"</string>
+	<string name="outdoor">"户外"</string>
+	<string name="car">"车载"</string>
+	<string name="heath">"健康"</string>
+	<string name="easy_sweat">"易出汗"</string>
+	<string name="less_sweat">"少出汗"</string>
+	<string name="normal">"正常"</string>
+    <string name="ask_reset">"确定要恢复出厂设置？"</string>
+    <string name="login_again">"恢复出厂后，请重新登陆"</string>
+    <string name="open_alarm">"启用闹钟功能"</string>
+	<string name="close_alarm">"禁用闹钟功能"</string>
+	<string name="bt_disconnect">"蓝牙可能已断开"</string>
+    <string name="reconnect">"重连"</string>
+	<string name="not_connect_device">"无法连接到蓝牙设备"</string>
     <declare-styleable name="GifTextureView"><attr format="reference|string" name="gifSource"/><attr format="boolean" name="isOpaque"/></declare-styleable>
     <declare-styleable name="GifView"><attr format="boolean" name="freezesAnimation"/></declare-styleable>
 </resources>

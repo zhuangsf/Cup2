@@ -359,18 +359,21 @@ public class FragmentHomePerson extends Fragment {
 
 		@Override
 		public void onClick(View v) {
-
+			
 			switch (mPosition) {
 			case 1:
+			{
+				final String male = getResources().getString(R.string.male);
+				final String female = getResources().getString(R.string.female);
 				String sexString = (String) personList1.get(mPosition).get("info");
-				int initSexCheck = "男".equals(sexString) ? 0 : 1;
+				int initSexCheck = male.equals(sexString) ? 0 : 1;
 				//TODO    display null at first time         !!!!!!!!!!!!!!!!!!!!!!   fix: init female oncreate
 				ad = new AlertDialog.Builder(getActivity()).setTitle((String) personList1.get(mPosition).get("title"))
-						.setSingleChoiceItems(new String[] { "男", "女" }, initSexCheck,
+						.setSingleChoiceItems(new String[] { male, female }, initSexCheck,
 								new DialogInterface.OnClickListener() {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
-										String sex = which == 0 ? "男" : "女";
+										String sex = which == 0 ? male : female;
 										personList1.get(mPosition).put("info", sex);
 										SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 										e.putString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[mPosition], sex);
@@ -378,11 +381,12 @@ public class FragmentHomePerson extends Fragment {
 										doUpdate1();
 									}
 								})
-						.setNegativeButton("确定", null).show();
+						.setNegativeButton(R.string.ok, null).show();
+			}
 				break;
 			case 2:
 				// could not change the phone number
-				Toast.makeText(getActivity(), "手机号码绑定，无法修改", Toast.LENGTH_SHORT).show();
+				Toast.makeText(getActivity(), getResources().getString(R.string.phone_bind), Toast.LENGTH_SHORT).show();
 				break;
 			case 0:
 				LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -394,7 +398,7 @@ public class FragmentHomePerson extends Fragment {
 				person_info.setText((String) personList1.get(mPosition).get("info"));
 				person_title.setText(list1Title[mPosition]);
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList1.get(mPosition).put("info", person_info.getText().toString());
@@ -404,8 +408,8 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate1();
 							}
-						}).setNegativeButton("取消", null).create();
-				ad.setTitle("个人信息设置");
+						}).setNegativeButton(R.string.cancel, null).create();
+				ad.setTitle(R.string.personal_setting);
 				ad.setView(layout);
 				ad.show();
 				Message msg = new Message();
@@ -458,7 +462,7 @@ public class FragmentHomePerson extends Fragment {
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList2.get(mPosition).put("info", person_info.getText().toString());
@@ -468,8 +472,8 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate2();
 							}
-						}).setNegativeButton("取消", null).create();
-				ad.setTitle("个人信息设置");
+						}).setNegativeButton(R.string.cancel, null).create();
+				ad.setTitle(R.string.personal_setting);
 				ad.setView(layout);
 				ad.show();
 				msg = new Message();
@@ -480,24 +484,24 @@ public class FragmentHomePerson extends Fragment {
 			case 0:
 			case 1:
 				if (mPosition == 0) {
-					person_info.setHint("公司");
+					person_info.setHint(R.string.company);
 					LinearLayout pd = (LinearLayout) layout.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton("办公室"));
-					pd.addView(addPredefineButton("家里"));
-					pd.addView(addPredefineButton("户外"));
-					pd.addView(addPredefineButton("车载"));
+					pd.addView(addPredefineButton(getResources().getString(R.string.office)));
+					pd.addView(addPredefineButton(getResources().getString(R.string.home)));
+					pd.addView(addPredefineButton(getResources().getString(R.string.outdoor)));
+					pd.addView(addPredefineButton(getResources().getString(R.string.car)));
 
 				}else if(mPosition==1)
 				{
-					person_info.setHint("健康");
+					person_info.setHint(R.string.heath);
 					LinearLayout pd = (LinearLayout) layout.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton("易出汗"));
-					pd.addView(addPredefineButton("少出汗"));
-					pd.addView(addPredefineButton("正常"));
+					pd.addView(addPredefineButton(getResources().getString(R.string.easy_sweat)));
+					pd.addView(addPredefineButton(getResources().getString(R.string.less_sweat)));
+					pd.addView(addPredefineButton(getResources().getString(R.string.normal)));
 				}
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
 				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+						.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog, int which) {
 								personList2.get(mPosition).put("info", person_info.getText().toString());
@@ -507,9 +511,9 @@ public class FragmentHomePerson extends Fragment {
 								e.commit();
 								doUpdate2();
 							}
-						}).setNegativeButton("取消", null).create();
+						}).setNegativeButton(R.string.cancel, null).create();
 
-				ad.setTitle("个人信息设置");
+				ad.setTitle(R.string.personal_setting);
 				ad.setView(layout);
 				ad.show();
 				msg = new Message();

@@ -129,19 +129,19 @@ public class FragmentWater extends Fragment {
 						temp_index=-1;
 						if (sendFailAlertDialog == null) {
 							sendFailAlertDialog=new AlertDialog.Builder(getActivity())
-									.setTitle("温馨提示")
-									.setMessage("蓝牙可能已断开")
+									.setTitle(R.string.tips)
+									.setMessage(R.string.bt_disconnect)
 //									.setCancelable(false)
-									.setPositiveButton("重连", new DialogInterface.OnClickListener() {
+									.setPositiveButton(R.string.reconnect, new DialogInterface.OnClickListener() {
 										@Override
 										public void onClick(DialogInterface dialog, int which) {
 											 boolean result= ((MainActivity)getActivity()).reConnect();
 											 if(!result){
-												 Toast.makeText(getActivity(), "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
+												 Toast.makeText(getActivity(), getResources().getString(R.string.not_connect_device), Toast.LENGTH_SHORT).show();
 											 }
 										}
 									})
-									.setNegativeButton("取消",null).create();
+									.setNegativeButton(R.string.cancel,null).create();
 						}
 						try {
 								sendFailAlertDialog.show();
@@ -199,8 +199,8 @@ public class FragmentWater extends Fragment {
 	private void temperatureComplete() {
 		try {
 			if (alertDialog == null) {
-				alertDialog = new AlertDialog.Builder(getActivity()).setMessage("亲！已到设定饮水温度咯！\n请及时享用哦").setTitle("温馨提示")
-						.setPositiveButton("确定", null).create();
+				alertDialog = new AlertDialog.Builder(getActivity()).setMessage("tips1").setTitle(R.string.tips)
+						.setPositiveButton(R.string.ok, null).create();
 			}
 
 			alertDialog.show();

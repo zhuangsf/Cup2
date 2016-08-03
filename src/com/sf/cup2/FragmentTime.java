@@ -132,9 +132,9 @@ public class FragmentTime extends Fragment {
 			public void onClick(View v) {
 				alarmEnable=!alarmEnable;
 				if(alarmEnable){
-					Toast.makeText(getActivity(), "启用闹钟功能", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.open_alarm), Toast.LENGTH_SHORT).show();
 				}else{
-					Toast.makeText(getActivity(), "禁用闹钟功能", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getActivity(), getResources().getString(R.string.close_alarm), Toast.LENGTH_SHORT).show();
 				}
 				
 				//1,update ui
@@ -249,7 +249,9 @@ public class FragmentTime extends Fragment {
 						c.add(Calendar.DAY_OF_MONTH, 1);
 					}
 					long tmpMills = c.getTimeInMillis() - System.currentTimeMillis();
-					Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后", Toast.LENGTH_LONG).show();
+					//Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后", Toast.LENGTH_LONG).show();
+					//todo 后续再修改字符串
+					
 					AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 					am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),AlarmManager.INTERVAL_DAY,getPendingIntent(index));
 				} else {
@@ -298,7 +300,8 @@ public class FragmentTime extends Fragment {
 							swtichList.get(index).setChecked(true);
 						} else {
 							long tmpMills = c.getTimeInMillis() - System.currentTimeMillis();
-							Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后",Toast.LENGTH_LONG).show();
+							//Toast.makeText(getActivity(), "闹钟"+(index+1)+" 设置:" + Utils.formatTime(tmpMills) + "后",Toast.LENGTH_LONG).show();
+							//todo后续修改
 							AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 							am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),AlarmManager.INTERVAL_DAY, getPendingIntent(index));
 						}
@@ -309,13 +312,13 @@ public class FragmentTime extends Fragment {
 					isTimePickerOk=true;
 				}else{
 					Utils.Log("android version older than KK");
-					tpd.setButton(DialogInterface.BUTTON_POSITIVE, "确认", new DialogInterface.OnClickListener() {
+					tpd.setButton(DialogInterface.BUTTON_POSITIVE, getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							isTimePickerOk=true;
 						}
 					});
-					tpd.setButton(DialogInterface.BUTTON_NEGATIVE, "取消", new DialogInterface.OnClickListener() {
+					tpd.setButton(DialogInterface.BUTTON_NEGATIVE, getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							isTimePickerOk=false;
