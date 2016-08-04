@@ -359,6 +359,7 @@ public class MainActivity extends Activity {
 			return;
 		}
 		// 2,login first
+		/*     先关闭注册  wuyx
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
 		if (TextUtils.isEmpty(phonenum)) {
 			Intent i = new Intent(this, LoginActivity.class);
@@ -367,9 +368,10 @@ public class MainActivity extends Activity {
 			onDestroy();
 			return;
 		}
+		*/
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
 //		if (true) {
-		if(false){   //先关闭蓝牙搜索
+		if(false){   //先关闭蓝牙搜索wuyx
 			Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 //			finish();
