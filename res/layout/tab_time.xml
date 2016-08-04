@@ -56,12 +56,45 @@
         android:background="@drawable/cup_light_gray" >
 
         
-        <ListView  
-	        android:id="@+id/alarm_listview"  
-	        android:layout_width="fill_parent"  
-	        android:layout_height="fill_parent" >  
-        </ListView>  
+         <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:gravity="center" 
+            android:orientation="vertical" >
+                  <RelativeLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:gravity="center_horizontal" >
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="20dp"
+                            android:gravity="center"
+                            android:text="@string/set_alarm"
+                            android:textColor="@drawable/black"
+                            android:textSize="20sp" />
+
+                        <ImageView
+                            android:id="@+id/add_alarm_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerInParent="true"
+                            android:layout_marginRight="10dp"
+                            android:background="@drawable/mode_add_selector" />
+
+                    </RelativeLayout>
         
+			        <ListView  
+				        android:id="@+id/alarm_listview"  
+				        android:layout_width="fill_parent"  
+				        android:layout_height="fill_parent" >  
+			        </ListView>  
+        </LinearLayout>
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
@@ -72,7 +105,8 @@
                 android:layout_height="wrap_content"
                 android:columnCount="3"
                 android:orientation="horizontal"
-                android:rowCount="3" >
+                android:rowCount="3"
+                android:visibility="gone" >
 
                 <LinearLayout
                     android:id="@+id/fitsr_linearlayout"

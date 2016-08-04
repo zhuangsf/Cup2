@@ -33,4 +33,18 @@
                         android:textOff="@string/off"
                         android:textOn="@string/on" />
 
+                 <LinearLayout 
+				        android:orientation="vertical" 
+				        android:layout_width="fill_parent" 
+				        android:layout_height="fill_parent" 
+				        android:layout_weight="1">
+                    <ImageView
+                        android:id="@+id/delete_alarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:layout_gravity="right|center_vertical"
+                        android:src="@drawable/mode_remove_selector" />
+				</LinearLayout>
 </LinearLayout>
