@@ -13,6 +13,7 @@ import com.sf.cup2.utils.Utils;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
@@ -23,7 +24,10 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Message;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -31,6 +35,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -43,6 +49,9 @@ public class FragmentTime extends Fragment {
 	private final static String TAG = FragmentTime.class.getPackage().getName() + "."
 			+ FragmentTime.class.getSimpleName();
 	
+	
+	private final static int MAX_ALARM_NUMBER = 20;
+	private final static int MAX_ALARM_VISABLE_NUMBER = 3;   //初始3个可见
 	TextView alarm1;
 	TextView alarm2;
 	TextView alarm3;
@@ -72,14 +81,71 @@ public class FragmentTime extends Fragment {
 	
 	private ListView mAlarmsList;
 	private AlarmsListAdapter alarmsListAdapter;
+	ImageView add_alarm_button;
+	private SharedPreferences mSharedPreferences;
+	List<Map<String, Object>> mListData = new ArrayList<Map<String, Object>>();
+
+	private void updateAddButtonStatus()
+	{
+		int size = 0;
+
+		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
+			boolean bVisable=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+i, i>MAX_ALARM_VISABLE_NUMBER?false:true);
+		    if(bVisable)
+			{
+				size ++;
+			}
+		}		
+	
+		if (size == 20) {
+			add_alarm_button.setEnabled(false);
+			add_alarm_button.setClickable(false);
+			add_alarm_button.setBackground(getActivity().getResources().getDrawable(R.drawable.water_mode_add_disable));
+		} else {
+			add_alarm_button.setEnabled(true);
+			add_alarm_button.setClickable(true);
+			add_alarm_button.setBackground(getActivity().getResources().getDrawable(R.drawable.mode_add_selector));
+		}	
+	}
+	
+	//找到第一个不显示的序号
+	private void addAlarm()
+	{
+		int firstMatchNumber = 0;
+		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
+			boolean bVisable=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+i, i>MAX_ALARM_VISABLE_NUMBER?false:true);
+		    if(bVisable)
+			{
+		    	firstMatchNumber ++;
+			}
+		    else
+		    {
+		    	break;
+		    }
+		}	
+		if(firstMatchNumber > 20)
+		{
+			return;
+		}
+		
+		SharedPreferences.Editor e=Utils.getSharedPpreferenceEdit(getActivity());
+		e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+firstMatchNumber, true);
+		e.commit();
+		
+		updateAddButtonStatus();
+		getData();
+		alarmsListAdapter.notifyDataSetChanged();
+	}
+	
+	
+	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
-		SharedPreferences p;
-		p = Utils.getSharedPpreference(getActivity());
-		alarmEnable=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE, true);
+
+		mSharedPreferences = Utils.getSharedPpreference(getActivity());
+		alarmEnable=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE, true);
 	}
 
 	@Override
@@ -90,6 +156,19 @@ public class FragmentTime extends Fragment {
 		mAlarmsList = (ListView) v.findViewById(R.id.alarm_listview);
 		alarmsListAdapter = new AlarmsListAdapter(getData());
 		mAlarmsList.setAdapter(alarmsListAdapter);
+		
+		add_alarm_button = (ImageView) v.findViewById(R.id.add_alarm_button);
+		updateAddButtonStatus();
+		
+		add_alarm_button.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				addAlarm();
+			}
+		});		
+		
+		
+		
 		
 		alarm1 = (TextView) v.findViewById(R.id.alarm1);
 		switch1 = (Switch) v.findViewById(R.id.switch1);
@@ -178,42 +257,30 @@ public class FragmentTime extends Fragment {
 	
 
 	private List<Map<String, Object>> getData() {
-		
-		SharedPreferences p;
-		p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);		
-		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map;
-		for (int i = 0; i < 20; i++) {
-			
-
-			boolean checked=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
-			String time=p.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, "00:00");
-			boolean bVisable=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+i, i>3?false:true);
-	
-			if(bVisable)
+		mListData.clear();
+		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {		
+			boolean checked=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
+			String time=mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, "00:00");
+			boolean bVisable=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE+i, i>MAX_ALARM_VISABLE_NUMBER?false:true);
+				if(bVisable)
 			{
 			map = new HashMap<String, Object>();
 			map.put("time", (String)time);
 			map.put("status", (boolean)checked);
-			list.add(map);
+			mListData.add(map);
 			}
 		}
 
        
-        return list;
+        return mListData;
     }
 
 	//get the setting from preferrence
 	private void initAlarm(){
-		 //SharedPreferences 初始化界面
-			SharedPreferences p;
-			p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
-			
-			
-			
 			for(int i=0;i<9;i++){
-				boolean checked=p.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
-				String text=p.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, "00:00");
+				boolean checked=mSharedPreferences.getBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+i, false);
+				String text=mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, "00:00");
 				swtichList.get(i).setChecked(checked);
 				alarmList.get(i).setText(text);
 			}
@@ -302,11 +369,8 @@ public class FragmentTime extends Fragment {
 				}
 				
 				 //SharedPreferences保存数据
-				SharedPreferences p;
-				SharedPreferences.Editor e;
-				p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
-				e = p.edit();
-				
+	
+				SharedPreferences.Editor e = mSharedPreferences.edit();
 				e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON+index, isChecked);
 				e.commit();
 			}
@@ -392,10 +456,8 @@ public class FragmentTime extends Fragment {
 		}
 		
 		 //SharedPreferences保存数据
-		SharedPreferences p;
-		SharedPreferences.Editor e;
-		p = getActivity().getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
-		e = p.edit();
+
+		SharedPreferences.Editor e = mSharedPreferences.edit();
 		e.putString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME+i, timeString);
 		e.commit();
 		
@@ -410,10 +472,10 @@ public class FragmentTime extends Fragment {
 	 */
 	private void saveTimeAction(String time){
 		try {
-		SharedPreferences p = Utils.getSharedPpreference(getActivity());
+		
 		final JSONObject result = new JSONObject();
-		final String accountid = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
-		final String phone = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, "");
+		final String accountid = mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
+		final String phone = mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, "");
 		if(TextUtils.isEmpty(accountid)||TextUtils.isEmpty(phone)){
 			// it must be a bug   missing the accountid
 			return ;
