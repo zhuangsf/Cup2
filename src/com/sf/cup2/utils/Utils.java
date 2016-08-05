@@ -159,7 +159,7 @@ public class Utils {
 	 */
 	public static void Log(String s) {
 		if (isDebug) {
-			Log.i("xxxxxxxxxxxx", s);
+			Log.i("jockey", s);
 		}
 	}
 

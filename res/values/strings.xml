@@ -64,6 +64,7 @@
 	<string name="off">"关"</string>
     <string name="default_time">"00:00"</string>
     <string name="set_alarm">"设置闹钟"</string>
+    <string name="delete_alarm">"确定删除该闹钟?"</string>
 
     <declare-styleable name="GifTextureView"><attr format="reference|string" name="gifSource"/><attr format="boolean" name="isOpaque"/></declare-styleable>
     <declare-styleable name="GifView"><attr format="boolean" name="freezesAnimation"/></declare-styleable>
