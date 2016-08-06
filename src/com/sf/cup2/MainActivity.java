@@ -402,7 +402,6 @@ public class MainActivity extends Activity {
 
 	
 		
-		
 		//TODO  开发阶段先关闭了，发布测试再打开
 		//add bugly
 		//CrashReport.initCrashReport(getApplicationContext(), "3aad7025f9", false);
