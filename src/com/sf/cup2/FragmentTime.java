@@ -72,7 +72,7 @@ public class FragmentTime extends Fragment {
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					i > MAX_ALARM_VISABLE_NUMBER ? false : true);
+					false);
 			if (bVisable) {
 				size++;
 			}
@@ -98,8 +98,8 @@ public class FragmentTime extends Fragment {
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					i > MAX_ALARM_VISABLE_NUMBER ? false : true);
-			if (bVisable) {
+					false);
+			if (bVisable) {   //如果为true,则继续查找
 				firstMatchNumber++;
 			} else {
 				break;
@@ -127,7 +127,7 @@ public class FragmentTime extends Fragment {
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					i > MAX_ALARM_VISABLE_NUMBER ? false : true);
+					false);
 
 			if (bVisable) {
 				matchAlarmIDIndex++;
@@ -249,7 +249,7 @@ public class FragmentTime extends Fragment {
 					Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					i > MAX_ALARM_VISABLE_NUMBER ? false : true);
+					false);
 
 			Utils.Log(" index = " + i + " checked = " + checked
 					+ " bVisable = " + bVisable);
@@ -266,7 +266,7 @@ public class FragmentTime extends Fragment {
 					Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					i > MAX_ALARM_VISABLE_NUMBER ? false : true);
+					false);
 			if (bVisable) {
 				map = new HashMap<String, Object>();
 				map.put("time", (String) time);
@@ -471,7 +471,7 @@ public class FragmentTime extends Fragment {
 
 		private LayoutInflater mInflator;
 		private List<Map<String, Object>> alarmData;
-
+		private boolean supressEvent = false;
 		public AlarmsListAdapter(List<Map<String, Object>> data) {
 
 			mInflator = getActivity().getLayoutInflater();
@@ -515,12 +515,17 @@ public class FragmentTime extends Fragment {
 							+ getRealIndex(alarmPosition), false);
 			Log.e("jockey", "getView switchOn = " + switchOn
 					+ " alarmPosition = " + alarmPosition);
+			supressEvent = true;
 			switchView.setChecked(switchOn);
+			supressEvent = false;
 			switchView
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 						@Override
 						public void onCheckedChanged(CompoundButton buttonView,
 								boolean isChecked) {
+							
+							if(supressEvent)return;
+							
 							if (isChecked) {
 
 								/*
@@ -567,7 +572,7 @@ public class FragmentTime extends Fragment {
 							}
 						}
 					});
-
+			
 			alarm_index.setText(Integer.toString(position));
 			delete_alarm.setOnClickListener(new OnClickListener() {
 				@Override
