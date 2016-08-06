@@ -51,7 +51,7 @@ public class FragmentTime extends Fragment {
 			+ "." + FragmentTime.class.getSimpleName();
 
 	private final static int MAX_ALARM_NUMBER = 20;
-	private final static int MAX_ALARM_VISABLE_NUMBER = 3; // 初始3个可见
+	private final static int MAX_ALARM_VISABLE_NUMBER = 4; // 初始3个可见
 
 	Calendar c;
 
