@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.json.JSONObject;
 
@@ -25,9 +26,11 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,7 +55,7 @@ public class FragmentTime extends Fragment {
 
 	private final static int MAX_ALARM_NUMBER = 20;
 	private final static int MAX_ALARM_VISABLE_NUMBER = 4; // 初始3个可见
-
+	public static final long ONE_DAY = 1000L * 60 * 60 * 24;
 	Calendar c;
 
 	View maskView;
@@ -65,14 +68,103 @@ public class FragmentTime extends Fragment {
 	ImageView add_alarm_button;
 	private SharedPreferences mSharedPreferences;
 	List<Map<String, Object>> mListData = new ArrayList<Map<String, Object>>();
+	AlarmManager mAlarmManager;
 
+	
+	public void setNextAlarm()    //获得最近一个闹钟
+	{
+		int nextAlarmPosition = -1;
+		
+		Time t = new Time("GMT+8"); 
+		t.setToNow(); // 取得系统时间。
+		int year = t.year;
+		int month = t.month;
+		int date = t.monthDay;
+		int hour = (t.hour +8) % 24; // 0-23
+		int minute = t.minute;
+		int second = t.second;
+		int timeNow = hour * 60 + minute;
+		Log.e("jockey", "setNextAlarm hour =" + hour+" minute ="+minute+" second"+second);
+        int minMinutes = 24*60;
+        //获得下个最接近的闹钟
+		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
+			boolean bVisable = mSharedPreferences.getBoolean(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
+			boolean bSwitchOn = mSharedPreferences.getBoolean(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON + i, false);
+			if (bVisable && bSwitchOn) {
+				String time = mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
+				String[] timeArray = time.split(":");
+				int timeSet = Integer.parseInt(timeArray[0]) * 60 + Integer.parseInt(timeArray[1]);
+				
+				if(timeSet <= timeNow)
+				{
+					timeSet += 24*60;
+				}
+				
+				if((timeSet - timeNow) < minMinutes)
+				{
+					minMinutes = timeSet - timeNow;
+					nextAlarmPosition = i;
+				}
+			}
+		}
+		Log.e("jockey", "setNextAlarm nextAlarmPosition =" + nextAlarmPosition+" minMinutes ="+minMinutes);
+		//没有闹钟了
+		if(nextAlarmPosition == -1)
+		{
+			return;
+		}
+		
+
+		
+		
+	
+		long firstTime = SystemClock
+				.elapsedRealtime(); // 开机之后到现在的运行时间(包括睡眠时间)
+		long systemTime = System
+				.currentTimeMillis();
+		String timeString = mSharedPreferences.getString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + nextAlarmPosition, "00:00");
+		String[] timeArray = timeString
+				.split(":");
+
+		c.setTimeInMillis(System
+				.currentTimeMillis());
+		// 这里时区需要设置一下，不然会有8个小时的时间差
+		c.setTimeZone(TimeZone
+				.getTimeZone("GMT+8"));
+		c.set(Calendar.MINUTE,
+				Integer.parseInt(timeArray[1]));
+		c.set(Calendar.HOUR_OF_DAY,
+				Integer.parseInt(timeArray[0]));
+		c.set(Calendar.SECOND, 0);
+		c.set(Calendar.MILLISECOND, 0);
+	
+		long selectTime = c.getTimeInMillis();
+		// 如果当前时间大于设置的时间，那么就从第二天的设定时间开始
+		if (systemTime > selectTime) {
+			c.add(Calendar.DAY_OF_MONTH, 1);
+			selectTime = c.getTimeInMillis();
+		}
+		// 计算现在时间到设定时间的时间差
+		long time = selectTime - systemTime;
+		firstTime += time;
+		
+		mAlarmManager.cancel(getPendingIntent(nextAlarmPosition));
+		mAlarmManager.setRepeating(
+						AlarmManager.ELAPSED_REALTIME_WAKEUP,
+						firstTime,
+						ONE_DAY,
+						getPendingIntent(nextAlarmPosition));
+				
+	}
+	
 	private void updateAddButtonStatus() {
 		int size = 0;
 
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
-					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					false);
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
 			if (bVisable) {
 				size++;
 			}
@@ -97,9 +189,8 @@ public class FragmentTime extends Fragment {
 		int firstMatchNumber = 0;
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
-					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					false);
-			if (bVisable) {   //如果为true,则继续查找
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
+			if (bVisable) { // 如果为true,则继续查找
 				firstMatchNumber++;
 			} else {
 				break;
@@ -126,16 +217,15 @@ public class FragmentTime extends Fragment {
 		int matchAlarmIDIndex = -1;
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean bVisable = mSharedPreferences.getBoolean(
-					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					false);
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
 
 			if (bVisable) {
 				matchAlarmIDIndex++;
 			}
 
 			if (matchAlarmIDIndex == alarmID) {
-				Log.e("jockey", "getRealIndex matchAlarmIDIndex = " + matchAlarmIDIndex + " alarmID = " + alarmID);
-				dumpData();
+				Log.e("jockey", "getRealIndex matchAlarmIDIndex = "
+						+ matchAlarmIDIndex + " alarmID = " + alarmID);
 				return i;
 			}
 
@@ -161,9 +251,11 @@ public class FragmentTime extends Fragment {
 			e.putString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + realIndex,
 					"00:00");
 			e.commit();
-
+			mAlarmManager.cancel(getPendingIntent(realIndex));
 			updateAddButtonStatus();
 			getData();
+			
+			setNextAlarm();
 			alarmsListAdapter.notifyDataSetChanged();
 		}
 
@@ -176,6 +268,9 @@ public class FragmentTime extends Fragment {
 		mSharedPreferences = Utils.getSharedPpreference(getActivity());
 		alarmEnable = mSharedPreferences.getBoolean(
 				Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE, true);
+
+		mAlarmManager = (AlarmManager) getActivity().getSystemService(
+				Context.ALARM_SERVICE);
 	}
 
 	@Override
@@ -183,7 +278,7 @@ public class FragmentTime extends Fragment {
 			Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.tab_time, null);
 		c = Calendar.getInstance();
-
+				
 		mAlarmsList = (ListView) v.findViewById(R.id.alarm_listview);
 		alarmsListAdapter = new AlarmsListAdapter(getData());
 		mAlarmsList.setAdapter(alarmsListAdapter);
@@ -242,14 +337,14 @@ public class FragmentTime extends Fragment {
 	}
 
 	private void dumpData() {
+
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
 			boolean checked = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON + i, false);
 			String time = mSharedPreferences.getString(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
 			boolean bVisable = mSharedPreferences.getBoolean(
-					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					false);
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
 
 			Utils.Log(" index = " + i + " checked = " + checked
 					+ " bVisable = " + bVisable);
@@ -265,8 +360,7 @@ public class FragmentTime extends Fragment {
 			String time = mSharedPreferences.getString(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
 			boolean bVisable = mSharedPreferences.getBoolean(
-					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i,
-					false);
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
 			if (bVisable) {
 				map = new HashMap<String, Object>();
 				map.put("time", (String) time);
@@ -278,15 +372,6 @@ public class FragmentTime extends Fragment {
 		return mListData;
 	}
 
-	// get the setting from preferrence
-	/*
-	 * private void initAlarm() { for (int i = 0; i < 9; i++) { boolean checked
-	 * = mSharedPreferences.getBoolean( Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON +
-	 * i, false); String text = mSharedPreferences.getString(
-	 * Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, "00:00");
-	 * swtichList.get(i).setChecked(checked); alarmList.get(i).setText(text); }
-	 * }
-	 */
 	private void updateAlarm() {
 		if (!alarmEnable) {
 			// 2,update mask
@@ -298,26 +383,6 @@ public class FragmentTime extends Fragment {
 			time_logo.setImageResource(R.drawable.time_logo_enable);
 		}
 	}
-
-	/*
-	 * private void updateAlarmStatus() { if (!alarmEnable) { for (int i = 0; i
-	 * < 9; i++) { if (swtichList.get(i).isChecked()) { AlarmManager am =
-	 * (AlarmManager) getActivity() .getSystemService(Context.ALARM_SERVICE);
-	 * am.cancel(getPendingIntent(i)); } } } else { for (int i = 0; i < 9; i++)
-	 * { if (swtichList.get(i).isChecked()) { String timeString =
-	 * alarmList.get(i).getText().toString(); String[] timeArray =
-	 * timeString.split(":"); c.set(Calendar.HOUR_OF_DAY,
-	 * Integer.parseInt(timeArray[0])); c.set(Calendar.MINUTE,
-	 * Integer.parseInt(timeArray[1])); Utils.Log("xxxxxxxxx hour:" +
-	 * Integer.parseInt(timeArray[0]) + " min:" +
-	 * Integer.parseInt(timeArray[1])); if (c.getTimeInMillis() <
-	 * Calendar.getInstance() .getTimeInMillis()) { c.add(Calendar.DAY_OF_MONTH,
-	 * 1); } long tmpMills = c.getTimeInMillis() - System.currentTimeMillis();
-	 * AlarmManager am = (AlarmManager) getActivity()
-	 * .getSystemService(Context.ALARM_SERVICE);
-	 * am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-	 * AlarmManager.INTERVAL_DAY, getPendingIntent(i)); } } } }
-	 */
 
 	private Intent getIntent(int requestCode) {
 		Intent intent = new Intent(getActivity(), MainActivity.class);
@@ -336,77 +401,6 @@ public class FragmentTime extends Fragment {
 		return senderPI;
 	}
 
-	private boolean isTimePickerOk = false;
-
-	/*
-	 * private void setAlarmTextClickListener(final int index) {
-	 * alarmList.get(index).setOnClickListener(new OnClickListener() {
-	 * 
-	 * @Override public void onClick(View v) { // 选中的时候设置他的初始值 String timeString
-	 * = alarmList.get(index).getText().toString(); String[] timeArray =
-	 * timeString.split(":"); c.set(Calendar.HOUR_OF_DAY,
-	 * Integer.parseInt(timeArray[0])); c.set(Calendar.MINUTE,
-	 * Integer.parseInt(timeArray[1])); Utils.Log("xxxxxxxxx hour:" +
-	 * Integer.parseInt(timeArray[0]) + " min:" +
-	 * Integer.parseInt(timeArray[1])); if (c.getTimeInMillis() <
-	 * Calendar.getInstance() .getTimeInMillis()) { c.add(Calendar.DAY_OF_MONTH,
-	 * 1); } int hour = c.get(Calendar.HOUR_OF_DAY); int minute =
-	 * c.get(Calendar.MINUTE);
-	 * 
-	 * TimePickerDialog tpd = new TimePickerDialog(getActivity(), new
-	 * OnTimeSetListener() {
-	 * 
-	 * @Override public void onTimeSet(TimePicker view, int hourOfDay, int
-	 * minute) { if (!isTimePickerOk) { return; } c = timePicker(index,
-	 * hourOfDay, minute); // TODO there is a bug that cant cancel or // return
-	 * fix it if (!swtichList.get(index).isChecked()) {
-	 * swtichList.get(index).setChecked(true); } else { long tmpMills =
-	 * c.getTimeInMillis() - System.currentTimeMillis(); //
-	 * Toast.makeText(getActivity(), // "闹钟"+(index+1)+" 设置:" + //
-	 * Utils.formatTime(tmpMills) + // "后",Toast.LENGTH_LONG).show(); //
-	 * todo后续修改 AlarmManager am = (AlarmManager) getActivity()
-	 * .getSystemService( Context.ALARM_SERVICE);
-	 * am.setRepeating(AlarmManager.RTC_WAKEUP, c.getTimeInMillis(),
-	 * AlarmManager.INTERVAL_DAY, getPendingIntent(index)); } } }, hour, minute,
-	 * true); if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-	 * Utils.Log("android version newer than L"); isTimePickerOk = true; } else
-	 * { Utils.Log("android version older than KK");
-	 * tpd.setButton(DialogInterface.BUTTON_POSITIVE,
-	 * getResources().getString(R.string.ok), new
-	 * DialogInterface.OnClickListener() {
-	 * 
-	 * @Override public void onClick(DialogInterface dialog, int which) {
-	 * isTimePickerOk = true; } });
-	 * tpd.setButton(DialogInterface.BUTTON_NEGATIVE,
-	 * getResources().getString(R.string.cancel), new
-	 * DialogInterface.OnClickListener() {
-	 * 
-	 * @Override public void onClick(DialogInterface dialog, int which) {
-	 * isTimePickerOk = false; } }); } tpd.show(); } }); }
-	 * 
-	 * private Calendar timePicker(int i, int hourOfDay, int minute) { String
-	 * timeString = minute < 10 ? hourOfDay + ":0" + minute : hourOfDay + ":" +
-	 * minute; alarmList.get(i).setText(timeString);
-	 * 
-	 * c.setTimeInMillis(System.currentTimeMillis());
-	 * c.set(Calendar.HOUR_OF_DAY, hourOfDay); c.set(Calendar.MINUTE, minute);
-	 * c.set(Calendar.SECOND, 0); c.set(Calendar.MILLISECOND, 0);
-	 * Utils.Log("xxxxxxxxx edit alarm :" + hourOfDay + ":" + minute + ":" +
-	 * c.getTimeInMillis() + ":" + Calendar.getInstance().getTimeInMillis()); //
-	 * 避免设置时间比当前时间小时 马上响应的情况发生 if (c.getTimeInMillis() <
-	 * Calendar.getInstance().getTimeInMillis()) { //
-	 * c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) + 1);
-	 * c.add(Calendar.DAY_OF_MONTH, 1); Utils.Log("xxxxxxxxx edit alarm 2:" +
-	 * (c.get(Calendar.MONTH) + 1) + ":" + c.get(Calendar.DAY_OF_MONTH)); }
-	 * 
-	 * // SharedPreferences保存数据
-	 * 
-	 * SharedPreferences.Editor e = mSharedPreferences.edit();
-	 * e.putString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME + i, timeString);
-	 * e.commit();
-	 * 
-	 * // send to server saveTimeAction(timeString); return c; }
-	 */
 	/**
 	 * 
 	 * @param time
@@ -472,6 +466,7 @@ public class FragmentTime extends Fragment {
 		private LayoutInflater mInflator;
 		private List<Map<String, Object>> alarmData;
 		private boolean supressEvent = false;
+
 		public AlarmsListAdapter(List<Map<String, Object>> data) {
 
 			mInflator = getActivity().getLayoutInflater();
@@ -496,6 +491,106 @@ public class FragmentTime extends Fragment {
 			return position;
 		}
 
+		private boolean isTimePickerOk = false;
+
+		
+
+		
+		private void setAlarmTextClickListener(final TextView alarm_time,
+				final int position, final boolean bChecked) {
+			alarm_time.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+
+					String timeString = alarm_time.getText().toString();
+					String[] timeArray = timeString.split(":");
+					c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
+					c.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]));
+
+					if (c.getTimeInMillis() < Calendar.getInstance()
+							.getTimeInMillis()) {
+						c.add(Calendar.DAY_OF_MONTH, 1);
+					}
+					int hour = c.get(Calendar.HOUR_OF_DAY);
+					int minute = c.get(Calendar.MINUTE);
+
+					TimePickerDialog tpd = new TimePickerDialog(getActivity(),
+							new OnTimeSetListener() {
+								@Override
+								public void onTimeSet(TimePicker view,
+										int hourOfDay, int minute) {
+									if (!isTimePickerOk) {
+										return;
+									}
+									c = timePicker(alarm_time, hourOfDay,
+											minute, position);
+									// TODO there is a bug that cant cancel or
+									// return fix it
+									Log.e("jockey", "onTimeSet position = "
+											+ position + " bChecked = "
+											+ bChecked);
+								}
+							}, hour, minute, true);
+					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+						Utils.Log("android version newer than L");
+						isTimePickerOk = true;
+					} else {
+						Utils.Log("android version older than KK");
+						tpd.setButton(DialogInterface.BUTTON_POSITIVE,
+								getResources().getString(R.string.ok),
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										isTimePickerOk = true;
+									}
+								});
+						tpd.setButton(DialogInterface.BUTTON_NEGATIVE,
+								getResources().getString(R.string.cancel),
+								new DialogInterface.OnClickListener() {
+									@Override
+									public void onClick(DialogInterface dialog,
+											int which) {
+										isTimePickerOk = false;
+									}
+								});
+					}
+					tpd.show();
+				}
+			});
+		}
+
+		private Calendar timePicker(TextView alarm_time, int hourOfDay,
+				int minute, final int position) {
+			String timeString = minute < 10 ? hourOfDay + ":0" + minute
+					: hourOfDay + ":" + minute;
+			alarm_time.setText(timeString);
+
+			c.setTimeInMillis(System.currentTimeMillis());
+			c.set(Calendar.HOUR_OF_DAY, hourOfDay);
+			c.set(Calendar.MINUTE, minute);
+			c.set(Calendar.SECOND, 0);
+			c.set(Calendar.MILLISECOND, 0);
+			Utils.Log("xxxxxxxxx edit alarm :" + hourOfDay + ":" + minute + ":"
+					+ c.getTimeInMillis() + ":"
+					+ Calendar.getInstance().getTimeInMillis());
+
+			if (c.getTimeInMillis() < Calendar.getInstance().getTimeInMillis()) {
+				// c.set(Calendar.DAY_OF_MONTH, c.get(Calendar.DAY_OF_MONTH) +
+				// 1);
+				c.add(Calendar.DAY_OF_MONTH, 1);
+			}
+
+			SharedPreferences.Editor e = mSharedPreferences.edit();
+			e.putString(Utils.SHARE_PREFERENCE_CUP_ALARM_TIME
+					+ getRealIndex(position), timeString);
+			e.commit();
+			setNextAlarm();
+			// send to server
+			// saveTimeAction(timeString);
+			return c;
+		}
+
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			// TODO Auto-generated method stub
@@ -513,6 +608,15 @@ public class FragmentTime extends Fragment {
 			boolean switchOn = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON
 							+ getRealIndex(alarmPosition), false);
+
+			final TextView alarm_time = (TextView) convertView
+					.findViewById(R.id.alarm_time);
+			String time = mSharedPreferences.getString(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_TIME
+							+ getRealIndex(alarmPosition), "00:00");
+			alarm_time.setText(time);
+			setAlarmTextClickListener(alarm_time, position, switchOn);
+
 			Log.e("jockey", "getView switchOn = " + switchOn
 					+ " alarmPosition = " + alarmPosition);
 			supressEvent = true;
@@ -523,57 +627,26 @@ public class FragmentTime extends Fragment {
 						@Override
 						public void onCheckedChanged(CompoundButton buttonView,
 								boolean isChecked) {
-							
-							if(supressEvent)return;
-							
-							if (isChecked) {
 
-								/*
-								 * String timeString =
-								 * alarmList.get(index).getText() .toString();
-								 * String[] timeArray = timeString.split(":");
-								 * c.set(Calendar.HOUR_OF_DAY,
-								 * Integer.parseInt(timeArray[0]));
-								 * c.set(Calendar.MINUTE,
-								 * Integer.parseInt(timeArray[1]));
-								 * Utils.Log("xxxxxxxxx hour:" +
-								 * Integer.parseInt(timeArray[0]) + " min:" +
-								 * Integer.parseInt(timeArray[1])); if
-								 * (c.getTimeInMillis() < Calendar.getInstance()
-								 * .getTimeInMillis()) {
-								 * c.add(Calendar.DAY_OF_MONTH, 1); } long
-								 * tmpMills = c.getTimeInMillis() -
-								 * System.currentTimeMillis(); //
-								 * Toast.makeText(getActivity(), //
-								 * "闹钟"+(index+1)+" 设置:" + //
-								 * Utils.formatTime(tmpMills) + "后", //
-								 * Toast.LENGTH_LONG).show(); // todo 后续再修改字符串
-								 * 
-								 * AlarmManager am = (AlarmManager)
-								 * getActivity()
-								 * .getSystemService(Context.ALARM_SERVICE);
-								 * am.setRepeating(AlarmManager.RTC_WAKEUP,
-								 * c.getTimeInMillis(),
-								 * AlarmManager.INTERVAL_DAY,
-								 * getPendingIntent(index));
-								 * 
-								 * } else { AlarmManager am = (AlarmManager)
-								 * getActivity()
-								 * .getSystemService(Context.ALARM_SERVICE);
-								 * am.cancel(getPendingIntent(index)); }
-								 */
-								// SharedPreferences保存数据
+							if (supressEvent)
+								return;
 
-								SharedPreferences.Editor e = mSharedPreferences.edit();
-								Log.e("jockey", "onCheckedChanged isChecked = " + isChecked + " getRealIndex(alarmPosition) = " + getRealIndex(alarmPosition));
-								e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON + getRealIndex(alarmPosition),isChecked);
-								e.commit();
-								dumpData();
-							}
+							// SharedPreferences保存数据
+							SharedPreferences.Editor e = mSharedPreferences
+									.edit();
+							Log.e("jockey", "onCheckedChanged isChecked = "
+									+ isChecked
+									+ " getRealIndex(alarmPosition) = "
+									+ getRealIndex(alarmPosition));
+							e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON
+									+ getRealIndex(alarmPosition), isChecked);
+							e.commit();
+							
+							setNextAlarm();
 						}
 					});
-			
-			alarm_index.setText(Integer.toString(position));
+
+			alarm_index.setText(Integer.toString(position + 1));
 			delete_alarm.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
@@ -588,9 +661,6 @@ public class FragmentTime extends Fragment {
 										public void onClick(
 												DialogInterface dialog,
 												int which) {
-											Log.e("jockey",
-													"onClick alarmPosition ="
-															+ alarmPosition);
 											deleteAlarm(alarmPosition);
 
 										}
