@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 	RadioGroup myTabRg;
 	RadioButton myTabRadioButton;
 	FragmentHome fHome;
-//	FragmentData fData;
+	FragmentData fData;
 	FragmentTime fTime;
 	FragmentWater fWater;
 //	FragmentMe fMe;
@@ -66,16 +66,20 @@ public class MainActivity extends Activity {
 	private int[] mRadioButton = {
 			R.id.rbTime,
 			R.id.rbWater,
+			R.id.rbData, 
 			R.id.rbHome, 
+			
 			};
 	private Fragment[] mFragmentArray = { 
 			fTime,
 			fWater,
+			fData,
 			fHome, 
 			};
 	private String[] mFragmentTag = { 
 			TAG_TIME,
 			TAG_WATER,
+			TAG_DATA,
 			TAG_HOME, 
 			};
 
@@ -394,7 +398,7 @@ public class MainActivity extends Activity {
 		{
 
 			Utils.Log("xxxxxxxxxxxxxxxxxx onCreate home:" + fWater);
-			getFragmentManager().beginTransaction().show(fWater).commit();
+			getFragmentManager().beginTransaction().show(fData).commit();
 		}
 
 		// if from alarm show the dialog
@@ -563,6 +567,17 @@ public class MainActivity extends Activity {
 		}
 		ft.hide(fWater);
 		mTab.add(fWater);
+		
+		fragment= fm.findFragmentByTag(TAG_DATA);
+		if (fragment != null) {// 如果有，则使用，处理翻转之后状态未保存问题
+			fData = (FragmentData) fragment;
+		} else {// 如果为空，才去新建，不新建切换的时候就可以保存状态了。
+			fData = FragmentData.newInstance(null);
+			ft.add(R.id.fragmentfield, fData, TAG_DATA);
+		}
+		ft.hide(fData);
+		mTab.add(fData);		
+		
 		
 		fragment= fm.findFragmentByTag(TAG_HOME);
 		if (fragment != null) {// 如果有，则使用，处理翻转之后状态未保存问题

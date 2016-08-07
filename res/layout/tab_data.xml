@@ -13,25 +13,15 @@
             android:paddingBottom="5dp"
             android:paddingTop="5dp" >
 
- <!-- Logo Start -->
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@+id/title"
-                android:layout_marginLeft="10dp"
-                android:src="@drawable/ic_launcher" />
- <!-- Logo Ends -->            
             <TextView
                 android:id="@id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
-                android:text="数据"
+                android:text="@string/waterdata_title"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
-           
 
-           
         </RelativeLayout>
     
     <TextView 

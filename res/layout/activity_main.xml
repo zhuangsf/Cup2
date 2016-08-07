@@ -56,6 +56,21 @@
             android:checked="true"
             android:textColor="@color/tab_selector_font_color" />
  
+        <RadioButton
+            android:id="@+id/rbData"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:layout_weight="1"
+            android:background="@drawable/tab_selector_checked_bg"
+            android:button="@null"
+            android:drawableTop="@drawable/tab_selector_water"
+            android:gravity="center_horizontal|bottom"
+            android:paddingTop="2dp"
+            android:text="@string/waterdata"
+            android:checked="true"
+            android:textColor="@color/tab_selector_font_color" />        
+        
          <RadioButton
             android:id="@+id/rbHome"
             android:layout_width="0dp"
