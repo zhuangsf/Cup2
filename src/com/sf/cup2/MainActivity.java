@@ -405,6 +405,24 @@ public class MainActivity extends Activity {
 		startFromAlarm(getIntent());
 
 	
+		/*    喝水量数据测试
+		DBAdapter db = new DBAdapter(this);
+		db.open();
+		long id;
+		id = db.insertWaterData(
+		"20160803",
+		"18:00",
+		"100");
+		id = db.insertWaterData(
+		"20160803",
+		"18:05",
+		"100");
+		
+		db.dumpData();
+		db.close();
+		*/
+		
+		
 		
 		//TODO  开发阶段先关闭了，发布测试再打开
 		//add bugly
