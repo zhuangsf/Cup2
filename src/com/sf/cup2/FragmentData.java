@@ -15,6 +15,7 @@ import com.github.mikephil.charting.components.Legend.LegendForm;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 
 import android.app.Fragment;
@@ -40,10 +41,7 @@ public class FragmentData extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View view = inflater.inflate(R.layout.tab_data, null);
     	mChart = (LineChart)view.findViewById(R.id.chart);
-    	
-        mChart.setDescription("");
-        mChart.setNoDataTextDescription("You need to provide data for the chart.");
-    	
+        	
         LineData mLineData = LineData(24);
 
         setChartStyle(mChart, mLineData);        
@@ -58,6 +56,9 @@ public class FragmentData extends Fragment {
           // 将x轴放到底部 默认在顶部
           XAxis mXAxis = mlinechart.getXAxis();
           mXAxis.setPosition(XAxisPosition.TOP);
+          
+          mXAxis.setDrawAxisLine(false);
+          
           LimitLine ll = new LimitLine(35f, "警戒线");  
           ll.setLineColor(Color.RED);  
           ll.setLineWidth(1f);  
@@ -67,7 +68,8 @@ public class FragmentData extends Fragment {
           // .. and more styling options  
           YAxis leftAxis = mlinechart.getAxisLeft();
           YAxis rightAxis = mlinechart.getAxisRight();
-          
+          leftAxis.setDrawGridLines(false);
+          rightAxis.setDrawGridLines(false);
           rightAxis.setEnabled(false);
           leftAxis.addLimitLine(ll);  	  
     	  
@@ -75,7 +77,7 @@ public class FragmentData extends Fragment {
           // 是否在折线上添加边框
           mlinechart.setDrawBorders(false);
           // 数据描述
-          //mlinechart.setDescription("温度记录数据");
+          mlinechart.setDescription("   ");
           // 如果没有数据的时候，会显示这个，类似listview的emtpyview
           mlinechart.setNoDataTextDescription("喝水量异常,请检查与水杯蓝牙连接");
           // 是否绘制背景颜色。
@@ -95,6 +97,7 @@ public class FragmentData extends Fragment {
        //   mlinechart.setBackgroundColor(Color.YELLOW);
           // 设置x y轴的数据
           mlinechart.setData(mLineData);
+
           // 设置比例图标，就是那一组y的value的
           Legend mLegend = mlinechart.getLegend();
           mLegend.setPosition(LegendPosition.BELOW_CHART_CENTER);
@@ -127,7 +130,7 @@ public class FragmentData extends Fragment {
               y.add(entry);
           }
           // y轴的数据集
-          LineDataSet set = new LineDataSet(y, "");
+          LineDataSet set = new LineDataSet(y, "   ");
           // 用y轴的集合来设置参数
           // 线宽
           set.setLineWidth(3.0f);
@@ -176,7 +179,7 @@ public class FragmentData extends Fragment {
              }
          });
   
-         ArrayList<LineDataSet> mLineDataSets = new ArrayList<LineDataSet>();
+         ArrayList<ILineDataSet> mLineDataSets = new ArrayList<ILineDataSet>();
          mLineDataSets.add(set);
  
          LineData mLineData = new LineData(x, mLineDataSets);
