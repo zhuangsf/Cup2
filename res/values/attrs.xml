@@ -4,4 +4,34 @@
         <attr name="border_width" format="dimension" />
         <attr name="border_color" format="color" />
     </declare-styleable>
+    
+    <declare-styleable name="CricleProgressBar">  
+            <attr name="cricleColor" format="color" />
+	    <attr name="cricleProgressColor" format="color" />
+	    <attr name="appsProgressColor" format="color" />
+	    <attr name="systemProgressColor" format="color" />
+	    <attr name="imageProgressColor" format="color" />
+	    <attr name="videoProgressColor" format="color" />
+	    <attr name="audioProgressColor" format="color" />
+	    <attr name="otherProgressColor" format="color" />
+	    <attr name="cacheProgressColor" format="color" />
+	    <attr name="cricleWidth" format="dimension" />
+	    <attr name="textColor" format="color" />
+	    <attr name="textSize" format="dimension" />
+	    <attr name="maxProgress" format="integer" />
+	    <attr name="currentProgress" format="integer" />
+	    <attr name="appsProgress" format="integer" />
+	    <attr name="systemProgress" format="integer" />
+	    <attr name="imageProgress" format="integer" />
+	    <attr name="videoProgress" format="integer" />
+	    <attr name="audioProgress" format="integer" />
+	    <attr name="otherProgress" format="integer" />
+	    <attr name="cacheProgress" format="integer" />
+	    <attr name="textIsDisplayable" format="boolean" />
+	    <attr name="style">
+	        <enum name="FILL" value="1" />
+	        <enum name="STROKE" value="0" />
+	    </attr>
+    </declare-styleable>     
+    
 </resources>

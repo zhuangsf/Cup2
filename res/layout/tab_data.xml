@@ -23,13 +23,48 @@
                 android:textSize="20sp" />
 
         </RelativeLayout>
-    <!--  
+
+               <LinearLayout
+            android:id="@+id/top"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical" 
+            android:layout_weight="1"
+		>
 		<com.sf.cup2.view.ArcProgressbar
 		    android:id="@+id/arcProgressbar_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
- -->
-
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" 
+            />
+  </LinearLayout>
+       <LinearLayout
+            android:id="@+id/bottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" 
+            android:gravity="bottom"
+		>
+		<View  
+   android:layout_width="fill_parent"  
+    android:layout_height="2px" 
+   android:background="?android:attr/listDivider" 
+   android:layout_marginBottom="3px"
+/>  
+       <TextView
+           android:id="@+id/datatime"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:text="2016年8月18日"
+           android:textColor="@android:color/black"
+           android:textSize="20sp" 
+           android:gravity="center"
+           />		
+<View  
+   android:layout_width="fill_parent"  
+    android:layout_height="2px" 
+   android:background="?android:attr/listDivider"  
+   android:layout_marginTop="3px"
+/>  
        <com.github.mikephil.charting.charts.LineChart
            android:id="@+id/chart"
            android:layout_width="match_parent"
@@ -38,4 +73,5 @@
 
        </com.github.mikephil.charting.charts.LineChart>
  
+        </LinearLayout>
 </LinearLayout>

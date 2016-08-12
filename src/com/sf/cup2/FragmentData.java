@@ -17,6 +17,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.sf.cup2.view.CricleProgressBar;
 
 import android.app.Fragment;
 import android.graphics.Color;
@@ -27,11 +28,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class FragmentData extends Fragment {
- 
+	
+    static final int COLOR_PUBLIC = Color.parseColor("#ff00cd66");
+    static final int COLOR_WARNING = Color.parseColor("#fff4511e");
+    
     protected String[] mMonths = new String[] {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
     };
-	LineChart mChart;
+	private LineChart mChart;
+	private CricleProgressBar cpb;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +50,13 @@ public class FragmentData extends Fragment {
         LineData mLineData = LineData(24);
 
         setChartStyle(mChart, mLineData);        
-        
-        
+        /*
+        cpb = (CricleProgressBar)view.findViewById(R.id.cricleProgress);
+        cpb.setVisibility(View.VISIBLE);
+	      cpb.setCricleProgressColor(COLOR_PUBLIC);
+	      cpb.setProgressWithAnimation(45);
+	      cpb.setTextColor(COLOR_PUBLIC);
+        */
         return view;
     }
  
@@ -59,7 +69,7 @@ public class FragmentData extends Fragment {
           
           mXAxis.setDrawAxisLine(false);
           
-          LimitLine ll = new LimitLine(35f, "警戒线");  
+          LimitLine ll = new LimitLine(35f, "500ml");  
           ll.setLineColor(Color.RED);  
           ll.setLineWidth(1f);  
           ll.enableDashedLine(10f, 5f, 0f);
