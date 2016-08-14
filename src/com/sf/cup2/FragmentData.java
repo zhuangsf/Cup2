@@ -17,8 +17,10 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.sf.cup2.view.ArcProgressbar;
 import com.sf.cup2.view.CricleProgressBar;
 
+import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -26,6 +28,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 
 public class FragmentData extends Fragment {
 	
@@ -36,7 +39,7 @@ public class FragmentData extends Fragment {
             "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Okt", "Nov", "Dec"
     };
 	private LineChart mChart;
-	private CricleProgressBar cpb;
+	private ArcProgressbar cpb;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,13 +53,14 @@ public class FragmentData extends Fragment {
         LineData mLineData = LineData(24);
 
         setChartStyle(mChart, mLineData);        
-        /*
-        cpb = (CricleProgressBar)view.findViewById(R.id.cricleProgress);
-        cpb.setVisibility(View.VISIBLE);
-	      cpb.setCricleProgressColor(COLOR_PUBLIC);
-	      cpb.setProgressWithAnimation(45);
-	      cpb.setTextColor(COLOR_PUBLIC);
-        */
+   
+        cpb = (ArcProgressbar)view.findViewById(R.id.arcProgressbar_view);
+        ObjectAnimator oObjectAnimator = ObjectAnimator.ofInt(cpb, "progress", 0,220);
+        oObjectAnimator.setDuration(1000L);
+        oObjectAnimator.setInterpolator(new DecelerateInterpolator());
+        oObjectAnimator.start();
+        
+ 
         return view;
     }
  
