@@ -107,16 +107,21 @@ public class ArcProgressbar extends View {
 
 	private void init(Canvas canvas) {
 		// 画弧形的矩阵区域。
-		
-		int offsetx = 80;
-		int offsety = 80;
-		       
+
 		// 计算弧形的圆心和半径。
-		int cx1 = mScreenW / 2;
-		int cy1 = (diameter + offsety) / 2;
-		int arcRadius = diameter / 2;
+		//int cx1 = mScreenW / 2;
+		//int cy1 = (diameter + offsety) / 2;
+		//int arcRadius = diameter / 2;
 		
-		rectBg = new RectF(cx1 - arcRadius, offsety, cx1 + arcRadius, diameter+offsety);
+		canvas.translate((mScreenW - diameter - 50)/2, 50);  
+		
+		
+        int cx1 = (diameter + 50) / 2;
+        int cy1 = (diameter + 50) / 2;
+        int arcRadius = (diameter - 50) / 2;
+        
+        rectBg = new RectF(50, 50, diameter, diameter);
+		//rectBg = new RectF(cx1 - arcRadius, offsety, cx1 + arcRadius, diameter+offsety);
 		// ProgressBar结尾和开始画2个圆，实现ProgressBar的圆角。
 
 		mPaintCircle.setColor(bgColor);

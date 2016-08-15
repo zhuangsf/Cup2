@@ -56,8 +56,8 @@ public class FragmentData extends Fragment {
    
         cpb = (ArcProgressbar)view.findViewById(R.id.arcProgressbar_view);
         ObjectAnimator oObjectAnimator = ObjectAnimator.ofInt(cpb, "progress", 0,220);
-        oObjectAnimator.setDuration(1000L);
-        oObjectAnimator.setInterpolator(new DecelerateInterpolator());
+        oObjectAnimator.setDuration(2000L);
+      //  oObjectAnimator.setInterpolator(new DecelerateInterpolator());
         oObjectAnimator.start();
         
  
