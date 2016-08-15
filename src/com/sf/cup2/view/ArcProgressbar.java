@@ -50,6 +50,19 @@ public class ArcProgressbar extends View {
 	public ArcProgressbar(Context context, AttributeSet attrs) {
 		super(context, attrs);
 
+	    DisplayMetrics dm = new DisplayMetrics();
+	    WindowManager mWm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);   
+	    mWm.getDefaultDisplay().getMetrics(dm);
+	    mScreenW = dm.widthPixels;    //得到宽度
+	    mScreenH = dm.heightPixels;  //得到高度		
+		Log.e("jockey", "ArcProgressbar mScreenW =" + mScreenW+" mScreenH ="+mScreenH);
+		
+		if(mScreenW == 480)
+		{
+	//		bgStrokeWidth = 40;
+	//		barStrokeWidth = 40;
+		}
+		
 		mPaintCircle = new Paint();
 		mPaintCircle.setAntiAlias(true);
 		mPaintCircle.setColor(bgColor);
@@ -78,14 +91,8 @@ public class ArcProgressbar extends View {
 		mPaintLine.setColor(Color.GREEN);  
 		mPaintLine.setTypeface(Typeface.DEFAULT_BOLD); 
 
-	    DisplayMetrics dm = new DisplayMetrics();
-	    WindowManager mWm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);   
-	    mWm.getDefaultDisplay().getMetrics(dm);
-	    mScreenW = dm.widthPixels;    //得到宽度
-	    mScreenH = dm.heightPixels;  //得到高度		
-		Log.e("jockey", "ArcProgressbar mScreenW =" + mScreenW+" mScreenH ="+mScreenH);
-		
-		diameter = mScreenW * 3 / 5; //直径为宽度3/5
+
+		diameter = mScreenW * 4 / 5; //直径为宽度4/5
 		
 	}
 
@@ -113,7 +120,15 @@ public class ArcProgressbar extends View {
 		//int cy1 = (diameter + offsety) / 2;
 		//int arcRadius = diameter / 2;
 		
-		canvas.translate((mScreenW - diameter - 50)/2, 50);  
+		if(mScreenW == 480)
+		{
+			canvas.translate((mScreenW - diameter - 50)/2, 0);  
+		}
+		else
+		{
+			canvas.translate((mScreenW - diameter - 50)/2, 50);  
+		}
+		
 		
 		
         int cx1 = (diameter + 50) / 2;
