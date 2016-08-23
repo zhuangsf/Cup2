@@ -593,7 +593,7 @@ public class FragmentWater extends Fragment {
 		  @Override
 		public void run() {
 			  //ask temp  not need to send msg  when bt return temp msg it will user setCurrentTemperatureFromBT
-			  ((MainActivity)getActivity()).sentAskTemperature();
+	//		  ((MainActivity)getActivity()).sentAskTemperature();
 			  }
 		};
 		 

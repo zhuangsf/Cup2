@@ -1,6 +1,7 @@
 package com.sf.cup2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -35,6 +36,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -140,6 +142,10 @@ public class MainActivity extends Activity {
     private BluetoothLeService mBluetoothLeService;
     private boolean mConnected = false;
     private BluetoothGattCharacteristic mNotifyCharacteristic;
+    
+    private ArrayList<ArrayList<BluetoothGattCharacteristic>> mGattCharacteristics =
+            new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+    
     private final String LIST_NAME = "NAME";
     private final String LIST_UUID = "UUID";
     private boolean iServiceBind=true;
@@ -201,7 +207,7 @@ public class MainActivity extends Activity {
    					progressDialog.dismiss();
    					mHandler.removeMessages(MSG_STOP_WAIT_BT);//connect success remove the hint
    		        }
-               // Toast.makeText(MainActivity.this, "蓝牙水杯已连接", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "蓝牙水杯已连接", Toast.LENGTH_SHORT).show();
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 Utils.Log("xxxxxxxxxxxxxxxxxx BroadcastReceiver ACTION_GATT_DISCONNECTED mConnected:"+mConnected);
@@ -214,12 +220,23 @@ public class MainActivity extends Activity {
 			//		 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
 			//	 }
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
-            	try {
+            
                 // Show all the supported services and characteristics on the user interface.
-//                displayGattServices(mBluetoothLeService.getSupportedGattServices());
+                displayGattServices(mBluetoothLeService.getSupportedGattServices());
+                
+                //sentMsgToBt("test","test","test");
+                
+                Utils.Log("ACTION_GATT_SERVICES_DISCOVERED");
+                
+                BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+				BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));   
+				mBluetoothLeService.readCharacteristic(characteristic);
+
                 // after discovered  set
                 //service 0000ffe0-0000-1000-8000-00805f9b34fb
                 //characteristic 0000ffe4-0000-1000-8000-00805f9b34fb
+                
+                /*     这里是上个项目的wuyx,可能uuid不对应,所以导致了会报错
                 BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString(Utils.BT_GET_SERVICE_UUID));
 				BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString(Utils.BT_GET_CHARACTERISTIC_UUID));
                 mBluetoothLeService.setCharacteristicNotification(characteristic, true);
@@ -229,7 +246,8 @@ public class MainActivity extends Activity {
   					progressDialog.dismiss();
   					Utils.Log(" mHandler.removeMessages="+mHandler.hasMessages(MSG_STOP_WAIT_BT));
   					mHandler.removeMessages(MSG_STOP_WAIT_BT);//connect success remove the hint
-  				}
+  				}*/
+            	try {
                 //TODO  if receiver ACTION_GATT_SERVICES_DISCOVERED not my btdevice. i dont want to handle it now.
             	} catch (Exception e) {
             		Utils.Log(TAG,"ACTION_GATT_SERVICES_DISCOVERED   e="+e.toString());
@@ -237,19 +255,12 @@ public class MainActivity extends Activity {
             } else if (BluetoothLeService.ACTION_DATA_AVAILABLE.equals(action)) {
 //                displayData(intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
             	try {
-	                Utils.Log("xxxxxxxxxxxxxxxxxx this is respone what i need:"+intent.getStringExtra(BluetoothLeService.EXTRA_DATA_NEED));
+	                Utils.Log("this is respone what i need:"+intent.getStringExtra(BluetoothLeService.EXTRA_DATA_NEED));
+	                Utils.Log("ACTION_DATA_AVAILABLE :"+intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
 	                String responeString=intent.getStringExtra(BluetoothLeService.EXTRA_DATA_NEED);
 	                String[] responeStringArray=responeString.split(" ");
 	                if("02".equals(responeStringArray[1])){
-	                	int temp=Integer.parseInt(responeStringArray[3]+responeStringArray[2], 16);
-	                	fWater.setCurrentTemperatureFromBT(temp/10+(temp%10>=5?1:0));
-	                    if(progressDialog!=null&&progressDialog.isShowing()){
-	    					progressDialog.dismiss();
-	    				}
 	                }else if("88".equals(responeStringArray[1])){
-	                	Thread.sleep(1000);
-	                	
-	                	fWater.setSelectTemperatureFromBT();
 	                }
 	                //TODO  if receiver FF means the cup is out of power. but i dont want to handle it now.
             	} catch (Exception e) {
@@ -258,6 +269,63 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void displayGattServices(List<BluetoothGattService> gattServices) {
+        if (gattServices == null) return;
+        String uuid = null;
+        String unknownServiceString = getResources().
+                getString(R.string.unknown_service);
+        String unknownCharaString = getResources().
+                getString(R.string.unknown_characteristic);
+        ArrayList<HashMap<String, String>> gattServiceData =
+                new ArrayList<HashMap<String, String>>();
+        ArrayList<ArrayList<HashMap<String, String>>> gattCharacteristicData
+                = new ArrayList<ArrayList<HashMap<String, String>>>();
+        mGattCharacteristics =
+                new ArrayList<ArrayList<BluetoothGattCharacteristic>>();
+
+        // Loops through available GATT Services.
+        for (BluetoothGattService gattService : gattServices) {
+            HashMap<String, String> currentServiceData =
+                    new HashMap<String, String>();
+            uuid = gattService.getUuid().toString();
+            currentServiceData.put(
+                    LIST_NAME, SampleGattAttributes.
+                            lookup(uuid, unknownServiceString));
+            currentServiceData.put(LIST_UUID, uuid);
+            gattServiceData.add(currentServiceData);
+            
+            Utils.Log("displayGattServices start -------------------------");
+            Utils.Log("displayGattServices uuid  "+uuid);
+            Utils.Log("displayGattServices currentServiceData  "+currentServiceData);
+            ArrayList<HashMap<String, String>> gattCharacteristicGroupData =
+                    new ArrayList<HashMap<String, String>>();
+            List<BluetoothGattCharacteristic> gattCharacteristics =
+                    gattService.getCharacteristics();
+            ArrayList<BluetoothGattCharacteristic> charas =
+                    new ArrayList<BluetoothGattCharacteristic>();
+           // Loops through available Characteristics.
+            for (BluetoothGattCharacteristic gattCharacteristic :
+                    gattCharacteristics) {
+                charas.add(gattCharacteristic);
+                HashMap<String, String> currentCharaData =
+                        new HashMap<String, String>();
+                uuid = gattCharacteristic.getUuid().toString();
+                currentCharaData.put(
+                        LIST_NAME, SampleGattAttributes.lookup(uuid,
+                                unknownCharaString));
+                currentCharaData.put(LIST_UUID, uuid);
+                
+                Utils.Log("displayGattServices uuid  "+uuid);
+                Utils.Log("displayGattServices currentCharaData  "+currentCharaData);
+                gattCharacteristicGroupData.add(currentCharaData);
+            }
+            Utils.Log("displayGattServices end -------------------------");
+            mGattCharacteristics.add(charas);
+            gattCharacteristicData.add(gattCharacteristicGroupData);
+         }
+    }
+    
+    
     public static String bin2hex(String bin) {
         char[] digital = "0123456789ABCDEF".toCharArray();
         StringBuffer sb = new StringBuffer("");
@@ -313,6 +381,16 @@ public class MainActivity extends Activity {
     }
     
 	private void sentMsgToBt(String action, String arg1, String arg2) {
+		
+		java.util.Map<Thread, StackTraceElement[]> ts = Thread.getAllStackTraces();  
+		StackTraceElement[] ste = ts.get(Thread.currentThread());  
+		Log.e("jockeyTrack", "--------------------start-------------------------"); 
+		for (StackTraceElement s : ste) {  
+		Log.e("jockeyTrack", s.toString()); 
+		}  
+		Log.e("jockeyTrack", "--------------------end-------------------------"); 
+		
+		
 		try {
 			if (mBluetoothLeService == null) {
 				return ;
@@ -323,14 +401,16 @@ public class MainActivity extends Activity {
 			if(sum.length()==1){
 				sum="0"+sum;	
 	    	}
-			sb.append("3a") // head
-			  .append(action) // action 01:set temp , 02:ask temp ,03 :set time
-			  .append(arg1)
-			  .append(arg2)
+			sb.append("55") // head
+			  .append("00") // action 01:set temp , 02:ask temp ,03 :set time
+			  .append("01")
 			  .append("00")
 			  .append("00")
-			  .append(sum)
-			  .append("0a");
+			  .append("00")
+			  .append("00")
+			  .append("00")
+			  .append("01")
+			  .append("aa");
 			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt:" + sb);
 			BluetoothGattService gattService = mBluetoothLeService
 					.getGattService(UUID.fromString(Utils.BT_SEND_SERVICE_UUID));
@@ -374,9 +454,8 @@ public class MainActivity extends Activity {
 		}
 		*/
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
-//		if (true) {
-		if(false){   //先关闭蓝牙搜索wuyx
-			Intent i = new Intent(this, DeviceScanActivity.class);
+		if (false) {
+		    Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 //			finish();
 //			onDestroy();

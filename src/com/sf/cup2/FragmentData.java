@@ -37,6 +37,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,7 +57,9 @@ public class FragmentData extends Fragment {
 	private TextView calendarCenter; 
 	private ImageButton calendarRight;
 	private SimpleDateFormat format;
+	private TextView dateTime;
 	
+	private RelativeLayout layout_calendar;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,7 @@ public class FragmentData extends Fragment {
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	View view = inflater.inflate(R.layout.tab_data, null);
+    	final View view = inflater.inflate(R.layout.tab_data, null);
     	mChart = (LineChart)view.findViewById(R.id.chart);
         	
         LineData mLineData = LineData(24);
@@ -76,6 +79,9 @@ public class FragmentData extends Fragment {
         oObjectAnimator.setDuration(2000L);
       //  oObjectAnimator.setInterpolator(new DecelerateInterpolator());
         oObjectAnimator.start();
+        
+        layout_calendar = (RelativeLayout)view.findViewById(R.id.layout_calendar);
+        
         
 		format = new SimpleDateFormat("yyyy-MM-dd");
 		//获取日历控件对象
@@ -121,15 +127,23 @@ public class FragmentData extends Fragment {
 			
 			public void OnItemClick(Date selectedStartDate,
 					Date selectedEndDate, Date downDate) {
-				if(calendar.isSelectMore()){
-				//	Toast.makeText(getApplicationContext(), format.format(selectedStartDate)+"到"+format.format(selectedEndDate), Toast.LENGTH_SHORT).show();
-				}else{
-				//	Toast.makeText(getApplicationContext(), format.format(downDate), Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getActivity(), format.format(downDate), Toast.LENGTH_SHORT).show();
+				if(dateTime != null)
+				{
+					String[] clickDate = format.format(downDate).split("-"); 
+					dateTime.setText(clickDate[0]+"年"+clickDate[1]+"月"+clickDate[2]+"日");
 				}
+				layout_calendar.setVisibility(view.GONE);
 			}
 		});        
-        
- 
+		
+		dateTime = (TextView)view.findViewById(R.id.datetime);
+		dateTime.setOnClickListener(new OnClickListener() {
+			
+			public void onClick(View v) {
+				layout_calendar.setVisibility(view.VISIBLE);
+			}
+		});
         return view;
     }
  
