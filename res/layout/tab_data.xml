@@ -59,7 +59,6 @@
            android:id="@+id/datetime"
            android:layout_width="match_parent"
            android:layout_height="wrap_content"
-           android:text="2016年8月18日"
            android:textColor="@android:color/black"
            android:textSize="20sp" 
            android:gravity="center"

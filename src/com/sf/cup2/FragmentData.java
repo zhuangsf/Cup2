@@ -82,7 +82,8 @@ public class FragmentData extends Fragment {
         
         layout_calendar = (RelativeLayout)view.findViewById(R.id.layout_calendar);
         
-        
+    
+    
 		format = new SimpleDateFormat("yyyy-MM-dd");
 		//获取日历控件对象
 		calendar = (CalendarView)view.findViewById(R.id.calendar);
@@ -93,7 +94,7 @@ public class FragmentData extends Fragment {
 		calendarRight = (ImageButton)view.findViewById(R.id.calendarRight);
 		try {
 			//设置日历日期
-			Date date = format.parse("2015-01-01");
+			Date date = format.parse(format.format(new    java.util.Date()));
 			calendar.setCalendarData(date);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -144,6 +145,9 @@ public class FragmentData extends Fragment {
 				layout_calendar.setVisibility(view.VISIBLE);
 			}
 		});
+		String[] clickDate = format.format(new java.util.Date()).split("-"); 
+		dateTime.setText(clickDate[0]+"年"+clickDate[1]+"月"+clickDate[2]+"日");
+
         return view;
     }
  
@@ -222,7 +226,7 @@ public class FragmentData extends Fragment {
           // y轴的数据
           ArrayList<Entry> y = new ArrayList<Entry>();
           for (int i = 0; i < count; i++) {
-              float f = (float) (Math.random() * 50);
+              float f = (float) (Math.random() * 500);
               Entry entry = new Entry(f, i);
               y.add(entry);
           }
