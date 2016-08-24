@@ -115,11 +115,26 @@ public class DBAdapter {
 				KEY_ROWID, KEY_DATA, KEY_TIME, KEY_WATER }, KEY_ROWID
 				+ "=" + rowId, null, null, null, null, null);
 		if (mCursor != null) {
+			
+
+			
 			mCursor.moveToFirst();
 		}
+		
+		
 		return mCursor;
 	}
 
+	
+	public Cursor getDataByDate(String dateString) throws SQLException {
+		Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_DATA+"=?", new String[]{dateString});  
+		if (mCursor != null) {
+			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+	}	
+	
 	// ---更新一个数据---
 
 	public boolean updateWater(long rowId, String data, String time,

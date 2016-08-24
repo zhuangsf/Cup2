@@ -484,22 +484,54 @@ public class MainActivity extends Activity {
 		startFromAlarm(getIntent());
 
 	
-		/*    喝水量数据测试
+		//   喝水量数据测试
+		/*
 		DBAdapter db = new DBAdapter(this);
 		db.open();
 		long id;
 		id = db.insertWaterData(
-		"20160803",
+		"2016-08-03",
 		"18:00",
+		"200");
+		id = db.insertWaterData(
+		"2016-08-03",
+		"17:00",
+		"50");
+		id = db.insertWaterData(
+		"2016-08-03",
+		"15:00",
+		"150");
+		id = db.insertWaterData(
+		"2016-08-03",
+		"13:30",
+		"300");
+		id = db.insertWaterData(
+		"2016-08-03",
+		"11:06",
 		"100");
 		id = db.insertWaterData(
-		"20160803",
-		"18:05",
+		"2016-08-04",
+		"18:00",
+		"200");
+		id = db.insertWaterData(
+		"2016-08-04",
+		"17:00",
+		"50");
+		id = db.insertWaterData(
+		"2016-08-04",
+		"15:00",
+		"150");
+		id = db.insertWaterData(
+		"2016-08-04",
+		"13:30",
+		"300");
+		id = db.insertWaterData(
+		"2016-08-04",
+		"11:06",
 		"100");
-		
 		db.dumpData();
 		db.close();
-		*/
+	*/
 		
 		
 		
