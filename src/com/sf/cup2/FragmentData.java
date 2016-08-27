@@ -165,11 +165,16 @@ public class FragmentData extends Fragment {
 	}
 
 	private void reflashChartData(String currentDateString) {
+		if(mChart != null)
+		{
+			mChart.clear();
+		}
 		DBAdapter db = new DBAdapter(getActivity());
 		db.open();
 		Cursor cursor = db.getDataByDate(currentDateString);
 		if (cursor != null && mChart != null) {
 			mChart.setData(getLineData(cursor));
+			mChart.notifyDataSetChanged();
 		}
 
 		db.close();
@@ -183,8 +188,8 @@ public class FragmentData extends Fragment {
 		mXAxis.setPosition(XAxisPosition.TOP);
 
 		mXAxis.setDrawAxisLine(false);
-
-		LimitLine ll = new LimitLine(35f, "500ml");
+		
+		LimitLine ll = new LimitLine(200f, "500ml");
 		ll.setLineColor(Color.RED);
 		ll.setLineWidth(1f);
 		ll.enableDashedLine(10f, 5f, 0f);
@@ -242,7 +247,7 @@ public class FragmentData extends Fragment {
 
 		for (int i = 0; i < 24; i++) {
 			String times = getString(R.string.times);
-			times = String.format(times, i);
+			times = String.format(times, (i + 6)%24);
 			x.add(times);
 		}
 
@@ -250,7 +255,7 @@ public class FragmentData extends Fragment {
 			do {
 				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
 				Entry entry = new Entry(
-						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), Integer.parseInt(drinkTIme[0]) );
+						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
 				y.add(entry);
 			} while (cursor.moveToNext());
 		}
