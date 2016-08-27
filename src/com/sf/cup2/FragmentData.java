@@ -76,6 +76,10 @@ public class FragmentData extends Fragment {
 		// LineData mLineData = getLineData(24);
 		// setChartStyle(mChart, mLineData);
 		setChartStyle(mChart);
+		
+		
+
+		
 		cpb = (ArcProgressbar) view.findViewById(R.id.arcProgressbar_view);
 		ObjectAnimator oObjectAnimator = ObjectAnimator.ofInt(cpb, "progress",
 				0, 220);
@@ -161,6 +165,16 @@ public class FragmentData extends Fragment {
 		// db.getDataByDate("2016-08-03");
 		// db.close();
 
+		mChart.setOnClickListener(new View.OnClickListener() {  
+		      
+		    @Override  
+		    public void onClick(View v) {  
+		        // TODO Auto-generated method stub  
+				dateTime.setText("when you see this ,you success");
+		    }  
+		});  		
+		
+		
 		return view;
 	}
 
