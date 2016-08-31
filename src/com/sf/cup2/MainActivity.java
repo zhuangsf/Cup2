@@ -42,6 +42,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
+import com.sf.cup2.FragmentHistory;
 
 public class MainActivity extends Activity {
 	private final static String TAG = MainActivity.class.getPackage() + "."
@@ -70,7 +71,6 @@ public class MainActivity extends Activity {
 			R.id.rbWater,
 			R.id.rbData, 
 			R.id.rbHome, 
-			
 			};
 	private Fragment[] mFragmentArray = { 
 			fTime,
@@ -485,53 +485,53 @@ public class MainActivity extends Activity {
 
 	
 		//   喝水量数据测试
-		/*
+	/*
 		DBAdapter db = new DBAdapter(this);
 		db.open();
 		long id;
 		id = db.insertWaterData(
-		"2016-08-03",
-		"18:00",
-		"200");
+		"2015-01-01",
+		"07:00",
+		"500");
 		id = db.insertWaterData(
-		"2016-08-03",
-		"17:00",
+		"2015-01-01",
+		"08:00",
 		"50");
 		id = db.insertWaterData(
-		"2016-08-03",
-		"15:00",
-		"150");
+		"2015-01-01",
+		"09:00",
+		"450");
 		id = db.insertWaterData(
-		"2016-08-03",
-		"13:30",
+		"2015-01-01",
+		"10:30",
 		"300");
 		id = db.insertWaterData(
 		"2016-08-03",
 		"11:06",
 		"100");
 		id = db.insertWaterData(
-		"2016-08-04",
-		"18:00",
+		"2015-01-01",
+		"13:00",
 		"200");
 		id = db.insertWaterData(
-		"2016-08-04",
-		"17:00",
+		"2015-01-01",
+		"16:00",
 		"50");
 		id = db.insertWaterData(
-		"2016-08-04",
-		"15:00",
+		"2015-01-01",
+		"18:00",
 		"150");
 		id = db.insertWaterData(
-		"2016-08-04",
-		"13:30",
+		"2015-01-01",
+		"20:30",
 		"300");
 		id = db.insertWaterData(
-		"2016-08-04",
-		"11:06",
+		"2015-01-01",
+		"23:06",
 		"100");
 		db.dumpData();
 		db.close();
-	*/
+*/
 		
 		
 		
@@ -687,6 +687,7 @@ public class MainActivity extends Activity {
 		ft.hide(fTime);
 		mTab.add(fTime);
 		
+
 		fragment= fm.findFragmentByTag(TAG_WATER);
 		if (fragment != null) {// 如果有，则使用，处理翻转之后状态未保存问题
 			fWater = (FragmentWater) fragment;
@@ -696,6 +697,10 @@ public class MainActivity extends Activity {
 		}
 		ft.hide(fWater);
 		mTab.add(fWater);
+	
+		
+
+		
 		
 		fragment= fm.findFragmentByTag(TAG_DATA);
 		if (fragment != null) {// 如果有，则使用，处理翻转之后状态未保存问题

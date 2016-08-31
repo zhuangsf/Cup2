@@ -27,6 +27,7 @@ import com.sf.cup2.view.CricleProgressBar;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -59,12 +60,13 @@ public class FragmentData extends Fragment {
 	private ImageButton calendarRight;
 	private SimpleDateFormat format;
 	private TextView dateTime;
-
+    private FragmentHistory fHistory;
 	private RelativeLayout layout_calendar;
-
+	private String mClickDate;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		fHistory = new FragmentHistory();
 	}
 
 	@Override
@@ -137,7 +139,8 @@ public class FragmentData extends Fragment {
 				// Toast.makeText(getActivity(), format.format(downDate),
 				// Toast.LENGTH_SHORT).show();
 				if (dateTime != null) {
-					String[] clickDate = format.format(downDate).split("-");
+					mClickDate = format.format(downDate);
+					String[] clickDate = mClickDate.split("-");
 					dateTime.setText(clickDate[0] + "年" + clickDate[1] + "月"
 							+ clickDate[2] + "日");
 				}
@@ -153,11 +156,12 @@ public class FragmentData extends Fragment {
 				layout_calendar.setVisibility(view.VISIBLE);
 			}
 		});
-		String[] clickDate = format.format(new java.util.Date()).split("-");
+		mClickDate = format.format(new java.util.Date());
+		String[] clickDate = mClickDate.split("-");
 		dateTime.setText(clickDate[0] + "年" + clickDate[1] + "月" + clickDate[2]
 				+ "日");
 
-		reflashChartData(format.format(new java.util.Date()));
+		reflashChartData(mClickDate);
 
 		// 测试打log用
 		// DBAdapter db = new DBAdapter(getActivity());
@@ -170,7 +174,13 @@ public class FragmentData extends Fragment {
 		    @Override  
 		    public void onClick(View v) {  
 		        // TODO Auto-generated method stub  
-				dateTime.setText("when you see this ,you success");
+		    	fHistory.setClickDate(mClickDate);
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, fHistory);
+            	ft.remove(FragmentData.this);
+            	ft.addToBackStack(null);
+				ft.commit();
 		    }  
 		});  		
 		

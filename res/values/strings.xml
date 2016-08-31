@@ -68,8 +68,10 @@
     <string name="waterdata">"数据"</string>
     <string name="waterdata_title">"饮水数据"</string>
     <string name="times">%1$02d:00</string>
-    
-    
+    <string name="waterdata_history">"饮水记录"</string>
+    <string name="history_day">"日"</string>
+    <string name="history_week">"周"</string>
+    <string name="history_month">"月"</string>
     
     
     <declare-styleable name="GifTextureView"><attr format="reference|string" name="gifSource"/><attr format="boolean" name="isOpaque"/></declare-styleable>
