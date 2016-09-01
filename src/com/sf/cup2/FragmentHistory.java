@@ -29,6 +29,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -55,13 +56,17 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
 
-public class FragmentHistory extends Fragment implements OnClickListener{
+public class FragmentHistory extends Fragment {
 	private View mView;
 	private LineChart mChart;
 	private String mClickDateString;
 	private DBAdapter mdbAdapter;
 	private ListView mHistoryList;
 	private SimpleAdapter historyListAdapter;
+	
+	private Button buttonDay;
+	private Button buttonWeek;
+	private Button buttonMonth;
 	//当前点击的按钮
 	private int currentClick = R.id.history_day;
 	public static FragmentHistory newInstance(Bundle b) {
@@ -106,6 +111,31 @@ public class FragmentHistory extends Fragment implements OnClickListener{
 		mHistoryList.setAdapter(historyListAdapter);
 		showDayData();
 
+		  buttonDay = (Button) view.findViewById(R.id.history_day);  
+		  buttonDay.setOnClickListener(new View.OnClickListener() {  
+	            public void onClick(View v) {  
+	                // Perform action on click  
+	                //增加自己的代码......  
+	            	showDayData();
+	            }  
+	        });  
+		  buttonWeek = (Button) view.findViewById(R.id.history_week);  
+		  buttonWeek.setOnClickListener(new View.OnClickListener() {  
+	            public void onClick(View v) {  
+	                // Perform action on click  
+	                //增加自己的代码......  
+	            	showWeekData(); 
+	            }  
+	        });  
+		  buttonMonth = (Button) view.findViewById(R.id.history_month);  
+		  buttonMonth.setOnClickListener(new View.OnClickListener() {  
+	            public void onClick(View v) {  
+	                // Perform action on click  
+	                //增加自己的代码......  
+	            	buttonMonth.setText("OnClick. " + " ....");      
+	            }  
+	        });  
+		
 	}
 
 	
@@ -118,6 +148,12 @@ public class FragmentHistory extends Fragment implements OnClickListener{
 		setChartStyle(mChart);
 		reflashChartData(mClickDateString);
 	}
+	private void showWeekData()
+	{
+		
+	}
+	
+	
 	private List<HashMap<String, Object>> getData() {
 		if(mClickDateString == null)
 		{
@@ -141,6 +177,11 @@ public class FragmentHistory extends Fragment implements OnClickListener{
 	        map.put("value", "喝了"+cursor.getString(DBAdapter.DATA_COLUMN_WATER)+"ml");
 			maps.add(map);
 		} while (cursor.moveToNext());
+		}
+		
+		if(cursor != null)
+		{
+			cursor.close();
 		}
 		return maps;
 	}
@@ -300,33 +341,34 @@ public class FragmentHistory extends Fragment implements OnClickListener{
 	
 	
 	
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.history_day:
-			if(currentClick != R.id.history_day)
-			{
-				showDayData();
-			}
-			break;
-		case R.id.history_week:
-			if(currentClick != R.id.history_week)
-			{
-			//	showDayData();
-			}
-			break;
-		case R.id.history_month:
-			if(currentClick != R.id.history_month)
-			{
-			//	showDayData();
-			}
-			break;
-
-
-		default:
-			break;
-		}
-	}
+//	@Override
+//	public void onClick(View v) {
+//		switch (v.getId()) {
+//		case R.id.history_day:
+//			if(currentClick != R.id.history_day)
+//			{
+//				currentClick = R.id.history_day;
+//				showDayData();
+//			}
+//			break;
+//		case R.id.history_week:
+//			if(currentClick != R.id.history_week)
+//			{
+//			//	showDayData();
+//			}
+//			break;
+//		case R.id.history_month:
+//			if(currentClick != R.id.history_month)
+//			{
+//			//	showDayData();
+//			}
+//			break;
+//
+//
+//		default:
+//			break;
+//		}
+//	}
 
 
 	

@@ -34,7 +34,7 @@
             android:orientation="horizontal"
 		>
 
-              <TextView
+              <Button  
                   android:id="@+id/history_day"
                   android:layout_width="fill_parent"
                   android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
                   android:textColor="@android:color/black"
                   android:textSize="20sp" />
                   
-                             <TextView
+                             <Button  
                 android:id="@+id/history_week"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
@@ -55,7 +55,7 @@
                 android:textSize="20sp" />
                              
                              
-               <TextView
+               <Button  
                 android:id="@+id/history_month"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
