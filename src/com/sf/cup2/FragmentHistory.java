@@ -1,6 +1,7 @@
 package com.sf.cup2;
 
 import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -57,6 +58,8 @@ import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
 
 public class FragmentHistory extends Fragment {
+	
+	private final static String TAG = "FragmentHistory";
 	private View mView;
 	private LineChart mChart;
 	private String mClickDateString;
@@ -109,6 +112,7 @@ public class FragmentHistory extends Fragment {
 		mHistoryList = (ListView) view.findViewById(R.id.history_listview);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getData(), R.layout.simpleitem, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
 		mHistoryList.setAdapter(historyListAdapter);
+		setChartStyle(mChart);
 		showDayData();
 
 		  buttonDay = (Button) view.findViewById(R.id.history_day);  
@@ -145,12 +149,11 @@ public class FragmentHistory extends Fragment {
 	}
 	private void showDayData()
 	{
-		setChartStyle(mChart);
 		reflashChartData(mClickDateString);
 	}
 	private void showWeekData()
 	{
-		
+		reflashChartWeekData(mClickDateString);
 	}
 	
 	
@@ -201,6 +204,26 @@ public class FragmentHistory extends Fragment {
 		
 		//db.close();
 	}
+	
+	private void reflashChartWeekData(String currentDateString) {
+		if(mChart != null)
+		{
+			mChart.clear();
+		}
+		//DBAdapter db = new DBAdapter(getActivity());
+		//db.open();
+		
+		
+		Cursor cursor = mdbAdapter.getDataByWeek(mdbAdapter.getWeekOfYear(currentDateString));
+		if (cursor != null && mChart != null) {
+			mChart.setData(getLineWeekData(cursor));
+			mChart.notifyDataSetChanged();
+			cursor.close();
+		}
+		
+		//db.close();
+	}	
+	
 	
 	private void setChartStyle(LineChart mlinechart) {
 
@@ -261,25 +284,89 @@ public class FragmentHistory extends Fragment {
 		mlinechart.animateX(1000);
 
 	}
-
-	private LineData getLineData(Cursor cursor) {
+	
+//	private String[] getWeekString(String[] dataString)
+//	{
+//		
+//		return ;
+//	}
+	
+	
+	private static String[] getFirstDayOfWeekDate(int year,int week)  
+    {  
+		String[] getFirstDayOfWeekDate = new String[7];
+		
+        //格式化日期  
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
+        Calendar cal = Calendar.getInstance();  
+        //设置年份  
+        cal.set(Calendar.YEAR,year);  
+        //设置周  
+        cal.set(Calendar.WEEK_OF_YEAR, week);  
+        //设置该周第一天为星期一  
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
+        getFirstDayOfWeekDate[0] = sdf.format(cal.getTime());   
+        Log.w(TAG, "getFirstDayOfWeekDate[0] = "+getFirstDayOfWeekDate[0]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);  
+        getFirstDayOfWeekDate[1] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[1] = "+getFirstDayOfWeekDate[1]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);  
+        getFirstDayOfWeekDate[2] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[2] = "+getFirstDayOfWeekDate[2]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);  
+        getFirstDayOfWeekDate[3] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[3] = "+getFirstDayOfWeekDate[3]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);  
+        getFirstDayOfWeekDate[4] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[4] = "+getFirstDayOfWeekDate[4]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);  
+        getFirstDayOfWeekDate[5] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[5] = "+getFirstDayOfWeekDate[5]);
+        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);  
+        getFirstDayOfWeekDate[6] = sdf.format(cal.getTime());  
+        Log.w(TAG, "getFirstDayOfWeekDate[6] = "+getFirstDayOfWeekDate[6]);
+        return getFirstDayOfWeekDate;
+    }  
+	
+	private int getDayIndexOfWeek(String[] getFirstDayOfWeekDate,String dayString)
+	{
+		Log.w(TAG, "getDayIndexOfWeek dayString = "+dayString);
+		for(int i = 0;i < 7;i++)
+		{
+			
+			if(getFirstDayOfWeekDate[i].equals(dayString))
+			{
+				Log.w(TAG, "getDayIndexOfWeek return  = "+i);
+				return i;
+			}
+		}
+		Log.w(TAG, "getDayIndexOfWeek return  -1 ");
+		return -1;
+	}
+	
+	private LineData getLineWeekData(Cursor cursor) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
-
-		for (int i = 0; i < 24; i++) {
-			String times = getString(R.string.times);
-			times = String.format(times, (i + 6)%24);
-			x.add(times);
+		
+		if (!cursor.moveToFirst()) {
+			return null;
 		}
+		String[] dataString = cursor.getString(DBAdapter.DATA_COLUMN_DATA).split("-");
+		
+		
+		String[] dayOfWeekDate = getFirstDayOfWeekDate(Integer.parseInt(dataString[0]),cursor.getInt(DBAdapter.DATA_COLUMN_WEEK));
+		for (int i = 0; i < 7; i++) {
 
-		if (cursor.moveToFirst()) {
-			do {
-				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
-				Entry entry = new Entry(
-						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
+	//		x.add(dayOfWeekDate[i]);
+			x.add("123");
+			int onedaywater = DBAdapter.getOneDayWater(dayOfWeekDate[i]);
+			if(onedaywater != 0)
+			{
+				Entry entry = new Entry(onedaywater*1.0f, i);
 				y.add(entry);
-			} while (cursor.moveToNext());
-		}
+			}
+		
+	    }
 
 		// y轴的数据集
 		LineDataSet set = new LineDataSet(y, "   ");
@@ -287,7 +374,7 @@ public class FragmentHistory extends Fragment {
 		// 线宽
 		set.setLineWidth(3.0f);
 		// 显示圆形大小
-		set.setCircleSize(5.0f);
+		set.setCircleRadius(0.0f);
 		// 折线的颜色
 		set.setColor(Color.BLACK);
 		// 圆球颜色
@@ -324,8 +411,86 @@ public class FragmentHistory extends Fragment {
 			@Override
 			public String getFormattedValue(float value, Entry entry,
 					int dataSetIndex, ViewPortHandler viewPortHandler) {
-				int n = (int) value;
-				String str = n + "℃";
+				//int n = (int) value;
+				//String str = n + "℃";
+				// return str;
+				return "";
+			}
+		});
+
+		ArrayList<ILineDataSet> mLineDataSets = new ArrayList<ILineDataSet>();
+		mLineDataSets.add(set);
+
+		LineData mLineData = new LineData(x, mLineDataSets);
+		return mLineData;
+
+	}	
+	
+
+	private LineData getLineData(Cursor cursor) {
+		ArrayList<String> x = new ArrayList<String>();
+		ArrayList<Entry> y = new ArrayList<Entry>();
+
+		for (int i = 0; i < 24; i++) {
+			String times = getString(R.string.times);
+			times = String.format(times, (i + 6)%24);
+			x.add(times);
+		}
+
+		if (cursor.moveToFirst()) {
+			do {
+				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
+				Entry entry = new Entry(
+						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
+				y.add(entry);
+			} while (cursor.moveToNext());
+		}
+
+		// y轴的数据集
+		LineDataSet set = new LineDataSet(y, "   ");
+		// 用y轴的集合来设置参数
+		// 线宽
+		set.setLineWidth(3.0f);
+		// 显示圆形大小
+		set.setCircleRadius(0.0f);
+		// 折线的颜色
+		set.setColor(Color.BLACK);
+		// 圆球颜色
+		set.setCircleColor(Color.RED);
+		// 设置mLineDataSet.setDrawHighlightIndicators(false)后，
+		// Highlight的十字交叉的纵横线将不会显示，
+		// 同时，mLineDataSet.setHighLightColor()失效。
+
+		set.setDrawHighlightIndicators(true);
+		// 点击后，十字交叉线的颜色
+		set.setHighLightColor(Color.BLUE);
+		// 设置显示数据点字体大小
+		set.setValueTextSize(10.0f);
+		// mLineDataSet.setDrawCircleHole(true);
+
+		// 改变折线样式，用曲线。
+		set.setDrawCubic(true);
+		// 默认是直线
+		// 曲线的平滑度，值越大越平滑。
+		set.setCubicIntensity(0.2f);
+
+		// 填充曲线下方的区域，红色，半透明。
+		set.setDrawFilled(true);
+		// 数值越小 透明度越大
+		set.setFillAlpha(50);
+		set.setFillColor(Color.RED);
+
+		// 填充折线上数据点、圆球里面包裹的中心空白处的颜色。
+		// set.setCircleColorHole(Color.YELLOW);
+		// 设置折线上显示数据的格式。如果不设置，将默认显示float数据格式。
+
+		set.setValueFormatter(new ValueFormatter() {
+
+			@Override
+			public String getFormattedValue(float value, Entry entry,
+					int dataSetIndex, ViewPortHandler viewPortHandler) {
+				//int n = (int) value;
+				//String str = n + "℃";
 				// return str;
 				return "";
 			}

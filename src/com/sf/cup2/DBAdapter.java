@@ -1,5 +1,12 @@
 package com.sf.cup2;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.TimeZone;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -10,9 +17,12 @@ import android.util.Log;
 
 public class DBAdapter {
 	public static final String KEY_ROWID = "_id";
+	public static final String KEY_TIMESTAMP = "timestamp";
 	public static final String KEY_DATA = "data";
 	public static final String KEY_TIME = "time";
 	public static final String KEY_WATER = "water";
+	public static final String KEY_WEEK = "week";
+	public static final String KEY_MONTH = "month";
 	private static final String TAG = "DBAdapter";
 	private static final String DATABASE_NAME = "water";
 	private static final String DATABASE_TABLE = "water_data";
@@ -21,15 +31,15 @@ public class DBAdapter {
 	public static final int DATA_COLUMN_DATA = 1;
 	public static final int DATA_COLUMN_TIME = 2;
 	public static final int DATA_COLUMN_WATER = 3;
-	
+	public static final int DATA_COLUMN_WEEK = 4;
+	public static final int DATA_COLUMN_MONTH = 5;
 	
 	private static final int DATABASE_VERSION = 1;
 	private static final String DATABASE_CREATE = "create table water_data (_id integer primary key autoincrement, "
-			+ "data text not null, time text not null, "
-			+ "water text not null);";
+			+ "data text not null, time text not null,water text not null,week integer not null,month text not null)";
 	private final Context mContext;
 	private DatabaseHelper DBHelper;
-	private SQLiteDatabase db;
+	private static SQLiteDatabase db;
 
 	public DBAdapter(Context context) {
 		mContext = context;
@@ -69,11 +79,42 @@ public class DBAdapter {
 
 	// ---向数据库中插入一个数据----
 
+	public int getWeekOfYear(String date){
+		 
+	      try{
+	         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+	         Calendar cal = Calendar.getInstance();
+	         //这一句必须要设置，否则美国认为第一天是周日，而我国认为是周一，对计算当期日期是第几周会有错误
+	         cal.setFirstDayOfWeek(Calendar.MONDAY); // 设置每周的第一天为星期一
+	         cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);// 每周从周一开始
+	         cal.setMinimalDaysInFirstWeek(1); // 设置每周最少为1天
+	         cal.setTime(df.parse(date));
+	         Log.w(TAG, "getWeekOfYear return  = "+cal.get(Calendar.WEEK_OF_YEAR));
+	         return cal.get(Calendar.WEEK_OF_YEAR);
+	      }
+	      catch(Exception e){
+	         e.printStackTrace();
+	      }
+	      return 0;
+	   }	
+	
+	
 	public long insertWaterData(String data, String time, String water) {
 		ContentValues initialValues = new ContentValues();
 		initialValues.put(KEY_DATA, data);
 		initialValues.put(KEY_TIME, time);
 		initialValues.put(KEY_WATER, water);
+		
+		
+		String[] dataString = data.split("-");
+		if(dataString != null)
+		{
+			initialValues.put(KEY_MONTH, dataString[1]);  //0 年 1月 2日
+		}
+		
+		initialValues.put(KEY_WEEK, getWeekOfYear(data));
+		Log.w(TAG, "insertWaterData KEY_MONTH = "+dataString[1]);
+		Log.w(TAG, "insertWaterData KEY_WEEK = "+getWeekOfYear(data));
 		return db.insert(DATABASE_TABLE, null, initialValues);
 	}
 
@@ -87,9 +128,23 @@ public class DBAdapter {
 
 	public Cursor getAllData() {
 		return db.query(DATABASE_TABLE, new String[] { KEY_ROWID, KEY_DATA,
-				KEY_TIME, KEY_WATER }, null, null, null, null, null);
+				KEY_TIME, KEY_WATER,KEY_WEEK,KEY_MONTH }, null, null, null, null, null);
 	}
 
+	public static int getOneDayWater(String dateString)
+	{
+		int oneDayWater = 0;
+		Cursor c = getDataByDate(dateString);
+		if (c.moveToFirst())
+		{
+		do {
+			oneDayWater += Integer.parseInt(c.getString(DATA_COLUMN_WATER));
+		} while (c.moveToNext());
+		}
+		
+		Log.w(TAG, "getOneDayWater oneDayWater = "+oneDayWater);
+		return oneDayWater;
+	}
 	
 	public void dumpData()
 	{
@@ -112,22 +167,40 @@ public class DBAdapter {
 
 	public Cursor getDataByID(long rowId) throws SQLException {
 		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] {
-				KEY_ROWID, KEY_DATA, KEY_TIME, KEY_WATER }, KEY_ROWID
+				KEY_ROWID, KEY_DATA, KEY_TIME, KEY_WATER ,KEY_WEEK,KEY_MONTH}, KEY_ROWID
 				+ "=" + rowId, null, null, null, null, null);
 		if (mCursor != null) {
-			
-
-			
 			mCursor.moveToFirst();
 		}
-		
-		
 		return mCursor;
 	}
 
 	
-	public Cursor getDataByDate(String dateString) throws SQLException {
+	public static Cursor getDataByDate(String dateString) throws SQLException {
 		Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_DATA+"=?", new String[]{dateString});  
+		if (mCursor != null) {
+			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+	}	
+	
+	public Cursor getDataByWeek(int weekNumber) throws SQLException {
+	//	Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_WEEK+"="+weekNumber );  
+		
+		Cursor mCursor = db.query(true, DATABASE_TABLE, new String[] {
+				KEY_ROWID, KEY_DATA, KEY_TIME, KEY_WATER ,KEY_WEEK,KEY_MONTH}, KEY_WEEK
+				+ "=" + weekNumber, null, null, null, null, null);
+		
+		if (mCursor != null) {
+			Log.w(TAG, "getDataByWeek mCursor.getCount() = "+mCursor.getCount());
+			mCursor.moveToFirst();
+		}
+		return mCursor;
+	}	
+	
+	public Cursor getDataByMonth(String monthString) throws SQLException {
+		Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_MONTH+"=?", new String[]{monthString});  
 		if (mCursor != null) {
 			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
 			mCursor.moveToFirst();

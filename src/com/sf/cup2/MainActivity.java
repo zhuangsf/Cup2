@@ -426,6 +426,100 @@ public class MainActivity extends Activity {
 		}
 	}
     
+	private void initData()
+	{
+		if(true)
+		return;
+		
+		DBAdapter db = new DBAdapter(this);
+		db.open();
+		long id;
+		id = db.insertWaterData(
+		"2015-01-01",
+		"07:00",
+		"500");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"08:00",
+		"50");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"09:00",
+		"450");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"10:30",
+		"300");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"11:06",
+		"100");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"13:00",
+		"200");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"16:00",
+		"50");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"18:00",
+		"150");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"20:30",
+		"300");
+		id = db.insertWaterData(
+		"2015-01-01",
+		"23:06",
+		"100");
+		
+		
+		id = db.insertWaterData(
+		"2015-01-03",
+		"07:00",
+		"300");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"08:00",
+		"250");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"09:00",
+		"150");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"10:30",
+		"250");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"11:06",
+		"150");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"13:00",
+		"240");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"16:00",
+		"450");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"18:00",
+		"450");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"20:30",
+		"340");
+		id = db.insertWaterData(
+		"2015-01-03",
+		"23:06",
+		"120");
+		
+		db.dumpData();
+		db.close();
+	}
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -485,53 +579,7 @@ public class MainActivity extends Activity {
 
 	
 		//   喝水量数据测试
-	/*
-		DBAdapter db = new DBAdapter(this);
-		db.open();
-		long id;
-		id = db.insertWaterData(
-		"2015-01-01",
-		"07:00",
-		"500");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"08:00",
-		"50");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"09:00",
-		"450");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"10:30",
-		"300");
-		id = db.insertWaterData(
-		"2016-08-03",
-		"11:06",
-		"100");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"13:00",
-		"200");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"16:00",
-		"50");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"18:00",
-		"150");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"20:30",
-		"300");
-		id = db.insertWaterData(
-		"2015-01-01",
-		"23:06",
-		"100");
-		db.dumpData();
-		db.close();
-*/
+		initData();
 		
 		
 		

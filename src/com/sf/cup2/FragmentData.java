@@ -20,6 +20,7 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
+import com.sf.cup2.utils.Utils;
 import com.sf.cup2.view.ArcProgressbar;
 import com.sf.cup2.view.CalendarView;
 import com.sf.cup2.view.CalendarView.OnItemClickListener;
@@ -163,12 +164,6 @@ public class FragmentData extends Fragment {
 
 		reflashChartData(mClickDate);
 
-		// 测试打log用
-		// DBAdapter db = new DBAdapter(getActivity());
-		// db.open();
-		// db.getDataByDate("2016-08-03");
-		// db.close();
-
 		mChart.setOnClickListener(new View.OnClickListener() {  
 		      
 		    @Override  
@@ -200,7 +195,7 @@ public class FragmentData extends Fragment {
 			mChart.setData(getLineData(cursor));
 			mChart.notifyDataSetChanged();
 		}
-
+		cursor.close();
 		db.close();
 	}
 
@@ -277,6 +272,8 @@ public class FragmentData extends Fragment {
 
 		if (cursor.moveToFirst()) {
 			do {
+				
+
 				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
 				Entry entry = new Entry(
 						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
