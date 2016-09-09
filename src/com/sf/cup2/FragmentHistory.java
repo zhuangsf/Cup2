@@ -4,6 +4,7 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,7 +111,7 @@ public class FragmentHistory extends Fragment {
 	public void initLayout(View view){
 		mChart = (LineChart) view.findViewById(R.id.chart);
 		mHistoryList = (ListView) view.findViewById(R.id.history_listview);
-		historyListAdapter =  new SimpleAdapter(getActivity(), getData(), R.layout.simpleitem, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
+		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
 		mHistoryList.setAdapter(historyListAdapter);
 		setChartStyle(mChart);
 		showDayData();
@@ -135,8 +136,7 @@ public class FragmentHistory extends Fragment {
 		  buttonMonth.setOnClickListener(new View.OnClickListener() {  
 	            public void onClick(View v) {  
 	                // Perform action on click  
-	                //增加自己的代码......  
-	            	buttonMonth.setText("OnClick. " + " ....");      
+	            	showMonthData();     
 	            }  
 	        });  
 		
@@ -149,15 +149,29 @@ public class FragmentHistory extends Fragment {
 	}
 	private void showDayData()
 	{
+		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
+		mHistoryList.setAdapter(historyListAdapter);		
 		reflashChartData(mClickDateString);
 	}
 	private void showWeekData()
 	{
-		reflashChartWeekData(mClickDateString);
+		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(false), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
+		mHistoryList.setAdapter(historyListAdapter);
+		
+		reflashChartWeekData(mClickDateString,false);
+	}
+	
+	private void showMonthData()
+	{
+		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(true), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
+		mHistoryList.setAdapter(historyListAdapter);
+		
+		reflashChartWeekData(mClickDateString,true);
 	}
 	
 	
-	private List<HashMap<String, Object>> getData() {
+	
+	private List<HashMap<String, Object>> getDayData() {
 		if(mClickDateString == null)
 		{
 			return null;
@@ -188,6 +202,50 @@ public class FragmentHistory extends Fragment {
 		}
 		return maps;
 	}
+	
+	private List<HashMap<String, Object>> getWeekData(boolean bMonth) {
+		if(mClickDateString == null)
+		{
+			return null;
+		}
+		List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
+		HashMap<String, Object> map = new HashMap<String, Object>();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd"); 
+		String[] dataString = mClickDateString.split("-");
+		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例 
+		ca.set(Integer.parseInt(dataString[0]), Integer.parseInt(dataString[1])-1, Integer.parseInt(dataString[2]));//月份是从0开始的，所以11表示12月 ,日期+1,是下面要减1
+		int days = 7;
+		
+		if(bMonth)
+		{
+			days = 30;
+		}
+			int i = 0;
+			ca.add(Calendar.DATE, -days);
+			do
+			{
+				ca.add(Calendar.DATE, +1); //月份减1 
+				Date date = ca.getTime(); //结果 
+				Log.w(TAG, "sf.format(date) = "+sf.format(date));
+				
+				int onedaywater = DBAdapter.getOneDayWater(sf.format(date));
+
+				if(onedaywater != 0)
+				{
+					map = new HashMap<String, Object>();
+			        map.put("image", R.drawable.login_phone_pic);
+			        map.put("time", sf.format(date));
+			        map.put("value", "已喝"+onedaywater+"ml");
+			        map.put("percent", "完成 35%");
+					maps.add(map);
+				}
+			}while(++i < days);
+		
+
+		return maps;
+	}	
+	
+	
 	private void reflashChartData(String currentDateString) {
 		if(mChart != null)
 		{
@@ -205,23 +263,17 @@ public class FragmentHistory extends Fragment {
 		//db.close();
 	}
 	
-	private void reflashChartWeekData(String currentDateString) {
+	private void reflashChartWeekData(String currentDateString,boolean bMonth) {
 		if(mChart != null)
 		{
 			mChart.clear();
 		}
-		//DBAdapter db = new DBAdapter(getActivity());
-		//db.open();
-		
-		
-		Cursor cursor = mdbAdapter.getDataByWeek(mdbAdapter.getWeekOfYear(currentDateString));
-		if (cursor != null && mChart != null) {
-			mChart.setData(getLineWeekData(cursor));
+		if(mChart != null)
+		{
+			mChart.setData(getLineWeekData(currentDateString,bMonth));
 			mChart.notifyDataSetChanged();
-			cursor.close();
 		}
 		
-		//db.close();
 	}	
 	
 	
@@ -284,89 +336,45 @@ public class FragmentHistory extends Fragment {
 		mlinechart.animateX(1000);
 
 	}
+
+
 	
-//	private String[] getWeekString(String[] dataString)
-//	{
-//		
-//		return ;
-//	}
-	
-	
-	private static String[] getFirstDayOfWeekDate(int year,int week)  
-    {  
-		String[] getFirstDayOfWeekDate = new String[7];
-		
-        //格式化日期  
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");  
-        Calendar cal = Calendar.getInstance();  
-        //设置年份  
-        cal.set(Calendar.YEAR,year);  
-        //设置周  
-        cal.set(Calendar.WEEK_OF_YEAR, week);  
-        //设置该周第一天为星期一  
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);  
-        getFirstDayOfWeekDate[0] = sdf.format(cal.getTime());   
-        Log.w(TAG, "getFirstDayOfWeekDate[0] = "+getFirstDayOfWeekDate[0]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.TUESDAY);  
-        getFirstDayOfWeekDate[1] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[1] = "+getFirstDayOfWeekDate[1]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.WEDNESDAY);  
-        getFirstDayOfWeekDate[2] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[2] = "+getFirstDayOfWeekDate[2]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.THURSDAY);  
-        getFirstDayOfWeekDate[3] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[3] = "+getFirstDayOfWeekDate[3]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.FRIDAY);  
-        getFirstDayOfWeekDate[4] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[4] = "+getFirstDayOfWeekDate[4]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);  
-        getFirstDayOfWeekDate[5] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[5] = "+getFirstDayOfWeekDate[5]);
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);  
-        getFirstDayOfWeekDate[6] = sdf.format(cal.getTime());  
-        Log.w(TAG, "getFirstDayOfWeekDate[6] = "+getFirstDayOfWeekDate[6]);
-        return getFirstDayOfWeekDate;
-    }  
-	
-	private int getDayIndexOfWeek(String[] getFirstDayOfWeekDate,String dayString)
-	{
-		Log.w(TAG, "getDayIndexOfWeek dayString = "+dayString);
-		for(int i = 0;i < 7;i++)
-		{
-			
-			if(getFirstDayOfWeekDate[i].equals(dayString))
-			{
-				Log.w(TAG, "getDayIndexOfWeek return  = "+i);
-				return i;
-			}
-		}
-		Log.w(TAG, "getDayIndexOfWeek return  -1 ");
-		return -1;
-	}
-	
-	private LineData getLineWeekData(Cursor cursor) {
+	private LineData getLineWeekData(String currentDateString,boolean bMonth) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
+		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd"); 
+		String[] dataString = currentDateString.split("-");
+		int days = 7;
 		
-		if (!cursor.moveToFirst()) {
-			return null;
+		if(bMonth)
+		{
+			days = 30;
 		}
-		String[] dataString = cursor.getString(DBAdapter.DATA_COLUMN_DATA).split("-");
 		
-		
-		String[] dayOfWeekDate = getFirstDayOfWeekDate(Integer.parseInt(dataString[0]),cursor.getInt(DBAdapter.DATA_COLUMN_WEEK));
-		for (int i = 0; i < 7; i++) {
-
-	//		x.add(dayOfWeekDate[i]);
-			x.add("123");
-			int onedaywater = DBAdapter.getOneDayWater(dayOfWeekDate[i]);
-			if(onedaywater != 0)
+		Calendar ca = Calendar.getInstance();//得到一个Calendar的实例 
+		ca.set(Integer.parseInt(dataString[0]), Integer.parseInt(dataString[1])-1, Integer.parseInt(dataString[2]));//月份是从0开始的，所以11表示12月 ,日期+1,是下面要减1
+			
+			int i = 0;
+			ca.add(Calendar.DATE, -days);
+			do
 			{
-				Entry entry = new Entry(onedaywater*1.0f, i);
-				y.add(entry);
-			}
+				ca.add(Calendar.DATE, +1); //月份减1 
+				Date date = ca.getTime(); //结果 
+				Log.w(TAG, "sf.format(date) = "+sf.format(date));
+				x.add(sf.format(date));
+				int onedaywater = DBAdapter.getOneDayWater(sf.format(date));
+				if(onedaywater == 0)
+				{
+					onedaywater = 1;
+				}
+				if(onedaywater != 0)
+				{
+					Entry entry = new Entry(onedaywater*1.0f, i);
+					y.add(entry);
+				}
+			}while(++i < days);
 		
-	    }
+
 
 		// y轴的数据集
 		LineDataSet set = new LineDataSet(y, "   ");
@@ -506,34 +514,6 @@ public class FragmentHistory extends Fragment {
 	
 	
 	
-//	@Override
-//	public void onClick(View v) {
-//		switch (v.getId()) {
-//		case R.id.history_day:
-//			if(currentClick != R.id.history_day)
-//			{
-//				currentClick = R.id.history_day;
-//				showDayData();
-//			}
-//			break;
-//		case R.id.history_week:
-//			if(currentClick != R.id.history_week)
-//			{
-//			//	showDayData();
-//			}
-//			break;
-//		case R.id.history_month:
-//			if(currentClick != R.id.history_month)
-//			{
-//			//	showDayData();
-//			}
-//			break;
-//
-//
-//		default:
-//			break;
-//		}
-//	}
 
 
 	
