@@ -53,12 +53,11 @@ public class MainActivity extends Activity {
 	FragmentHome fHome;
 	FragmentData fData;
 	FragmentTime fTime;
-	FragmentWater fWater;
+
 //	FragmentMe fMe;
 	private static final String TAG_HOME="TAG_HOME";
 	private static final String TAG_DATA="TAG_DATA";
 	private static final String TAG_TIME="TAG_TIME";
-	private static final String TAG_WATER="TAG_WATER";
 	private static final String TAG_ME="TAG_ME";
 
 	FragmentHomeReset fHome_reset;
@@ -68,19 +67,16 @@ public class MainActivity extends Activity {
 
 	private int[] mRadioButton = {
 			R.id.rbTime,
-			R.id.rbWater,
 			R.id.rbData, 
 			R.id.rbHome, 
 			};
 	private Fragment[] mFragmentArray = { 
 			fTime,
-			fWater,
 			fData,
 			fHome, 
 			};
 	private String[] mFragmentTag = { 
 			TAG_TIME,
-			TAG_WATER,
 			TAG_DATA,
 			TAG_HOME, 
 			};
@@ -653,7 +649,7 @@ public class MainActivity extends Activity {
 		// if (savedInstanceState == null)
 		{
 
-			Utils.Log("xxxxxxxxxxxxxxxxxx onCreate home:" + fWater);
+			Utils.Log("xxxxxxxxxxxxxxxxxx onCreate home:" + fData);
 			getFragmentManager().beginTransaction().show(fData).commit();
 		}
 
@@ -818,16 +814,6 @@ public class MainActivity extends Activity {
 		ft.hide(fTime);
 		mTab.add(fTime);
 		
-
-		fragment= fm.findFragmentByTag(TAG_WATER);
-		if (fragment != null) {// 如果有，则使用，处理翻转之后状态未保存问题
-			fWater = (FragmentWater) fragment;
-		} else {// 如果为空，才去新建，不新建切换的时候就可以保存状态了。
-			fWater = FragmentWater.newInstance(null);
-			ft.add(R.id.fragmentfield, fWater, TAG_WATER);
-		}
-		ft.hide(fWater);
-		mTab.add(fWater);
 	
 		
 

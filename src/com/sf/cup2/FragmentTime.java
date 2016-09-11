@@ -11,6 +11,11 @@ import java.util.TimeZone;
 import org.json.JSONObject;
 
 import com.sf.cup2.utils.Utils;
+import com.sf.cup2.view.swipelistview.BaseSwipListAdapter;
+import com.sf.cup2.view.swipelistview.SwipeMenu;
+import com.sf.cup2.view.swipelistview.SwipeMenuCreator;
+import com.sf.cup2.view.swipelistview.SwipeMenuItem;
+import com.sf.cup2.view.swipelistview.SwipeMenuListView;
 
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -23,6 +28,9 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Message;
@@ -48,6 +56,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
 public class FragmentTime extends Fragment {
 	private final static String TAG = FragmentTime.class.getPackage().getName()
@@ -61,15 +70,16 @@ public class FragmentTime extends Fragment {
 	View maskView;
 	FrameLayout alarm_layout;
 	ImageView time_logo;
+	ImageView water_alarm;
 	boolean alarmEnable = true;
 
-	private ListView mAlarmsList;
+	private SwipeMenuListView mAlarmsList;
 	private AlarmsListAdapter alarmsListAdapter;
 	ImageView add_alarm_button;
 	private SharedPreferences mSharedPreferences;
 	List<Map<String, Object>> mListData = new ArrayList<Map<String, Object>>();
 	AlarmManager mAlarmManager;
-
+	private ToggleButton mTogBtn;
 	
 	public void setNextAlarm()    //获得最近一个闹钟
 	{
@@ -174,13 +184,13 @@ public class FragmentTime extends Fragment {
 		if (size == 20) {
 			add_alarm_button.setEnabled(false);
 			add_alarm_button.setClickable(false);
-			add_alarm_button.setBackground(getActivity().getResources()
-					.getDrawable(R.drawable.water_mode_add_disable));
+//			add_alarm_button.setBackground(getActivity().getResources()
+//					.getDrawable(R.drawable.water_mode_add_disable));
 		} else {
 			add_alarm_button.setEnabled(true);
 			add_alarm_button.setClickable(true);
-			add_alarm_button.setBackground(getActivity().getResources()
-					.getDrawable(R.drawable.mode_add_selector));
+//			add_alarm_button.setBackground(getActivity().getResources()
+//					.getDrawable(R.drawable.mode_add_selector));
 		}
 	}
 
@@ -279,10 +289,86 @@ public class FragmentTime extends Fragment {
 		View v = inflater.inflate(R.layout.tab_time, null);
 		c = Calendar.getInstance();
 				
-		mAlarmsList = (ListView) v.findViewById(R.id.alarm_listview);
+		mAlarmsList = (SwipeMenuListView) v.findViewById(R.id.alarm_listview);
 		alarmsListAdapter = new AlarmsListAdapter(getData());
 		mAlarmsList.setAdapter(alarmsListAdapter);
+		
+	     // step 1. create a MenuCreator
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
 
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                		getActivity());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+                        0x00, 0x00)));
+                // set item width
+                deleteItem.setWidth(100);
+                // set a icon
+            //    deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                deleteItem.setTitle("删除");
+                // set item title fontsize
+                deleteItem.setTitleSize(18);
+                // set item title font color
+                deleteItem.setTitleColor(Color.WHITE);
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        // set creator
+        mAlarmsList.setMenuCreator(creator);
+
+        // step 2. listener item click event
+        mAlarmsList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
+				new AlertDialog.Builder(getActivity())
+				.setMessage(R.string.delete_alarm)
+				.setTitle(R.string.tips)
+				.setPositiveButton(R.string.ok,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(
+									DialogInterface dialog,
+									int which) {
+								deleteAlarm(position);
+							}
+						}).setNegativeButton(R.string.cancel, null)
+				.create().show();
+                return false;
+            }
+        });
+
+        // set SwipeListener
+        mAlarmsList.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+
+        // set MenuStateChangeListener
+        mAlarmsList.setOnMenuStateChangeListener(new SwipeMenuListView.OnMenuStateChangeListener() {
+            @Override
+            public void onMenuOpen(int position) {
+            }
+
+            @Override
+            public void onMenuClose(int position) {
+            }
+        });
+
+
+		
+		water_alarm = (ImageView) v.findViewById(R.id.img_alarm);
 		add_alarm_button = (ImageView) v.findViewById(R.id.add_alarm_button);
 		updateAddButtonStatus();
 
@@ -293,6 +379,45 @@ public class FragmentTime extends Fragment {
 			}
 		});
 
+		mTogBtn = (ToggleButton) v.findViewById(R.id.mTogBtn); // 获取到控件
+		mTogBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView,
+					boolean isChecked) {
+				// TODO Auto-generated method stub
+				
+				alarmEnable = isChecked;
+				if (alarmEnable) {
+					Toast.makeText(getActivity(),
+							getResources().getString(R.string.open_alarm),
+							Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(getActivity(),
+							getResources().getString(R.string.close_alarm),
+							Toast.LENGTH_SHORT).show();
+				}
+
+				// 1,update ui
+				updateAlarm();
+
+				// 2,update all alarm only click can change the diff status
+				// updateAlarmStatus();
+
+				// 3, save the status only click can change the diff status
+				SharedPreferences.Editor e = Utils
+						.getSharedPpreferenceEdit(getActivity());
+				e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE,
+						alarmEnable);
+				e.commit();				
+				
+				
+				
+				
+			}
+		});// 添加监听事件
+		
+		
 		time_logo = (ImageView) v.findViewById(R.id.time_logo);
 		time_logo.setOnClickListener(new OnClickListener() {
 			@Override
@@ -377,10 +502,17 @@ public class FragmentTime extends Fragment {
 			// 2,update mask
 			alarm_layout.addView(maskView);
 			// 3,change clock ui
-			time_logo.setImageResource(R.drawable.time_logo_disable);
+			if(water_alarm != null)
+			{
+				water_alarm.setBackgroundResource(R.drawable.icon_clock_remind_off);
+			}
+			
 		} else {
 			alarm_layout.removeView(maskView);
-			time_logo.setImageResource(R.drawable.time_logo_enable);
+			if(water_alarm != null)
+			{
+				water_alarm.setBackgroundResource(R.drawable.icon_clock_remind_on);
+			}
 		}
 	}
 
@@ -461,7 +593,13 @@ public class FragmentTime extends Fragment {
 
 	}
 
-	private class AlarmsListAdapter extends BaseAdapter {
+
+	
+	
+	
+	
+	
+	private class AlarmsListAdapter extends BaseSwipListAdapter {
 
 		private LayoutInflater mInflator;
 		private List<Map<String, Object>> alarmData;
@@ -590,6 +728,12 @@ public class FragmentTime extends Fragment {
 			// saveTimeAction(timeString);
 			return c;
 		}
+		
+        @Override
+        public boolean getSwipEnableByPosition(int position) {
+            return true;
+        }
+		
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -599,11 +743,9 @@ public class FragmentTime extends Fragment {
 				convertView = mInflator.inflate(R.layout.listview_item, null);
 			}
 			final int alarmPosition = position;
-			ImageView delete_alarm = (ImageView) convertView
-					.findViewById(R.id.delete_alarm);
 			TextView alarm_index = (TextView) convertView
 					.findViewById(R.id.alarm_index);
-			Switch switchView = (Switch) convertView
+			ToggleButton switchView = (ToggleButton) convertView
 					.findViewById(R.id.alarm_switch);
 			boolean switchOn = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON
@@ -647,28 +789,6 @@ public class FragmentTime extends Fragment {
 					});
 
 			alarm_index.setText(Integer.toString(position + 1));
-			delete_alarm.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					// ################ for delete must be carefull
-
-					new AlertDialog.Builder(getActivity())
-							.setMessage(R.string.delete_alarm)
-							.setTitle(R.string.tips)
-							.setPositiveButton(R.string.ok,
-									new DialogInterface.OnClickListener() {
-										@Override
-										public void onClick(
-												DialogInterface dialog,
-												int which) {
-											deleteAlarm(alarmPosition);
-
-										}
-									}).setNegativeButton(R.string.cancel, null)
-							.create().show();
-
-				}
-			});
 
 			return convertView;
 		}
