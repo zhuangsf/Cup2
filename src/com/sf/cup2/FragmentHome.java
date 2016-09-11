@@ -44,6 +44,8 @@ public class FragmentHome extends Fragment {
 	ListView homeList2View;
 	String[] listTitle;
 	String[] list2Title;
+	
+	int[] listDrawable;
 	private static final int ABOUT_INDEX=0;
 	private static final int PAIR_INFO_INDEX=1;
 	private static final int RESET_INDEX=2;
@@ -78,8 +80,15 @@ public class FragmentHome extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Resources res =getResources();
-        listTitle=res.getStringArray(R.array.home_list_title);
-        list2Title=res.getStringArray(R.array.home_part2_list_title);
+        listTitle=res.getStringArray(R.array.home_list_top_title);
+        list2Title=res.getStringArray(R.array.home_list_down_title);
+        listDrawable = new int[]{
+        		R.drawable.icon_head,
+        		R.drawable.icon_nickname,
+        		R.drawable.icon_gender,
+        		R.drawable.icon_height,
+        		R.drawable.icon_plan,
+        };
         
         
         
@@ -88,34 +97,23 @@ public class FragmentHome extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
     	View view=inflater.inflate(R.layout.tab_home, null);
-    	textViewGet=((TextView)view.findViewById(R.id.getText));
+
     	homeListView=(ListView) view.findViewById(R.id.homeListView); 
-    	HomeListViewAdapter1 hlva=new HomeListViewAdapter1(this.getActivity(), getData(), R.layout.tab_home_list_item,
-    			new String[]{"title","info","img"},
-    			new int[]{R.id.title_text,R.id.info_text,R.id.right_img});
+    	HomeListViewAdapter1 hlva=new HomeListViewAdapter1(this.getActivity(), getData(), R.layout.tab_home_list_item_top,
+    			new String[]{"item_image","title_text","text_view1","image_view1","image_view2"},
+    			new int[]{R.id.item_image,R.id.title_text,R.id.text_view1,R.id.image_view1,R.id.image_view2});
     	setHeight(hlva,homeListView);
     	homeListView.setAdapter(hlva);
     	
     	homeList2View=(ListView) view.findViewById(R.id.homeList2View); 
     	HomeListViewAdapter2 hlva2=new HomeListViewAdapter2(this.getActivity(), getData2(), R.layout.tab_home_list_item,
-    			new String[]{"title","info","img"},
-    			new int[]{R.id.title_text,R.id.info_text,R.id.right_img});
+		new String[]{"title","info","img"},
+		new int[]{R.id.title_text,R.id.info_text,R.id.right_img});
+
     	setHeight(hlva2,homeList2View);
     	homeList2View.setAdapter(hlva2);
     	
-    	buttonGet=((Button)view.findViewById(R.id.getButton));
-    	buttonGet.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View arg0) {
-				
-				new Thread(new Runnable() {
-					@Override
-					public void run() {
-						httpGet("http://121.204.243.79:8080/Cup/user/jsonfeed");
-					}
-				}).start();
-			}
-		});
+
     	
     	
         return view;
@@ -174,6 +172,7 @@ public class FragmentHome extends Fragment {
     } 
     
     private class HomeListViewAdapter2 extends SimpleAdapter{
+    	
 		public HomeListViewAdapter2(Context context, List<Map<String, Object>> data, int resource, String[] from,int[] to) {
 			super(context, data, resource, from, to);
 		}
@@ -231,9 +230,12 @@ public class FragmentHome extends Fragment {
 		Map<String, Object> map;
 		for (int i = 0; i < listTitle.length; i++) {
 			map = new HashMap<String, Object>();
-			map.put("title", listTitle[i]);
-			map.put("info", "");
-			map.put("img", ">");
+			map.put("item_image", listDrawable[i]);
+			Utils.Log("listTitle = "+listTitle[i]);
+			map.put("title_text", listTitle[i]);
+			map.put("text_view1", "");
+			map.put("image_view1", 0);
+			map.put("image_view2", 0);
 			list.add(map);
 		}
 
@@ -246,6 +248,7 @@ public class FragmentHome extends Fragment {
 		Map<String, Object> map;
 		for (int i = 0; i < list2Title.length; i++) {
 			map = new HashMap<String, Object>();
+			Utils.Log("list2Title = "+list2Title[i]);
 			map.put("title", list2Title[i]);
 			map.put("info", "");
 			map.put("img", ">");

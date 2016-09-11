@@ -1,14 +1,18 @@
 <resources>
 
-   <string-array name="home_list_title">
+   <string-array name="home_list_down_title">
         <item>关于我们</item>
         <item>已配对信息</item>
         <item>恢复出厂设置</item>
         <item>固件升级</item>
     </string-array> 
-    
-    <string-array name="home_part2_list_title">
-        <item>个人信息</item>
+
+    <string-array name="home_list_top_title">
+        <item>我的头像</item>
+        <item>昵称</item>
+        <item>性别</item>
+        <item>身高</item>
+        <item>饮水计划</item>
     </string-array> 
     
     
