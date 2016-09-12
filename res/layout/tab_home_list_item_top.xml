@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:gravity="end"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="20dp"
         >
        <TextView
         android:id="@+id/text_view1"
@@ -41,10 +41,12 @@
        <ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
+		android:gravity="center_vertical"
 		android:id="@+id/image_view1"/> 
 		    <ImageView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content" 
+		android:gravity="center_vertical"
 		android:id="@+id/image_view2"/> 
 
 	</LinearLayout>

@@ -141,7 +141,7 @@ public class FragmentHomePerson extends Fragment {
 		String sex=p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "");
 		if(TextUtils.isEmpty(sex)){
 			SharedPreferences.Editor e=Utils.getSharedPpreferenceEdit(getActivity());
-			e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "女");
+			e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
 			e.commit();
 		}
 

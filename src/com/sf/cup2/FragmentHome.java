@@ -19,7 +19,9 @@ import com.sf.cup2.utils.Utils;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -30,6 +32,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -46,11 +49,11 @@ public class FragmentHome extends Fragment {
 	String[] list2Title;
 	
 	int[] listDrawable;
-	private static final int ABOUT_INDEX=0;
-	private static final int PAIR_INFO_INDEX=1;
-	private static final int RESET_INDEX=2;
-	private static final int HARDWARE_UPDATE_INDEX=3;
-	
+	private static final int HEAD_INDEX=0;
+	private static final int NICK_NAME_INDEX=1;
+	private static final int GENDER_INDEX=2;
+	private static final int HEIGHT_INDEX=3;
+	private static final int PLAN_INDEX=4;
 	
 	Handler mHandler = new Handler()
 	  {
@@ -127,6 +130,75 @@ public class FragmentHome extends Fragment {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View view=super.getView(position, convertView, parent);
 			view.setOnClickListener(new MyListener1(position));
+			
+			TextView textView;
+			ImageView imageView1;
+			ImageView imageView2;
+			textView = (TextView)view.findViewById(R.id.text_view1);
+			imageView1 = (ImageView)view.findViewById(R.id.image_view1);
+			imageView2 = (ImageView)view.findViewById(R.id.image_view2);
+			
+//			private static final int HEAD_INDEX=0;
+//			private static final int NICK_NAME_INDEX=1;
+//			private static final int GENDER_INDEX=2;
+//			private static final int HEIGHT_INDEX=3;
+//			private static final int PLAN_INDEX=4;
+			if(position == HEAD_INDEX)
+			{
+				textView.setVisibility(View.GONE);
+				imageView1.setImageResource(R.drawable.ic_launcher);
+				imageView2.setVisibility(View.GONE);
+			//	Drawable d = Drawable.createFromPath(avatarFilePath);
+			//	Utils.Log("avatar avatarFilePath:"+avatarFilePath+" ,d:"+d);
+			//	avatar_image.setImageDrawable(d);
+			}
+			else if(position == NICK_NAME_INDEX)
+			{
+				textView.setText("jockey");
+				
+				textView.setVisibility(View.VISIBLE);
+				imageView1.setVisibility(View.GONE);
+				imageView2.setVisibility(View.GONE);
+			}
+			else if(position == GENDER_INDEX)
+			{
+				textView.setVisibility(View.GONE);
+				
+				imageView1.setVisibility(View.VISIBLE);
+				imageView2.setVisibility(View.VISIBLE);
+				
+				SharedPreferences p=Utils.getSharedPpreference(getActivity());
+				String sex=p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
+				
+				if("femail".equals(sex))
+				{
+					imageView1.setImageResource(R.drawable.button_man1);
+					imageView2.setImageResource(R.drawable.button_woman2);
+				}
+				else
+				{
+					imageView1.setImageResource(R.drawable.button_man2);
+					imageView2.setImageResource(R.drawable.button_woman1);
+				}
+			}
+			else if(position == HEIGHT_INDEX)
+			{
+				textView.setText("180");
+				textView.setVisibility(View.VISIBLE);
+				
+				imageView1.setVisibility(View.GONE);
+				imageView2.setVisibility(View.GONE);
+			}
+			else if(position == PLAN_INDEX)
+			{
+				textView.setText("2500");
+				Drawable image = getResources().getDrawable(R.drawable.icon_next);  
+				image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());//非常重要，必须设置，否则图片不会显示  
+				textView.setCompoundDrawables(null,null, image, null);  
+				textView.setVisibility(View.VISIBLE);
+				imageView1.setVisibility(View.GONE);
+				imageView2.setVisibility(View.GONE);
+			}
 			return view;
 		}
     	
@@ -139,35 +211,35 @@ public class FragmentHome extends Fragment {
         @Override  
         public void onClick(View v) {  
 //            Toast.makeText(FragmentHome.this.getActivity(),((TextView)v.findViewById(R.id.title_text)).getText()+""+mPosition, Toast.LENGTH_SHORT).show();
-            if(ABOUT_INDEX==mPosition){
-            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            	ft.add(R.id.fragmentfield, new FragmentHomeAbout());
-            	ft.remove(FragmentHome.this);
-            	ft.addToBackStack(null);
-				ft.commit();
-            }else if (PAIR_INFO_INDEX==mPosition){
-            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            	ft.add(R.id.fragmentfield, new FragmentHomePairInfo());
-            	ft.remove(FragmentHome.this);
-            	ft.addToBackStack(null);
-				ft.commit();
-            }else if(RESET_INDEX==mPosition){
-            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            	ft.add(R.id.fragmentfield, new FragmentHomeReset());
-            	ft.remove(FragmentHome.this);
-            	ft.addToBackStack(null);
-				ft.commit();
-            }else if (HARDWARE_UPDATE_INDEX==mPosition){
-            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            	ft.add(R.id.fragmentfield, new FragmentHomeHardwareUpdate());
-            	ft.remove(FragmentHome.this);
-            	ft.addToBackStack(null);
-				ft.commit();
-            }
+//            if(ABOUT_INDEX==mPosition){
+//            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+//            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            	ft.add(R.id.fragmentfield, new FragmentHomeAbout());
+//            	ft.remove(FragmentHome.this);
+//            	ft.addToBackStack(null);
+//				ft.commit();
+//            }else if (PAIR_INFO_INDEX==mPosition){
+//            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+//            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            	ft.add(R.id.fragmentfield, new FragmentHomePairInfo());
+//            	ft.remove(FragmentHome.this);
+//            	ft.addToBackStack(null);
+//				ft.commit();
+//            }else if(RESET_INDEX==mPosition){
+//            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+//            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            	ft.add(R.id.fragmentfield, new FragmentHomeReset());
+//            	ft.remove(FragmentHome.this);
+//            	ft.addToBackStack(null);
+//				ft.commit();
+//            }else if (HARDWARE_UPDATE_INDEX==mPosition){
+//            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+//            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//            	ft.add(R.id.fragmentfield, new FragmentHomeHardwareUpdate());
+//            	ft.remove(FragmentHome.this);
+//            	ft.addToBackStack(null);
+//				ft.commit();
+//            }
         }  
     } 
     
