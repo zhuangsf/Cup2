@@ -1,0 +1,35 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:layout_marginBottom="20dp"
+    android:layout_marginTop="5dp"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/rulerscale_vertical_left" />
+
+    <TextView
+        android:id="@+id/vrulerunit"
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_centerInParent="true"
+        android:background="@null"
+        android:textColor="#000000"
+        android:textSize="14sp" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:background="@null"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@null"
+        android:scaleType="fitXY"
+        android:src="@drawable/rulerscale_vertical_right" />    
+    
+</RelativeLayout>

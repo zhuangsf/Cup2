@@ -210,15 +210,15 @@ public class FragmentHome extends Fragment {
         }  
         @Override  
         public void onClick(View v) {  
-//            Toast.makeText(FragmentHome.this.getActivity(),((TextView)v.findViewById(R.id.title_text)).getText()+""+mPosition, Toast.LENGTH_SHORT).show();
-//            if(ABOUT_INDEX==mPosition){
-//            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-//            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-//            	ft.add(R.id.fragmentfield, new FragmentHomeAbout());
-//            	ft.remove(FragmentHome.this);
-//            	ft.addToBackStack(null);
-//				ft.commit();
-//            }else if (PAIR_INFO_INDEX==mPosition){
+             if(PLAN_INDEX==mPosition){
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHomePlan());
+            	ft.remove(FragmentHome.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+            }
+//             else if (PAIR_INFO_INDEX==mPosition){
 //            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
 //            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //            	ft.add(R.id.fragmentfield, new FragmentHomePairInfo());

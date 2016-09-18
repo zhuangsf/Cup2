@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    
+            <TextView
+            android:id="@+id/title1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="每天需要的饮水量约为"
+            android:textColor="@color/text_color_red"
+            android:textSize="20sp" />
+            
+                    <TextView
+            android:id="@+id/title2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="每个人每日所需的饮水量根据个人身体情况有很大差异,选择推荐值,系统将自动为您推荐每天合理的饮水量"
+            android:textColor="@color/text_color_gray"
+            android:textSize="10sp" />
+    
+             <RelativeLayout
+                android:id="@+id/v_ruler"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                >
+
+                <ImageView
+                    android:layout_width="80dp"
+                    android:layout_height="2dp"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:contentDescription="@null"
+                    android:src="@drawable/rulerscale_vertical_selected" />
+
+                <com.sf.cup2.view.CustomerScrollView
+                    android:id="@+id/vruler"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:layout_marginLeft="60dp"
+                    android:layout_marginRight="60dp"
+                    android:scrollbars="none" >
+
+                    <LinearLayout
+                        android:id="@+id/vruler_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical" >
+                    </LinearLayout>
+                </com.sf.cup2.view.CustomerScrollView>
+            </RelativeLayout>
+
+
+</LinearLayout>
