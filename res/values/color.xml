@@ -23,6 +23,8 @@
 <drawable name="cup_pink">#ffe30090</drawable>
 <drawable name="cup_dark_gray">#ff515151</drawable>
 
+
+<color name="background_color_gray">#FFf5f5f5</color>
 <color name="text_color_gray">#FF927166</color>
 <color name="text_color_red">#FFFF0000</color>
 </resources> 
