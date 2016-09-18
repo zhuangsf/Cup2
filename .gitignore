@@ -2,3 +2,5 @@
 bin/res/crunch/drawable-hdpi/tab_cup_me.png
 bin/res/crunch/drawable-hdpi/tab_weixin_normal.png
 bin/*
+gen/*
+.gitignore
