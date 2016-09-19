@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -22,6 +23,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
@@ -33,6 +35,8 @@ public class FragmentHomePlan extends Fragment {
 	private ScrollView ruler;
 	private LinearLayout rulerlayout;
 
+	private ImageView goBack;
+	private ImageView save;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -80,6 +84,23 @@ public class FragmentHomePlan extends Fragment {
 			}
 		}), 300);
 
+		goBack = (ImageView)v.findViewById(R.id.goBack);
+		goBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHome());
+            	ft.remove(FragmentHomePlan.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+		save = (ImageView)v.findViewById(R.id.save);
+		save.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+			//todo 保存的操作
+			}
+		});
 	}	
 	
 	
@@ -89,7 +110,7 @@ public class FragmentHomePlan extends Fragment {
 		View topview = (View) LayoutInflater.from(getActivity()).inflate(
 				R.layout.blankvrulerunit, null);
 		topview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				rulerHeight / 4));   //设置之后,可以上线滑动到一半
+				rulerHeight / 2));   //设置之后,可以上线滑动到一半
 		rulerlayout.addView(topview);
 		for (int i = 0; i < 25; i++) {
 			View view = (View) LayoutInflater.from(getActivity()).inflate(
@@ -102,7 +123,7 @@ public class FragmentHomePlan extends Fragment {
 		View bottomview = (View) LayoutInflater.from(getActivity()).inflate(
 				R.layout.blankvrulerunit, null);
 		bottomview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-				rulerHeight / 4));
+				rulerHeight / 2));
 		rulerlayout.addView(bottomview);
 	}	
 	

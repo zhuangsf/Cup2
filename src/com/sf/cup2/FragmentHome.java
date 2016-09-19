@@ -49,12 +49,18 @@ public class FragmentHome extends Fragment {
 	String[] list2Title;
 	
 	int[] listDrawable;
+	int[] list2Drawable;
 	private static final int HEAD_INDEX=0;
 	private static final int NICK_NAME_INDEX=1;
 	private static final int GENDER_INDEX=2;
 	private static final int HEIGHT_INDEX=3;
 	private static final int PLAN_INDEX=4;
 	
+	private static final int ACCOUNT_INDEX=0;
+	private static final int WARN_INDEX=1;
+	private static final int PAIRING_INDEX=2;
+	private static final int UPDATE_INDEX=3;
+	private static final int ABOUT_INDEX=4;
 	Handler mHandler = new Handler()
 	  {
 	    @Override
@@ -92,6 +98,13 @@ public class FragmentHome extends Fragment {
         		R.drawable.icon_height,
         		R.drawable.icon_plan,
         };
+        list2Drawable = new int[]{
+        		R.drawable.icon_account,
+        		R.drawable.icon_warn,
+        		R.drawable.icon_pairing,
+        		R.drawable.icon_nickname,
+        		R.drawable.icon_about,
+        };
         
         
         
@@ -109,9 +122,9 @@ public class FragmentHome extends Fragment {
     	homeListView.setAdapter(hlva);
     	
     	homeList2View=(ListView) view.findViewById(R.id.homeList2View); 
-    	HomeListViewAdapter2 hlva2=new HomeListViewAdapter2(this.getActivity(), getData2(), R.layout.tab_home_list_item,
-		new String[]{"title","info","img"},
-		new int[]{R.id.title_text,R.id.info_text,R.id.right_img});
+    	HomeListViewAdapter2 hlva2=new HomeListViewAdapter2(this.getActivity(), getData2(), R.layout.tab_home_list_item_down,
+		new String[]{"item_image","title_text","image_view"},
+		new int[]{R.id.item_image,R.id.title_text,R.id.image_view});
 
     	setHeight(hlva2,homeList2View);
     	homeList2View.setAdapter(hlva2);
@@ -321,9 +334,9 @@ public class FragmentHome extends Fragment {
 		for (int i = 0; i < list2Title.length; i++) {
 			map = new HashMap<String, Object>();
 			Utils.Log("list2Title = "+list2Title[i]);
-			map.put("title", list2Title[i]);
-			map.put("info", "");
-			map.put("img", ">");
+			map.put("item_image", list2Drawable[i]);
+			map.put("title_text", list2Title[i]);
+			map.put("image_view", R.drawable.icon_next);
 			list.add(map);
 		}
 

@@ -5,109 +5,133 @@
     android:background="@color/background_color_gray"
     android:orientation="vertical" >
 
-          <RelativeLayout
-            android:id="@+id/header"
-            android:layout_width="fill_parent"
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <ImageView
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp" >
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/bar_icon_back" />
 
-          <ImageView
-              android:id="@+id/goBack"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentLeft="true"
-              android:layout_centerVertical="true"
-              android:layout_marginLeft="10dp"
-              android:src="@drawable/bar_icon_back" />
-              
-            <TextView
-                android:id="@id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="饮水计划设置"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-
-          <ImageView
-              android:id="@+id/save"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentRight="true"
-              android:layout_centerVertical="true"
-              android:layout_marginRight="10dp"
-              android:background="@drawable/bar_icon_save" />
-            
-        </RelativeLayout>
-            <TextView
-            android:id="@+id/title1"
+        <TextView
+            android:id="@id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="每天需要的饮水量约为"
-            android:textColor="@color/text_color_red"
+            android:text="饮水计划设置"
+            android:textColor="@android:color/black"
             android:textSize="20sp" />
-            
-                    <TextView
-            android:id="@+id/title2"
+
+        <ImageView
+            android:id="@+id/save"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/bar_icon_save" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_weight="3"
+            android:background="@color/background_color_white"
+            android:gravity="center"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/title1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="每天需要的饮水量约为 2000ml"
+                android:textColor="@color/text_color_red"
+                android:textSize="20sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/title2"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
             android:layout_centerInParent="true"
             android:text="每个人每日所需的饮水量根据个人身体情况有很大差异,选择推荐值,系统将自动为您推荐每天合理的饮水量"
             android:textColor="@color/text_color_gray"
             android:textSize="10sp" />
-    
-             <RelativeLayout
-                android:id="@+id/v_ruler"
+
+        <RelativeLayout
+            android:id="@+id/v_ruler"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp" 
+            android:layout_weight="12">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_marginLeft="50dp"
+                    android:layout_weight="4"
+                    android:background="@drawable/dotted_line"
+                    android:orientation="horizontal" />
+
+                <TextView
+                    android:id="@+id/line_hint"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="推荐值"
+                    android:textColor="@color/text_color_red"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+            <com.sf.cup2.view.CustomerScrollView
+                android:id="@+id/vruler"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                >
+                android:layout_marginLeft="60dp"
+                android:layout_marginRight="60dp"
+                android:layout_marginTop="10dp"
+                android:scrollbars="none" >
 
-                 <LinearLayout 
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerVertical="true"
-    android:gravity="center"
-    android:orientation="horizontal" >
-
-                <View 
-    android:layout_width="0dp"
-    android:layout_height="2dp"
-    android:layout_marginLeft="50dp"
-    android:orientation="horizontal"
-    android:layout_weight="4"
-    android:background="@drawable/dotted_line" />
-                                    <TextView
-            android:id="@+id/line_hint"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="推荐值"
-            android:textColor="@color/text_color_red"
-            android:textSize="10sp" />
-                
-</LinearLayout>
-                <com.sf.cup2.view.CustomerScrollView
-                    android:id="@+id/vruler"
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    android:layout_marginLeft="60dp"
-                    android:layout_marginRight="60dp"
-                    android:scrollbars="none" >
-
-                    <LinearLayout
-                        android:id="@+id/vruler_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:layout_marginRight="10dp"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical" >
-                    </LinearLayout>
-                </com.sf.cup2.view.CustomerScrollView>
-            </RelativeLayout>
-
+                <LinearLayout
+                    android:id="@+id/vruler_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="vertical" >
+                </LinearLayout>
+            </com.sf.cup2.view.CustomerScrollView>
+        </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>

@@ -6,36 +6,37 @@
     android:minHeight="36dp"
     android:gravity="center_vertical"
      >
+     
+    
+        <ImageView
+            android:paddingLeft="10dp"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:id="@+id/item_image"/> 
 
     <TextView
         android:id="@+id/title_text"
-        android:layout_weight="1"
-        android:paddingLeft="20dp"
+        android:paddingLeft="10dp"
+         android:layout_weight="1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textColor="@drawable/black"
+        android:textColor="#927166"
         android:textSize="18sp" />
-        <!-- android:background="@android:color/holo_blue_dark" -->
+
     
-    <TextView
-        android:id="@+id/info_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="15sp" />
-	
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:gravity="end"
         android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="20dp"
         >
-    <TextView
-        android:id="@+id/right_img"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         android:gravity="center"
-        android:textSize="20sp" />
+       <ImageView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:layout_gravity="right|center_vertical"
+		android:gravity="center_vertical"
+		android:id="@+id/image_view"/> 
 	</LinearLayout>
 </LinearLayout>
