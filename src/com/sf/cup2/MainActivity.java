@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.sf.cup2.guide.GuideView;
+import com.sf.cup2.guide.SingleGuideView;
 import com.sf.cup2.login.LoginActivity;
 import com.sf.cup2.utils.Utils;
 import com.tencent.bugly.crashreport.CrashReport;
@@ -609,7 +610,7 @@ public class MainActivity extends Activity {
 		SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
 		int isFirst = p.getInt(Utils.SHARE_PREFERENCE_CUP_OPEN_COUNTS, 0);
 		if (isFirst == 0) {
-			Intent i = new Intent(this, GuideView.class);
+		    Intent i = new Intent(this, SingleGuideView.class);
 			startActivity(i);
 			finish();
 			onDestroy();
