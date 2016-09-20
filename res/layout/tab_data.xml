@@ -1,23 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"  
-    android:layout_width="fill_parent"  
-    android:layout_height="fill_parent"  
-    > 
-    
-<LinearLayout
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:background="@color/background_color_gray">
-     
-    
-       <RelativeLayout
+    android:layout_height="fill_parent" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@color/background_color_gray"
+        android:orientation="vertical" >
+
+        <RelativeLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@layout/header_gradient"
             android:paddingBottom="5dp"
             android:paddingTop="5dp" >
+
+            <ImageView
+                android:id="@+id/logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/icon_logo" />
 
             <TextView
                 android:id="@id/title"
@@ -28,103 +35,174 @@
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
 
+            <ImageView
+                android:id="@+id/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/icon_share" />
         </RelativeLayout>
 
-               <LinearLayout
-            android:id="@+id/top"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:orientation="vertical" 
-            android:layout_weight="1"
-		>
-		<com.sf.cup2.view.ArcProgressbar
-		    android:id="@+id/arcProgressbar_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" 
-            />
-  </LinearLayout>
-       <LinearLayout
-            android:id="@+id/bottom"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" 
-            android:gravity="bottom"
-		>
-		<View  
-   android:layout_width="fill_parent"  
-    android:layout_height="2px" 
-   android:background="?android:attr/listDivider" 
-   android:layout_marginBottom="3px"
-/>  
-       <TextView
-           android:id="@+id/datetime"
-           android:layout_width="match_parent"
-           android:layout_height="wrap_content"
-           android:textColor="@android:color/black"
-           android:textSize="20sp" 
-           android:gravity="center"
-           />		
-<View  
-   android:layout_width="fill_parent"  
-    android:layout_height="2px" 
-   android:background="?android:attr/listDivider"  
-   android:layout_marginTop="3px"
-/>  
-       <com.github.mikephil.charting.charts.LineChart
-           android:id="@+id/chart"
-           android:layout_width="match_parent"
-           android:layout_height="200dp"
-           >
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal" >
 
-       </com.github.mikephil.charting.charts.LineChart>
- 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="今日喝水"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="1000"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="饮水目标"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="2000"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="25sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="完成计划"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="50%"
+                    android:textColor="@color/text_color_gray"
+                    android:textSize="25sp" />
+            </LinearLayout>
         </LinearLayout>
-</LinearLayout>
 
-<RelativeLayout 
-    android:id="@+id/layout_calendar"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:visibility="gone" 
-    android:background="#F5A0B3">
 
-    <TextView
-        android:id="@+id/calendarCenter"
-        style="@style/main_bar_text_style"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical" >
+
+        <com.sf.cup2.view.PercentView
+            android:id="@+id/arcProgressbar_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/bottom"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="8dp" />
+        android:gravity="bottom"
+        android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/calendarLeft"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:padding="8dp"
-        android:src="@drawable/calendar_month_left" />
+        <TextView
+            android:id="@+id/datetime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/text_color_gray"
+            android:textSize="20sp" />
 
-    <ImageButton
-        android:id="@+id/calendarRight"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:background="@null"
-        android:contentDescription="@null"
-        android:padding="8dp"
-        android:src="@drawable/calendar_month_right" />
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="200dp" >
+        </com.github.mikephil.charting.charts.LineChart>
+    </LinearLayout>
 
-    <com.sf.cup2.view.CalendarView
-        android:id="@+id/calendar"
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout_calendar"
         android:layout_width="fill_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/calendarCenter" />
+        android:layout_height="wrap_content"
+        android:background="#F5A0B3"
+        android:visibility="gone" >
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/calendarCenter"
+            style="@style/main_bar_text_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="8dp" />
 
+        <ImageButton
+            android:id="@+id/calendarLeft"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/calendar_month_left" />
 
+        <ImageButton
+            android:id="@+id/calendarRight"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/calendar_month_right" />
 
-</FrameLayout> 
+        <com.sf.cup2.view.CalendarView
+            android:id="@+id/calendar"
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/calendarCenter" />
+    </RelativeLayout>
+
+</FrameLayout>
