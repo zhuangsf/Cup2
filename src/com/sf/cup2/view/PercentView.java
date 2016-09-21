@@ -70,10 +70,12 @@ public class PercentView extends View{
     private int deepRedColor;
     /**灰色*/
     private int grayColor;
+    /**绿色*/
+    private int greenColor;
     /**间隔的角度*/
     private double spaceAngle=22.5;
     /**两条圆弧的起始角度*/
-    private double floatAngel=20;
+    private double floatAngel=60;
     /**自定义的Bitmap*/
     private Bitmap mBitmap;
     /**自定义的画布，目的是为了能画出重叠的效果*/
@@ -137,25 +139,26 @@ public class PercentView extends View{
         bitmapPaint.setAntiAlias(true);
 
         outerArcWidth = context.getResources().getDimensionPixelOffset(R.dimen.dp2);
-        insideArcWidth = context.getResources().getDimensionPixelOffset(R.dimen.dp12);
+        insideArcWidth = context.getResources().getDimensionPixelOffset(R.dimen.dp18);
         spaceWidth = context.getResources().getDimensionPixelOffset(R.dimen.dp12);
         scrollCircleRadius = context.getResources().getDimensionPixelOffset(R.dimen.dp4);
         percentTextSize = context.getResources().getDimensionPixelOffset(R.dimen.dp8);
-        textSizeAim = context.getResources().getDimensionPixelOffset(R.dimen.sp15);
-        textSizeTag = context.getResources().getDimensionPixelOffset(R.dimen.sp30);
+        textSizeAim = context.getResources().getDimensionPixelOffset(R.dimen.sp40);
+        textSizeTag = context.getResources().getDimensionPixelOffset(R.dimen.sp18);
         pinkColor = context.getResources().getColor(R.color.percent_pink);
         yellowColor = context.getResources().getColor(R.color.percent_yellow);
         pinkRedColor = context.getResources().getColor(R.color.percent_pink_red);
         redColor = context.getResources().getColor(R.color.percent_red);
         deepRedColor = context.getResources().getColor(R.color.percent_deep_red);
         grayColor = context.getResources().getColor(R.color.percent_gray);
-
+        greenColor = context.getResources().getColor(R.color.percent_green);
 
         pos = new float[2];
         tan = new float[2];
         mBitmapBackDeepRed= BitmapFactory.decodeResource(context.getResources(), R.mipmap.blur_back_deep_red);
         mMatrix=new Matrix();
-        setAngel(100);
+        setAngel(75);
+        setRankText("test1","test2");
     }
 
     private int count=0;
@@ -171,11 +174,11 @@ public class PercentView extends View{
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         mCanvas =new Canvas(mBitmap);
 
-        radius= (int) (height/(1+Math.sin(Math.toRadians(spaceAngle))));//获取最外园的半径
+        radius= (int) (9 * height/(16*(1+Math.sin(Math.toRadians(spaceAngle)))));//获取最外园的半径
         insideArcRadius= radius-scrollCircleRadius-spaceWidth;//内弧半径
-//        Log.i(TAG,"最外园半径"+radius+"\n高度为"+height);
+        Log.i("PercentVIew","最外园半径"+radius+" 高度为"+height+" 宽度为"+width);
 //        Log.i(TAG,"最外园半径"+Math.sin(Math.toRadians(spaceAngle)));
-        paintPercentText(mCanvas);
+//        paintPercentText(mCanvas);
         paintPercentBack(mCanvas);
         paintPercent(mAngel, aimPercent, mCanvas);
 //        calculateItemPositions(aimPercent,increaseValue,mCanvas,mBitmapBackDeepRed);
@@ -213,11 +216,11 @@ public class PercentView extends View{
         paint.setStrokeCap(Paint.Cap.ROUND);//设置为圆角
         paint.setAntiAlias(true);
         //绘制最外层圆条底色
-        outerArcRadius=radius-outerArcWidth;
-        outerArea= new RectF(width/2 - outerArcRadius, radius - outerArcRadius, width/2  + outerArcRadius, radius + outerArcRadius);
-        canvas.drawArc(outerArea,
-                (float) (180 - floatAngel),
-                (float) (180 + 2 * floatAngel), false, paint);
+//        outerArcRadius=radius-outerArcWidth;
+//        outerArea= new RectF(width/2 - outerArcRadius, radius - outerArcRadius, width/2  + outerArcRadius, radius + outerArcRadius);
+//        canvas.drawArc(outerArea,
+//                (float) (180 - floatAngel),
+//                (float) (180 + 2 * floatAngel), false, paint);
         //绘制里层大宽度弧形
         paint.setColor(pinkColor);
         paint.setStrokeWidth(insideArcWidth);
@@ -260,19 +263,14 @@ public class PercentView extends View{
         }
         if (aimPercent<=10){//目的是为了
             drawInsideArc((float) (180 - floatAngel), (float) roateAngel, canvas);
-            drawOuterAcr((float) (180 - floatAngel), (float) roateAngel, canvas,mBitmapBackDeepRed,yellowColor);
         }else if (aimPercent>10&&aimPercent<=20){
             drawInsideArc((float) (180 - floatAngel), (float) roateAngel, canvas);
-            drawOuterAcr((float) (180 - floatAngel), (float) roateAngel, canvas,mBitmapBackDeepRed,yellowColor);
         }else if (aimPercent>20&&aimPercent<=60){
             drawInsideArc((float) (180 - floatAngel), (float) (roateAngel-(spaceAngle-floatAngel)), canvas);
-            drawOuterAcr((float) (180 - floatAngel), (float) (roateAngel - (spaceAngle - floatAngel)), canvas,mBitmapBackDeepRed,pinkRedColor);
         }else if (aimPercent>60&&aimPercent<=90){
             drawInsideArc((float) (180 - floatAngel), (float) (roateAngel-(spaceAngle-floatAngel)), canvas);
-            drawOuterAcr((float) (180 - floatAngel), (float) (roateAngel - (spaceAngle - floatAngel)),canvas,mBitmapBackDeepRed,redColor);
         }else {
             drawInsideArc((float) (180 - floatAngel), (float) (roateAngel-2*(spaceAngle-floatAngel)), canvas);
-            drawOuterAcr((float) (180 - floatAngel), (float) (roateAngel-2*(spaceAngle-floatAngel)), canvas,mBitmapBackDeepRed, deepRedColor);
         }
 
 
@@ -295,69 +293,36 @@ public class PercentView extends View{
     }
 
     /***
-     * 绘制外部彩色线条和小红圈
-     * 利用PathMeasure的getTranslate测量出需要绘制的圆弧的末端的坐标位置
-     * @param formDegree 起始角度
-     * @param toDegree 旋转角度
-     * @param canvas 画布
-     * @param bitmap 四种状态的模糊Bitmap
-     * @param color 四种状态的实心颜色
-     */
-    private void drawOuterAcr(float formDegree ,float toDegree,Canvas canvas,Bitmap bitmap,int color){
-    	
-    	//不画外圈
-    	if(true)
-    		return;
-    	
-        shaderPaint.setStrokeWidth(outerArcWidth);
-        shaderPaint.setStyle(Paint.Style.STROKE);
-//        canvas.drawArc( new RectF(width/2 - outerArcRadius, radius - outerArcRadius, width/2  + outerArcRadius, radius + outerArcRadius),
-//                formDegree,
-//                toDegree, false, shaderPaint);
-        Path orbit = new Path();
-        //通过Path类画一个90度（180—270）的内切圆弧路径
-        orbit.addArc(outerArea, formDegree, toDegree);
-        // 创建 PathMeasure
-        PathMeasure measure = new PathMeasure(orbit, false);
-        measure.getPosTan(measure.getLength() * 1, pos, tan);
-        mMatrix.reset();
-        mMatrix.postTranslate(pos[0] - bitmap.getWidth() / 2, pos[1] - bitmap.getHeight() / 2);   // 将图片绘制中心调整到与当前点重合
-        canvas.drawPath(orbit, shaderPaint);//绘制外层的线条
-        canvas.drawBitmap(bitmap, mMatrix, bitmapPaint);//绘制
-        bitmapPaint.setColor(color);
-        //绘制实心小圆圈
-        canvas.drawCircle(pos[0], pos[1], 8, bitmapPaint);
-    }
-    /***
      * 4个色值由浅到深分别是 ffd200 ff5656 fa4040 f60157
      * 等级划分：0-20% 再接再厉   21-60% 技高一筹   61-90% 名列前茅   90以上 理财达人
      */
     private void paintText(Canvas canvas){
         if (!TextUtils.isEmpty(tag)&&!TextUtils.isEmpty(aim)){
-            if (aimPercent>=0&&aimPercent<=20){
-                textPaint.setColor(yellowColor);
-            }else if (aimPercent>20&&aimPercent<=60){
-                textPaint.setColor(pinkRedColor);
-            }else if (aimPercent>60&&aimPercent<=90){
-                textPaint.setColor(redColor);
-            }else {
-                textPaint.setColor(deepRedColor);
-            }
+            textPaint.setColor(deepRedColor);
             textPaint.setTextSize(textSizeTag);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setStrokeWidth(2);
-            canvas.drawText(tag, width / 2, radius - textSizeTag / 2, textPaint);
-            textPaint.setColor(grayColor);
+            canvas.drawText("完成50%", width / 2, radius - textSizeTag, textPaint);
+            textPaint.setColor(deepRedColor);
             textPaint.setTextSize(textSizeAim);
             textPaint.setStrokeWidth(1);
-            float leftLength=textPaint.measureText("你击败了");
-            float rightLength=textPaint.measureText("的用户");
-            float centerLength=textPaint.measureText(aim+"%");
-            float rightOffest=textSizeAim/2;//
-            canvas.drawText("你击败了",width/2-leftLength/2-centerLength/2+rightOffest,radius + textSizeAim, textPaint);
-            canvas.drawText("的用户",width/2+rightLength/2+centerLength/2+rightOffest,radius + textSizeAim, textPaint);
-            textPaint.setColor(Color.parseColor("#fa4040"));
-            canvas.drawText(aim+"%",width/2+rightOffest,radius + textSizeAim, textPaint);
+//            float leftLength=textPaint.measureText("你击败了");
+//            float rightLength=textPaint.measureText("的用户");
+//            float centerLength=textPaint.measureText(aim+"%");
+//            float rightOffest=textSizeAim/2;
+            canvas.drawText("1000",width/2,radius + textSizeAim/2, textPaint);
+            
+            
+            textPaint.setColor(grayColor);
+            textPaint.setTextSize(textSizeTag);
+            canvas.drawText("目标  2000ml",width/2,radius + textSizeAim, textPaint);
+
+            textPaint.setColor(greenColor);
+            textPaint.setTextSize(textSizeTag);
+            canvas.drawText("80%",width/2,2*radius - textSizeTag*2, textPaint);
+            
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_battery_hight);  
+            canvas.drawBitmap(bitmap, (width - bitmap.getWidth())/2,2*radius - textSizeTag*2+3, textPaint);  
 
         }
 
