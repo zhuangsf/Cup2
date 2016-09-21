@@ -32,6 +32,7 @@ import android.app.FragmentTransaction;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -151,6 +152,10 @@ public class FragmentData extends Fragment {
 		});
 
 		dateTime = (TextView) view.findViewById(R.id.datetime);
+		dateTime.setCompoundDrawablePadding(3); 
+		Drawable image = getActivity().getResources().getDrawable(R.drawable.icon_calendar);  
+		image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());
+		dateTime.setCompoundDrawables(image,null, null, null); 
 		dateTime.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
@@ -263,11 +268,20 @@ public class FragmentData extends Fragment {
 	private LineData getLineData(Cursor cursor) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
-
+		boolean bEmptyData = false;
+		if (!cursor.moveToFirst()) {
+			bEmptyData = true;
+		}
+		
 		for (int i = 0; i < 24; i++) {
 			String times = getString(R.string.times);
 			times = String.format(times, (i + 6)%24);
 			x.add(times);
+			if(bEmptyData && i == 0)
+			{
+				Entry entry = new Entry(0.0f, i);
+				y.add(entry);
+			}
 		}
 
 		if (cursor.moveToFirst()) {

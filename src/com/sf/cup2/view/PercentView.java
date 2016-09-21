@@ -155,7 +155,7 @@ public class PercentView extends View{
         tan = new float[2];
         mBitmapBackDeepRed= BitmapFactory.decodeResource(context.getResources(), R.mipmap.blur_back_deep_red);
         mMatrix=new Matrix();
-        setAngel(50);
+        setAngel(100);
     }
 
     private int count=0;
