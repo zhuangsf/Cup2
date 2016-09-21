@@ -183,9 +183,12 @@
     <!-- 用作后面阴影,点击时候退出 -->
 
     <View
+        android:id="@+id/mask_view"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:visibility="gone" />
+        android:background="#88000000"
+        android:visibility="gone"
+        />
 
     <RelativeLayout
         android:id="@+id/layout_calendar"

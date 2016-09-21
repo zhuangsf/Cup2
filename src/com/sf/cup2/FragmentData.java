@@ -65,6 +65,7 @@ public class FragmentData extends Fragment {
     private FragmentHistory fHistory;
 	private RelativeLayout layout_calendar;
 	private String mClickDate;
+	private View mask_view;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -110,6 +111,15 @@ public class FragmentData extends Fragment {
 			e.printStackTrace();
 		}
 
+		mask_view = (View)view.findViewById(R.id.mask_view);
+		mask_view.setOnClickListener(new OnClickListener() {
+
+			public void onClick(View v) {
+				mask_view.setVisibility(View.GONE);
+				layout_calendar.setVisibility(view.GONE);
+			}
+		});
+		
 		// 获取日历中年月 ya[0]为年，ya[1]为月（格式大家可以自行在日历控件中改）
 		String[] ya = calendar.getYearAndmonth().split("-");
 		calendarCenter.setText(ya[0] + "年" + ya[1] + "月");
@@ -147,6 +157,8 @@ public class FragmentData extends Fragment {
 							+ clickDate[2] + "日");
 				}
 				layout_calendar.setVisibility(view.GONE);
+				mask_view.setVisibility(View.GONE);
+				
 				reflashChartData(format.format(downDate));
 			}
 		});
@@ -160,6 +172,7 @@ public class FragmentData extends Fragment {
 
 			public void onClick(View v) {
 				layout_calendar.setVisibility(view.VISIBLE);
+				mask_view.setVisibility(View.VISIBLE);
 			}
 		});
 		mClickDate = format.format(new java.util.Date());
