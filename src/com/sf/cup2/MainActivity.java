@@ -998,6 +998,13 @@ public class MainActivity extends Activity {
 	    int count=getFragmentManager().getBackStackEntryCount();
 		if(count==0){
 			long l = System.currentTimeMillis();
+			
+		if(fData.bShowCalendar())
+		{
+			fData.closeCalendar();
+			return;
+		}
+			
 	    if (l - lastTime > 2000L)
 	    {
 	      lastTime = l;

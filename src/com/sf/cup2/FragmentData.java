@@ -156,7 +156,7 @@ public class FragmentData extends Fragment {
 					dateTime.setText(clickDate[0] + "年" + clickDate[1] + "月"
 							+ clickDate[2] + "日");
 				}
-				layout_calendar.setVisibility(view.GONE);
+				layout_calendar.setVisibility(View.GONE);
 				mask_view.setVisibility(View.GONE);
 				
 				reflashChartData(format.format(downDate));
@@ -366,6 +366,26 @@ public class FragmentData extends Fragment {
 
 	}
 
+	public boolean bShowCalendar()
+	{
+		if(mask_view != null)
+		return mask_view.getVisibility() == View.VISIBLE;
+		else
+		return false;
+	}
+	
+	public void closeCalendar()
+	{
+		if(layout_calendar != null)
+		{
+			layout_calendar.setVisibility(View.GONE);
+		}
+		if(layout_calendar != null)
+		{
+			mask_view.setVisibility(View.GONE);
+		}
+	}
+	
 	public static FragmentData newInstance(Bundle b) {
 		FragmentData fd = new FragmentData();
 		fd.setArguments(b);
