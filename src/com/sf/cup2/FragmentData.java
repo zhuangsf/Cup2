@@ -222,11 +222,15 @@ public class FragmentData extends Fragment {
 
 		// 将x轴放到底部 默认在顶部
 		XAxis mXAxis = mlinechart.getXAxis();
-		mXAxis.setPosition(XAxisPosition.TOP);
+		mXAxis.setPosition(XAxisPosition.BOTTOM);
 
-		mXAxis.setDrawAxisLine(false);
+		//x轴底部线
+		mXAxis.setDrawAxisLine(true);
 		
-		LimitLine ll = new LimitLine(200f, "500ml");
+		//竖方向线不显示
+		mXAxis.setDrawGridLines(false);
+		
+		LimitLine ll = new LimitLine(500f, "500ml");
 		ll.setLineColor(Color.RED);
 		ll.setLineWidth(1f);
 		ll.enableDashedLine(10f, 5f, 0f);
@@ -235,8 +239,10 @@ public class FragmentData extends Fragment {
 		// .. and more styling options
 		YAxis leftAxis = mlinechart.getAxisLeft();
 		YAxis rightAxis = mlinechart.getAxisRight();
-		leftAxis.setDrawGridLines(false);
-		rightAxis.setDrawGridLines(false);
+		
+		//显示横方向线
+		leftAxis.setDrawGridLines(true);
+		rightAxis.setDrawGridLines(true);
 		rightAxis.setEnabled(false);
 		leftAxis.addLimitLine(ll);
 
@@ -309,16 +315,18 @@ public class FragmentData extends Fragment {
 		}
 
 		// y轴的数据集
-		LineDataSet set = new LineDataSet(y, "   ");
+		LineDataSet set = new LineDataSet(y, null);
 		// 用y轴的集合来设置参数
 		// 线宽
-		set.setLineWidth(3.0f);
+		set.enableDashedLine(10f, 5f, 0f);
+		set.setLineWidth(1.0f);
 		// 显示圆形大小
-		set.setCircleSize(5.0f);
+		set.setCircleSize(2.0f);
 		// 折线的颜色
-		set.setColor(Color.BLACK);
+		set.setColor(Color.RED);
 		// 圆球颜色
 		set.setCircleColor(Color.RED);
+		set.setDrawCircleHole(false);
 		// 设置mLineDataSet.setDrawHighlightIndicators(false)后，
 		// Highlight的十字交叉的纵横线将不会显示，
 		// 同时，mLineDataSet.setHighLightColor()失效。
@@ -339,8 +347,9 @@ public class FragmentData extends Fragment {
 		// 填充曲线下方的区域，红色，半透明。
 		set.setDrawFilled(true);
 		// 数值越小 透明度越大
-		set.setFillAlpha(50);
-		set.setFillColor(Color.RED);
+	//	set.setFillAlpha(50);
+	//	set.setFillColor(Color.RED);
+		set.setFillDrawable(getActivity().getResources().getDrawable(R.drawable.background_linechart));
 
 		// 填充折线上数据点、圆球里面包裹的中心空白处的颜色。
 		// set.setCircleColorHole(Color.YELLOW);
