@@ -95,6 +95,19 @@ public class DBAdapter {
 				KEY_TIME, KEY_WATER }, null, null, null, null, null);
 	}
 
+	public boolean bIsEmptyData()
+	{
+		Cursor c = getAllData();
+		if (c.moveToFirst())
+		{
+			return false;
+		}
+		else
+		{
+			return true;
+		}
+	}
+	
 	public static int getOneDayWater(String dateString)
 	{
 		int oneDayWater = 0;

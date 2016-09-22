@@ -425,179 +425,176 @@ public class MainActivity extends Activity {
     
 	private void initData()
 	{
-	
-		if(true)
-			return;
 		DBAdapter db = new DBAdapter(this);
 		db.open();
+		if(db.bIsEmptyData())
+		{
 		long id;
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"07:00",
 		"500");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"08:00",
 		"50");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"09:00",
 		"450");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"10:30",
 		"300");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"11:06",
 		"100");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"13:00",
 		"200");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"16:00",
 		"50");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"18:00",
 		"150");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"20:30",
 		"300");
 		id = db.insertWaterData(
-		"2015-01-01",
+		"2016-09-22",
 		"23:06",
 		"100");
 		
 		id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"07:00",
 				"330");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"08:00",
 				"280");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"09:00",
 				"130");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"10:30",
 				"450");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"11:06",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"13:00",
 				"340");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"16:00",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"18:00",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"20:30",
 				"340");
 				id = db.insertWaterData(
-				"2015-01-02",
+				"2016-09-21",
 				"23:06",
 				"120");		
 		
 		
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"07:00",
 		"500");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"08:00",
 		"150");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"09:00",
 		"350");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"10:30",
 		"150");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"11:06",
 		"580");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"13:00",
 		"140");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"16:00",
 		"350");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"18:00",
 		"350");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"20:30",
 		"140");
 		id = db.insertWaterData(
-		"2015-01-03",
+		"2016-09-20",
 		"23:06",
 		"220");
 		
 		id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"07:00",
 				"100");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"08:00",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"09:00",
 				"650");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"10:30",
 				"150");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"11:06",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"13:00",
 				"440");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"16:00",
 				"350");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"18:00",
 				"150");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"20:30",
 				"310");
 				id = db.insertWaterData(
-				"2015-01-05",
+				"2016-09-18",
 				"23:06",
 				"150");
-		
-		
-		db.dumpData();
+		}
 		db.close();
 	}
     

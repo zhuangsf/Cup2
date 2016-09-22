@@ -280,6 +280,10 @@ public class FragmentData extends Fragment {
 		// 下方字体颜色
 		mLegend.setTextColor(Color.BLUE);
 		// 设置x轴的动画
+		
+		//是否显示表格下方表格的名称
+		mLegend.setEnabled(false);
+		
 		mlinechart.animateX(1000);
 
 	}
