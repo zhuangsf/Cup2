@@ -43,7 +43,7 @@ public class LoginActivity extends Activity {
 	boolean isCountDown=false;
 	Thread countDownThread;
 	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -335,4 +335,5 @@ public class LoginActivity extends Activity {
 		super.onDestroy();
 		SMSSDK.unregisterAllEventHandler();
 	}
+
 }
