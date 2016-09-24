@@ -64,18 +64,19 @@
         SortId="1"
         AppKey="1195120244"
         AppSecret="b80151bf8d4457b914c033121f9992e5"
-        RedirectUrl="http://www.sharesdk.cn"
+        RedirectUrl="http://sharesdk.cn"
         ShareByAppClient="true"
         Enable="true" />
-
+    
     <TencentWeibo
         Id="2" 
         SortId="2"
         AppKey="1105636841"
         AppSecret="KEY2L6rUPtsUtxsCuD3"
         RedirectUri="http://sharesdk.cn"
-        Enable="true" />
+        Enable="false" />
     
+   
     <QZone
         Id="3"
         SortId="3"
@@ -116,8 +117,8 @@
 	<QQ
         Id="7"
         SortId="7"
-        AppId="100371282"
-        AppKey="aed9b0303e3ed1e27bae87c33761161d"
+        AppId="1105636841"
+        AppKey="2L6rUPtsUtxsCuD3"
         ShareByAppClient="true"
         Enable="true" />
     
