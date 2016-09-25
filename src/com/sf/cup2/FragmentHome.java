@@ -48,13 +48,10 @@ public class FragmentHome extends Fragment {
 	String[] listTitle;
 	String[] list2Title;
 	
-	int[] listDrawable;
-	int[] list2Drawable;
-	private static final int HEAD_INDEX=0;
-	private static final int NICK_NAME_INDEX=1;
-	private static final int GENDER_INDEX=2;
-	private static final int HEIGHT_INDEX=3;
-	private static final int PLAN_INDEX=4;
+	private int[] listDrawable;
+	private int[] list2Drawable;
+	private static final int MODIFY_INDEX=0;
+	private static final int PLAN_INDEX=1;
 	
 	private static final int ACCOUNT_INDEX=0;
 	private static final int WARN_INDEX=1;
@@ -92,10 +89,7 @@ public class FragmentHome extends Fragment {
         listTitle=res.getStringArray(R.array.home_list_top_title);
         list2Title=res.getStringArray(R.array.home_list_down_title);
         listDrawable = new int[]{
-        		R.drawable.icon_head,
-        		R.drawable.icon_nickname,
-        		R.drawable.icon_gender,
-        		R.drawable.icon_height,
+        		R.drawable.icon_modify,
         		R.drawable.icon_plan,
         };
         list2Drawable = new int[]{
@@ -156,62 +150,58 @@ public class FragmentHome extends Fragment {
 //			private static final int GENDER_INDEX=2;
 //			private static final int HEIGHT_INDEX=3;
 //			private static final int PLAN_INDEX=4;
-			if(position == HEAD_INDEX)
+			if(position == MODIFY_INDEX)
 			{
 				textView.setVisibility(View.GONE);
-				imageView1.setImageResource(R.drawable.ic_launcher);
-				imageView2.setVisibility(View.GONE);
-			//	Drawable d = Drawable.createFromPath(avatarFilePath);
-			//	Utils.Log("avatar avatarFilePath:"+avatarFilePath+" ,d:"+d);
-			//	avatar_image.setImageDrawable(d);
-			}
-			else if(position == NICK_NAME_INDEX)
-			{
-				textView.setText("jockey");
-				
-				textView.setVisibility(View.VISIBLE);
-				imageView1.setVisibility(View.GONE);
-				imageView2.setVisibility(View.GONE);
-			}
-			else if(position == GENDER_INDEX)
-			{
-				textView.setVisibility(View.GONE);
-				
 				imageView1.setVisibility(View.VISIBLE);
-				imageView2.setVisibility(View.VISIBLE);
-				
-				SharedPreferences p=Utils.getSharedPpreference(getActivity());
-				String sex=p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
-				
-				if("femail".equals(sex))
-				{
-					imageView1.setImageResource(R.drawable.button_man1);
-					imageView2.setImageResource(R.drawable.button_woman2);
-				}
-				else
-				{
-					imageView1.setImageResource(R.drawable.button_man2);
-					imageView2.setImageResource(R.drawable.button_woman1);
-				}
-			}
-			else if(position == HEIGHT_INDEX)
-			{
-				textView.setText("180");
-				textView.setVisibility(View.VISIBLE);
-				
-				imageView1.setVisibility(View.GONE);
-				imageView2.setVisibility(View.GONE);
+				imageView1.setImageResource(R.drawable.ic_launcher);
 			}
 			else if(position == PLAN_INDEX)
 			{
 				textView.setText("2500");
-				Drawable image = getResources().getDrawable(R.drawable.icon_next);  
-				image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());//非常重要，必须设置，否则图片不会显示  
-				textView.setCompoundDrawables(null,null, image, null);  
+				
 				textView.setVisibility(View.VISIBLE);
 				imageView1.setVisibility(View.GONE);
-				imageView2.setVisibility(View.GONE);
 			}
+//			else if(position == GENDER_INDEX)
+//			{
+//				textView.setVisibility(View.GONE);
+//				
+//				imageView1.setVisibility(View.VISIBLE);
+//				imageView2.setVisibility(View.VISIBLE);
+//				
+//				SharedPreferences p=Utils.getSharedPpreference(getActivity());
+//				String sex=p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
+//				
+//				if("femail".equals(sex))
+//				{
+//					imageView1.setImageResource(R.drawable.button_man1);
+//					imageView2.setImageResource(R.drawable.button_woman2);
+//				}
+//				else
+//				{
+//					imageView1.setImageResource(R.drawable.button_man2);
+//					imageView2.setImageResource(R.drawable.button_woman1);
+//				}
+//			}
+//			else if(position == HEIGHT_INDEX)
+//			{
+//				textView.setText("180");
+//				textView.setVisibility(View.VISIBLE);
+//				
+//				imageView1.setVisibility(View.GONE);
+//				imageView2.setVisibility(View.GONE);
+//			}
+//			else if(position == PLAN_INDEX)
+//			{
+//				textView.setText("2500");
+//				Drawable image = getResources().getDrawable(R.drawable.icon_next);  
+//				image.setBounds(0, 0, image.getMinimumWidth(), image.getMinimumHeight());//非常重要，必须设置，否则图片不会显示  
+//				textView.setCompoundDrawables(null,null, image, null);  
+//				textView.setVisibility(View.VISIBLE);
+//				imageView1.setVisibility(View.GONE);
+//				imageView2.setVisibility(View.GONE);
+//			}
 			return view;
 		}
     	
@@ -223,7 +213,16 @@ public class FragmentHome extends Fragment {
         }  
         @Override  
         public void onClick(View v) {  
-             if(PLAN_INDEX==mPosition){
+        	 if(MODIFY_INDEX==mPosition)
+        	 {
+             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+             	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+             	ft.add(R.id.fragmentfield, new FragmentHomePerson());
+             	ft.remove(FragmentHome.this);
+             	ft.addToBackStack(null);
+ 				ft.commit();
+        	 }
+        	 else if(PLAN_INDEX==mPosition){
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
             	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             	ft.add(R.id.fragmentfield, new FragmentHomePlan());
@@ -320,7 +319,7 @@ public class FragmentHome extends Fragment {
 			map.put("title_text", listTitle[i]);
 			map.put("text_view1", "");
 			map.put("image_view1", 0);
-			map.put("image_view2", 0);
+			map.put("image_view2", R.drawable.icon_next);
 			list.add(map);
 		}
 

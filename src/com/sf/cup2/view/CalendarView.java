@@ -463,7 +463,7 @@ public class CalendarView extends View implements View.OnTouchListener {
 		public Path boxPath; // 边框路径
 		//public Path preMonthBtnPath; // 上一月按钮三角形
 		//public Path nextMonthBtnPath; // 下一月按钮三角形
-		public String[] weekText = { "Sun","Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
+		public String[] weekText = { "周天","周一", "周二", "周三", "周四", "周五", "周六"};
 		//public String[] monthText = {"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"};
 		   
 		public void init() {

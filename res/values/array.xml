@@ -1,39 +1,34 @@
 <resources>
 
-   <string-array name="home_list_down_title">
+    <string-array name="home_list_down_title">
         <item>账号绑定</item>
         <item>提醒设置</item>
         <item>配对信息</item>
         <item>固件升级</item>
         <item>关于</item>
-    </string-array> 
-
+    </string-array>
     <string-array name="home_list_top_title">
-        <item>我的头像</item>
-        <item>昵称</item>
-        <item>性别</item>
-        <item>身高</item>
-        <item>饮水计划</item>
-    </string-array> 
-    
-    
-     <string-array name="home_about_list_title">
+        <item>个人资料修改</item>
+        <item>饮水计划(ml)</item>
+    </string-array>
+    <string-array name="home_about_list_title">
         <item>进入官网</item>
         <item>购买</item>
     </string-array>
-    
-     
-       <string-array name="person_list_title1">
+    <string-array name="person_list_title1">
+        <item>我的头像</item>
         <item>昵称</item>
         <item>性别</item>
-        <item>手机</item>
+        <item>身高(cm)</item>
+        <item>体重(kg)</item>
+        <item>生日</item>
     </string-array>
-    
-       <string-array name="person_list_title2">
+    <string-array name="person_list_title2">
         <item>场景</item>
         <item>体质</item>
         <item>身高（cm）</item>
         <item>体重（kg）</item>
         <item>生日</item>
     </string-array>
+
 </resources>
