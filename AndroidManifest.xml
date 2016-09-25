@@ -124,6 +124,10 @@
         
 
 
+        <!-- umeng -->
+        <meta-data android:value="57e73011e0f55a2e41003966" android:name="UMENG_APPKEY"></meta-data>
+        <meta-data android:value="MateCup_Common" android:name="UMENG_CHANNEL"/>
+
     </application>
 
 </manifest>

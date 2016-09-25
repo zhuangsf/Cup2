@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import com.sf.cup2.MainActivity;
 import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.content.Context;
@@ -334,6 +335,23 @@ public class LoginActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		SMSSDK.unregisterAllEventHandler();
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		//add for umeng
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		//add for umeng
+        MobclickAgent.onPause(this);
 	}
 
 }

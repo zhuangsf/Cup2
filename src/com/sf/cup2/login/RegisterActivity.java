@@ -1,6 +1,7 @@
 package com.sf.cup2.login;
 
 import com.sf.cup2.R;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -28,5 +29,22 @@ public class RegisterActivity extends Activity {
                 finish();
             }
         });
+	}
+	
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		
+		//add for umeng
+		MobclickAgent.onResume(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		
+		//add for umeng
+        MobclickAgent.onPause(this);
 	}
 }

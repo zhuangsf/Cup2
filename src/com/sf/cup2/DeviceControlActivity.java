@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.sf.cup2.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 /*
  * Copyright (C) 2013 The Android Open Source Project
@@ -319,12 +320,18 @@ public class DeviceControlActivity extends Activity {
             final boolean result = mBluetoothLeService.connect(mDeviceAddress);
             Log.d(TAG, "Connect request result=" + result);
         }
+        
+    	//add for umeng
+		MobclickAgent.onResume(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
+        
+        //add for umeng
+        MobclickAgent.onPause(this);
     }
 
     @Override

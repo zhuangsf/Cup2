@@ -70,6 +70,13 @@
 }
 
 
+#add for umeng
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class com.sf.cup2.R$*{
+public static final int *;
+}
 
 
 -dontwarn android.support.v13.*

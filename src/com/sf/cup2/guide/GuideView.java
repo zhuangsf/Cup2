@@ -8,6 +8,7 @@ import java.util.TimerTask;
 import com.sf.cup2.MainActivity;
 import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -107,6 +108,22 @@ public class GuideView extends Activity{
 			 new dismissMaskViewTask().execute();
 			
 	    }
+	    
+		@Override
+		protected void onResume() {
+			super.onResume();
+			
+			//add for umeng
+			MobclickAgent.onResume(this);
+		}
+	
+		@Override
+		protected void onPause() {
+			super.onPause();
+			
+			//add for umeng
+	        MobclickAgent.onPause(this);
+		}
 	    
 	    private Timer timer = new Timer(true);
 		public void dismissMaskView(){

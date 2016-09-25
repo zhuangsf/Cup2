@@ -19,6 +19,7 @@ package com.sf.cup2;
 import java.util.ArrayList;
 
 import com.sf.cup2.view.CircleWaveView;
+import com.umeng.analytics.MobclickAgent;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -202,6 +203,10 @@ public class DeviceScanActivity extends Activity {
         // Initializes list view adapter.
         mLeDeviceListAdapter = new LeDeviceListAdapter();
         device_list.setAdapter(mLeDeviceListAdapter);
+        
+        
+    	//add for umeng
+		MobclickAgent.onResume(this);
     }
 
     @Override
@@ -220,6 +225,10 @@ public class DeviceScanActivity extends Activity {
         super.onPause();
         scanLeDevice(false);
         mLeDeviceListAdapter.clear();
+        
+        
+      //add for umeng
+        MobclickAgent.onPause(this);
     }
     @Override
     protected void onDestroy() {

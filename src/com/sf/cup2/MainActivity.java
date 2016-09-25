@@ -5,11 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import com.sf.cup2.guide.GuideView;
 import com.sf.cup2.guide.SingleGuideView;
-import com.sf.cup2.login.LoginActivity;
 import com.sf.cup2.utils.Utils;
-import com.tencent.bugly.crashreport.CrashReport;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.analytics.MobclickAgent.EScenarioType;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +42,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
-import com.sf.cup2.FragmentHistory;
 
 public class MainActivity extends Activity {
 	private final static String TAG = MainActivity.class.getPackage() + "."
@@ -600,7 +598,8 @@ public class MainActivity extends Activity {
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		
+		//add for umeng
+	    MobclickAgent.setScenarioType(this, EScenarioType.E_UM_NORMAL);
 		
 		// 1,is first open app start guide
 		SharedPreferences p = Utils.getSharedPpreference(this);
@@ -686,7 +685,8 @@ public class MainActivity extends Activity {
 			}
 		}*/
 		
-		
+		//add for umeng
+		MobclickAgent.onResume(this);
 	}
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -758,6 +758,9 @@ public class MainActivity extends Activity {
     protected void onPause() {
         super.onPause();
         unregisterReceiver(mGattUpdateReceiver);
+        
+        //add for umeng
+        MobclickAgent.onPause(this);
     }
 
     @Override
