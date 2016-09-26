@@ -377,13 +377,7 @@ public class MainActivity extends Activity {
     
 	private void sentMsgToBt(String action, String arg1, String arg2) {
 		
-		java.util.Map<Thread, StackTraceElement[]> ts = Thread.getAllStackTraces();  
-		StackTraceElement[] ste = ts.get(Thread.currentThread());  
-		Log.e("jockeyTrack", "--------------------start-------------------------"); 
-		for (StackTraceElement s : ste) {  
-		Log.e("jockeyTrack", s.toString()); 
-		}  
-		Log.e("jockeyTrack", "--------------------end-------------------------"); 
+
 		
 		
 		try {

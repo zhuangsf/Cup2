@@ -2,6 +2,8 @@ package com.sf.cup2;
 
 import java.io.File;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -31,12 +33,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.Message;
 import android.os.SystemClock;
+import android.os.storage.StorageManager;
 import android.provider.MediaStore;
 import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -87,6 +92,7 @@ public class FragmentHomePerson extends Fragment {
 	ImageView avatar_image;
 	private SelectPicPopupWindow menuWindow; // 自定义的头像编辑弹出框
 	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
+	private static final String IMAGE_FILE_NAME_CROP = "avatarImage_crop.jpg";// 头像文件名称
 	private String urlpath; // 图片本地路径
 	private String resultStr = ""; // 服务端返回结果集
 	private static ProgressDialog pd;// 等待进度圈
@@ -189,39 +195,86 @@ public class FragmentHomePerson extends Fragment {
 		setHeight(hlva2, personlist_view2);
 		personlist_view2.setAdapter(hlva2);
 
-		// avatar_image = (ImageView) view.findViewById(R.id.avatar_image);
-		// SharedPreferences p = Utils.getSharedPpreference(getActivity());
-		// String avatarFilePath =
-		// p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
-		// if(!TextUtils.isEmpty(avatarFilePath)){
-		// Drawable d = Drawable.createFromPath(avatarFilePath);
-		// Utils.Log("avatar avatarFilePath:"+avatarFilePath+" ,d:"+d);
-		// avatar_image.setImageDrawable(d);
-		// }
-
 		mainLayout = (RelativeLayout) view.findViewById(R.id.mainLayout);
-		// avatar_layout = (LinearLayout) view.findViewById(R.id.avatar_layout);
-		// avatar_layout.setOnClickListener(new OnClickListener() {
-		// @Override
-		// public void onClick(View v) {
-		// menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
-		// menuWindow.showAtLocation(view.findViewById(R.id.mainLayout),
-		// Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
-		// }
-		// });
+
 
 		return view;
 	}
 
+	
+
+	
+	 public static String getInternelStoragePath(Context context) {
+	        ArrayList storagges = new ArrayList();
+	        StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+	        try {
+	            Class<?>[] paramClasses = {};
+	            Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
+	            getVolumeList.setAccessible(true);
+	            Object[] params = {};
+	            Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
+	            if (invokes != null) {
+	                StorageInfo info = null;
+	                for (int i = 0; i < invokes.length; i++) {
+	                    Object obj = invokes[i];
+	                    Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
+	                    String path = (String) getPath.invoke(obj, new Object[0]);
+	                    info = new StorageInfo(path);
+	                    File file = new File(info.path);
+	                    if ((file.exists()) && (file.isDirectory()) && (file.canWrite())) {
+	                        Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
+	                        String state = null;
+	                        try {
+	                            Method getVolumeState = StorageManager.class.getMethod("getVolumeState", String.class);
+	                            state = (String) getVolumeState.invoke(storageManager, info.path);
+	                            info.state = state;
+	                        } catch (Exception e) {
+	                            e.printStackTrace();
+	                        }
+	                        info.isRemoveable = ((Boolean) isRemovable.invoke(obj, new Object[0])).booleanValue();
+	                        
+	                        Log.e("jockeyTrack", "info.isRemoveable = "+info.isRemoveable+" path = "+path+" info.isMounted() = "+info.isMounted()); 
+	                        if (info.isMounted() && !info.isRemoveable) {
+	                           return info.path+"/MateCup";
+	                        }
+	                    }
+	                }
+	            }
+	        } catch (NoSuchMethodException e1) {
+	            e1.printStackTrace();
+	        } catch (IllegalArgumentException e) {
+	            e.printStackTrace();
+	        } catch (IllegalAccessException e) {
+	            e.printStackTrace();
+	        } catch (InvocationTargetException e) {
+	            e.printStackTrace();
+	        }
+	        storagges.trimToSize();
+
+	        return null;
+	    }
+
+	
 	// save and edit pic uri can not be same or it will 0byte
 	private Uri getTakePicSaveUri() {
-		return Uri.fromFile(new File(Environment.getExternalStorageDirectory(),
-				IMAGE_FILE_NAME));
+		String filePath = getInternelStoragePath(getActivity());
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		return Uri.fromFile(new File(filePath,IMAGE_FILE_NAME));
 	}
 
 	private Uri getCropPicSaveUri() {
-		return Uri.fromFile(new File(Environment.getExternalStorageDirectory()
-				+ "/8CUP", IMAGE_FILE_NAME));
+		
+		String filePath = getInternelStoragePath(getActivity());
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		return Uri.fromFile(new File(filePath,IMAGE_FILE_NAME_CROP));
 	}
 
 	// 为弹出窗口实现监听类
@@ -315,13 +368,15 @@ public class FragmentHomePerson extends Fragment {
 			// Bitmap photo = extras.getParcelable("data");
 			Bitmap photo = getBitmapFromUri(getCropPicSaveUri(), getActivity());
 			Drawable drawable = new BitmapDrawable(null, photo);
-			urlpath = FileUtil.saveFile(getActivity(), "avatar.jpg", photo);
+			urlpath = FileUtil.saveFile(getActivity(), getInternelStoragePath(getActivity()),IMAGE_FILE_NAME, photo);
 			SharedPreferences.Editor e = Utils
 					.getSharedPpreferenceEdit(getActivity());
 			e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR, urlpath);
 			// e.putBoolean(Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, true);
 			e.commit();
-			avatar_image.setImageDrawable(drawable);
+			
+			//更新头像
+			hlva1.notifyDataSetChanged();
 
 			try {
 				// send to server
@@ -390,13 +445,20 @@ public class FragmentHomePerson extends Fragment {
 				textView.setVisibility(View.GONE);
 				imageView1.setVisibility(View.VISIBLE);
 
-				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String avatarFilePath = p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
+				//SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String avatarFilePath = getInternelStoragePath(getActivity())+"/"+IMAGE_FILE_NAME;
 				if (!TextUtils.isEmpty(avatarFilePath)) {
 					Drawable d = Drawable.createFromPath(avatarFilePath);
 					Utils.Log("avatar avatarFilePath:" + avatarFilePath
 							+ " ,d:" + d);
-					imageView1.setImageDrawable(d);
+					if(d == null)
+					{
+						imageView1.setImageResource(R.drawable.ic_launcher);
+					}
+					else
+					{
+						imageView1.setImageDrawable(d);
+					}
 				} else {
 					imageView1.setImageResource(R.drawable.ic_launcher);
 				}
@@ -903,3 +965,5 @@ public class FragmentHomePerson extends Fragment {
 
 	}
 }
+
+
