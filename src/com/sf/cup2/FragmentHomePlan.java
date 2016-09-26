@@ -37,6 +37,8 @@ public class FragmentHomePlan extends Fragment {
 
 	private ImageView goBack;
 	private ImageView save;
+	
+	private TextView line_hint;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -62,9 +64,7 @@ public class FragmentHomePlan extends Fragment {
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
-//							user_height_value.setText("身高是: "
-//									+ String.valueOf((int) Math.ceil((ruler
-//											.getScrollY()) / 10)) + " CM");
+							line_hint.setText(String.valueOf((int) Math.ceil(ruler.getScrollY())) +"ml");
 						}
 					}, 1000);
 					break;
@@ -75,6 +75,7 @@ public class FragmentHomePlan extends Fragment {
 
 		});
 
+		line_hint = (TextView) v.findViewById(R.id.line_hint);
 		rulerlayout = (LinearLayout) v.findViewById(R.id.vruler_layout);
 
 		new Handler().postDelayed((new Runnable() {
@@ -112,12 +113,12 @@ public class FragmentHomePlan extends Fragment {
 		topview.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
 				rulerHeight / 2));   //设置之后,可以上线滑动到一半
 		rulerlayout.addView(topview);
-		for (int i = 0; i < 25; i++) {
+		for (int i = 0; i < 50; i++) {
 			View view = (View) LayoutInflater.from(getActivity()).inflate(
 					R.layout.vrulerunit, null);
 			view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,100));
 			TextView tv = (TextView) view.findViewById(R.id.vrulerunit);
-			tv.setText(String.valueOf(i * 10));
+			tv.setText(String.valueOf(i * 100));
 			rulerlayout.addView(view);
 		}
 		View bottomview = (View) LayoutInflater.from(getActivity()).inflate(
