@@ -117,21 +117,6 @@
                 </ListView>
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="50dp"
-                 >
-
-                <ListView
-                    android:id="@+id/persionlist_view2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/white"
-                    android:scrollbars="none" >
-                </ListView>
-            </LinearLayout>
         </LinearLayout>
 
     </RelativeLayout>

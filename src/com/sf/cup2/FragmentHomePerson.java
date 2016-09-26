@@ -62,8 +62,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class FragmentHomePerson extends Fragment {
-	private final static String TAG = FragmentHomePerson.class.getPackage()
-			.getName() + "." + FragmentHomePerson.class.getSimpleName();
+	private final static String TAG = FragmentHomePerson.class.getPackage().getName() + "." + FragmentHomePerson.class.getSimpleName();
 
 	ListView personlist_view_pic;
 	ListView personlist_view1;
@@ -74,12 +73,8 @@ public class FragmentHomePerson extends Fragment {
 	private int[] list1Drawable;
 
 	PersonListViewAdapter1 hlva1;
-	PersonListViewAdapter2 hlva2;
 
 	List<Map<String, Object>> personList1 = new ArrayList<Map<String, Object>>(); // list
-																					// view
-																					// 就是一直玩弄这个
-	List<Map<String, Object>> personList2 = new ArrayList<Map<String, Object>>(); // list
 																					// view
 																					// 就是一直玩弄这个
 
@@ -108,16 +103,10 @@ public class FragmentHomePerson extends Fragment {
 				// alertdialog with edittext cant not open im.
 				try {
 					Thread.sleep(200);
-					person_info.dispatchTouchEvent(MotionEvent.obtain(
-							SystemClock.uptimeMillis(),
-							SystemClock.uptimeMillis(),
-							MotionEvent.ACTION_DOWN, person_info.getRight(),
+					person_info.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, person_info.getRight(),
 							person_info.getRight() + 5, 0));
-					person_info.dispatchTouchEvent(MotionEvent.obtain(
-							SystemClock.uptimeMillis(),
-							SystemClock.uptimeMillis(), MotionEvent.ACTION_UP,
-							person_info.getRight(), person_info.getRight() + 5,
-							0));
+					person_info.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, person_info.getRight(),
+							person_info.getRight() + 5, 0));
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
@@ -130,10 +119,8 @@ public class FragmentHomePerson extends Fragment {
 				// upload pic success
 				String picUrl = jsonObject.optString("url", "");
 				if (!TextUtils.isEmpty(picUrl)) {
-					SharedPreferences.Editor e = Utils
-							.getSharedPpreferenceEdit(getActivity());
-					e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH,
-							picUrl);
+					SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+					e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH, picUrl);
 					e.commit();
 				}
 				break;
@@ -153,108 +140,79 @@ public class FragmentHomePerson extends Fragment {
 		Resources res = getResources();
 		list1Title = res.getStringArray(R.array.person_list_title1);
 		list2Title = res.getStringArray(R.array.person_list_title2);
-		list1Drawable = new int[] { R.drawable.icon_head,
-				R.drawable.icon_nickname, R.drawable.icon_gender,
-				R.drawable.icon_height, R.drawable.icon_weight,
-				R.drawable.icon_age };
+		list1Drawable = new int[] { R.drawable.icon_head, R.drawable.icon_nickname, R.drawable.icon_gender, R.drawable.icon_height, R.drawable.icon_weight, R.drawable.icon_age };
 
-		SharedPreferences p = Utils.getSharedPpreference(getActivity());
-		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "");
-		if (TextUtils.isEmpty(sex)) {
-			SharedPreferences.Editor e = Utils
-					.getSharedPpreferenceEdit(getActivity());
-			e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
-			e.commit();
-		}
 
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.tab_home_person_info, null);
 
 		initList1();
-		initList2();
 
 		personlist_view1 = (ListView) view.findViewById(R.id.persionlist_view1);
-		hlva1 = new PersonListViewAdapter1(this.getActivity(), getData1(),
-				R.layout.tab_home_list_item_top, new String[] { "item_image",
-						"title_text", "text_view1", "image_view1",
-						"image_view2" }, new int[] { R.id.item_image,
-						R.id.title_text, R.id.text_view1, R.id.image_view1,
-						R.id.image_view2 });
+		hlva1 = new PersonListViewAdapter1(this.getActivity(), getData1(), R.layout.tab_home_list_item_top, new String[] { "item_image", "title_text", "text_view1", "image_view1", "image_view2" },
+				new int[] { R.id.item_image, R.id.title_text, R.id.text_view1, R.id.image_view1, R.id.image_view2 });
 		setHeight(hlva1, personlist_view1);
 		personlist_view1.setAdapter(hlva1);
 
-		personlist_view2 = (ListView) view.findViewById(R.id.persionlist_view2);
-		hlva2 = new PersonListViewAdapter2(this.getActivity(), getData2(),
-				R.layout.tab_home_list_item, new String[] { "title", "info",
-						"img" }, new int[] { R.id.title_text, R.id.info_text,
-						R.id.right_img });
-		setHeight(hlva2, personlist_view2);
-		personlist_view2.setAdapter(hlva2);
 
 		mainLayout = (RelativeLayout) view.findViewById(R.id.mainLayout);
-
 
 		return view;
 	}
 
-	
+	public static String getInternelStoragePath(Context context) {
+		ArrayList storagges = new ArrayList();
+		StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+		try {
+			Class<?>[] paramClasses = {};
+			Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
+			getVolumeList.setAccessible(true);
+			Object[] params = {};
+			Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
+			if (invokes != null) {
+				StorageInfo info = null;
+				for (int i = 0; i < invokes.length; i++) {
+					Object obj = invokes[i];
+					Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
+					String path = (String) getPath.invoke(obj, new Object[0]);
+					info = new StorageInfo(path);
+					File file = new File(info.path);
+					if ((file.exists()) && (file.isDirectory()) && (file.canWrite())) {
+						Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
+						String state = null;
+						try {
+							Method getVolumeState = StorageManager.class.getMethod("getVolumeState", String.class);
+							state = (String) getVolumeState.invoke(storageManager, info.path);
+							info.state = state;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						info.isRemoveable = ((Boolean) isRemovable.invoke(obj, new Object[0])).booleanValue();
 
-	
-	 public static String getInternelStoragePath(Context context) {
-	        ArrayList storagges = new ArrayList();
-	        StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
-	        try {
-	            Class<?>[] paramClasses = {};
-	            Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
-	            getVolumeList.setAccessible(true);
-	            Object[] params = {};
-	            Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
-	            if (invokes != null) {
-	                StorageInfo info = null;
-	                for (int i = 0; i < invokes.length; i++) {
-	                    Object obj = invokes[i];
-	                    Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
-	                    String path = (String) getPath.invoke(obj, new Object[0]);
-	                    info = new StorageInfo(path);
-	                    File file = new File(info.path);
-	                    if ((file.exists()) && (file.isDirectory()) && (file.canWrite())) {
-	                        Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
-	                        String state = null;
-	                        try {
-	                            Method getVolumeState = StorageManager.class.getMethod("getVolumeState", String.class);
-	                            state = (String) getVolumeState.invoke(storageManager, info.path);
-	                            info.state = state;
-	                        } catch (Exception e) {
-	                            e.printStackTrace();
-	                        }
-	                        info.isRemoveable = ((Boolean) isRemovable.invoke(obj, new Object[0])).booleanValue();
-	                        
-	                        Log.e("jockeyTrack", "info.isRemoveable = "+info.isRemoveable+" path = "+path+" info.isMounted() = "+info.isMounted()); 
-	                        if (info.isMounted() && !info.isRemoveable) {
-	                           return info.path+"/MateCup";
-	                        }
-	                    }
-	                }
-	            }
-	        } catch (NoSuchMethodException e1) {
-	            e1.printStackTrace();
-	        } catch (IllegalArgumentException e) {
-	            e.printStackTrace();
-	        } catch (IllegalAccessException e) {
-	            e.printStackTrace();
-	        } catch (InvocationTargetException e) {
-	            e.printStackTrace();
-	        }
-	        storagges.trimToSize();
+						Log.e("jockeyTrack", "info.isRemoveable = " + info.isRemoveable + " path = " + path + " info.isMounted() = " + info.isMounted());
+						if (info.isMounted() && !info.isRemoveable) {
+							return info.path + "/MateCup";
+						}
+					}
+				}
+			}
+		} catch (NoSuchMethodException e1) {
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		storagges.trimToSize();
 
-	        return null;
-	    }
+		return null;
+	}
 
-	
 	// save and edit pic uri can not be same or it will 0byte
 	private Uri getTakePicSaveUri() {
 		String filePath = getInternelStoragePath(getActivity());
@@ -262,19 +220,19 @@ public class FragmentHomePerson extends Fragment {
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
-		return Uri.fromFile(new File(filePath,IMAGE_FILE_NAME));
+
+		return Uri.fromFile(new File(filePath, IMAGE_FILE_NAME));
 	}
 
 	private Uri getCropPicSaveUri() {
-		
+
 		String filePath = getInternelStoragePath(getActivity());
 		File file = new File(filePath);
 		if (!file.exists()) {
 			file.mkdirs();
 		}
-		
-		return Uri.fromFile(new File(filePath,IMAGE_FILE_NAME_CROP));
+
+		return Uri.fromFile(new File(filePath, IMAGE_FILE_NAME_CROP));
 	}
 
 	// 为弹出窗口实现监听类
@@ -287,18 +245,14 @@ public class FragmentHomePerson extends Fragment {
 			case R.id.takePhotoBtn:
 				Intent takeIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 				// 下面这句指定调用相机拍照后的照片存储的路径
-				takeIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-						getTakePicSaveUri());
+				takeIntent.putExtra(MediaStore.EXTRA_OUTPUT, getTakePicSaveUri());
 				startActivityForResult(takeIntent, REQUESTCODE_TAKE);
 				break;
 			// 相册选择图片
 			case R.id.pickPhotoBtn:
 				Intent pickIntent = new Intent(Intent.ACTION_PICK, null);
 				// 如果朋友们要限制上传到服务器的图片类型时可以直接写如："image/jpeg 、 image/png等的类型"
-				pickIntent
-						.setDataAndType(
-								MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-								"image/*");
+				pickIntent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 				startActivityForResult(pickIntent, REQUESTCODE_PICK);
 				break;
 			default:
@@ -368,14 +322,13 @@ public class FragmentHomePerson extends Fragment {
 			// Bitmap photo = extras.getParcelable("data");
 			Bitmap photo = getBitmapFromUri(getCropPicSaveUri(), getActivity());
 			Drawable drawable = new BitmapDrawable(null, photo);
-			urlpath = FileUtil.saveFile(getActivity(), getInternelStoragePath(getActivity()),IMAGE_FILE_NAME, photo);
-			SharedPreferences.Editor e = Utils
-					.getSharedPpreferenceEdit(getActivity());
+			urlpath = FileUtil.saveFile(getActivity(), getInternelStoragePath(getActivity()), IMAGE_FILE_NAME, photo);
+			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 			e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR, urlpath);
 			// e.putBoolean(Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, true);
 			e.commit();
-			
-			//更新头像
+
+			// 更新头像
 			hlva1.notifyDataSetChanged();
 
 			try {
@@ -383,18 +336,13 @@ public class FragmentHomePerson extends Fragment {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
-						SharedPreferences p = Utils
-								.getSharedPpreference(getActivity());
-						final String phone = p.getString(
-								Utils.SHARE_PREFERENCE_CUP_PHONE, "");
-						final String accountid = p.getString(
-								Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
+						SharedPreferences p = Utils.getSharedPpreference(getActivity());
+						final String phone = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, "");
+						final String accountid = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
 
 						// http://121.199.75.79:8280//user/updateProfile.do
 						if (!TextUtils.isEmpty(urlpath)) {
-							Utils.httpPostFile(Utils.URL_PATH
-									+ "/user/updateProfile.do", urlpath,
-									mHandler, accountid, phone);
+							Utils.httpPostFile(Utils.URL_PATH + "/user/updateProfile.do", urlpath, mHandler, accountid, phone);
 						}
 					}
 				}).start();
@@ -411,10 +359,8 @@ public class FragmentHomePerson extends Fragment {
 	public static Bitmap getBitmapFromUri(Uri uri, Context mContext) {
 		try {
 			// 读取uri所在的图片
-			Bitmap bitmap = BitmapFactory.decodeStream(mContext
-					.getContentResolver().openInputStream(uri));
-			bitmap = MediaStore.Images.Media.getBitmap(
-					mContext.getContentResolver(), uri);
+			Bitmap bitmap = BitmapFactory.decodeStream(mContext.getContentResolver().openInputStream(uri));
+			bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), uri);
 			return bitmap;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -423,9 +369,7 @@ public class FragmentHomePerson extends Fragment {
 	}
 
 	private class PersonListViewAdapter1 extends SimpleAdapter {
-		public PersonListViewAdapter1(Context context,
-				List<Map<String, Object>> data, int resource, String[] from,
-				int[] to) {
+		public PersonListViewAdapter1(Context context, List<Map<String, Object>> data, int resource, String[] from, int[] to) {
 			super(context, data, resource, from, to);
 		}
 
@@ -435,8 +379,8 @@ public class FragmentHomePerson extends Fragment {
 			view.setOnClickListener(new MyListener1(position));
 
 			TextView textView;
-			ImageView imageView1;
-			ImageView imageView2;
+			final ImageView imageView1;
+			final ImageView imageView2;
 			textView = (TextView) view.findViewById(R.id.text_view1);
 			imageView1 = (ImageView) view.findViewById(R.id.image_view1);
 			imageView2 = (ImageView) view.findViewById(R.id.image_view2);
@@ -445,18 +389,15 @@ public class FragmentHomePerson extends Fragment {
 				textView.setVisibility(View.GONE);
 				imageView1.setVisibility(View.VISIBLE);
 
-				//SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String avatarFilePath = getInternelStoragePath(getActivity())+"/"+IMAGE_FILE_NAME;
+				// SharedPreferences p =
+				// Utils.getSharedPpreference(getActivity());
+				String avatarFilePath = getInternelStoragePath(getActivity()) + "/" + IMAGE_FILE_NAME;
 				if (!TextUtils.isEmpty(avatarFilePath)) {
 					Drawable d = Drawable.createFromPath(avatarFilePath);
-					Utils.Log("avatar avatarFilePath:" + avatarFilePath
-							+ " ,d:" + d);
-					if(d == null)
-					{
+					Utils.Log("avatar avatarFilePath:" + avatarFilePath + " ,d:" + d);
+					if (d == null) {
 						imageView1.setImageResource(R.drawable.ic_launcher);
-					}
-					else
-					{
+					} else {
 						imageView1.setImageDrawable(d);
 					}
 				} else {
@@ -465,7 +406,12 @@ public class FragmentHomePerson extends Fragment {
 				imageView2.setVisibility(View.GONE);
 			} else if (position == 1) {
 				textView.setVisibility(View.VISIBLE);
-				textView.setText("test");
+				
+				
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				final String nickName = p.getString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, "");
+				
+				textView.setText(nickName);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
@@ -474,10 +420,35 @@ public class FragmentHomePerson extends Fragment {
 
 				imageView1.setVisibility(View.VISIBLE);
 				imageView2.setVisibility(View.VISIBLE);
+				
+				imageView1.setOnClickListener(new OnClickListener() {
 
+					public void onClick(View v) {
+						imageView1.setImageResource(R.drawable.button_man2);
+						imageView2.setImageResource(R.drawable.button_woman1);
+						
+
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "mail");
+						e.commit();
+						
+
+					}
+				});
+				imageView2.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						imageView1.setImageResource(R.drawable.button_man1);
+						imageView2.setImageResource(R.drawable.button_woman2);
+						
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "mail");
+						e.commit();
+						
+					}
+				});
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX,
-						"femail");
+				String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
 
 				if ("femail".equals(sex)) {
 					imageView1.setImageResource(R.drawable.button_man1);
@@ -488,19 +459,26 @@ public class FragmentHomePerson extends Fragment {
 				}
 			} else if (position == 3) {
 				textView.setVisibility(View.VISIBLE);
-				textView.setText("test");
+				
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160");
+				textView.setText(height);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
 			} else if (position == 4) {
 				textView.setVisibility(View.VISIBLE);
-				textView.setText("test");
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45");
+				textView.setText(height);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
 			} else if (position == 5) {
 				textView.setVisibility(View.VISIBLE);
-				textView.setText("1984年6月20日");
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
+				textView.setText(birthday);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
@@ -522,272 +500,132 @@ public class FragmentHomePerson extends Fragment {
 		public void onClick(View v) {
 
 			switch (mPosition) {
-			case 0:
-			{
-				 menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
-				 menuWindow.showAtLocation(mainLayout,Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+			case 0: {
+				menuWindow = new SelectPicPopupWindow(getActivity(), itemsOnClick);
+				menuWindow.showAtLocation(mainLayout, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
 			}
-			break;
+				break;
 			case 1: {
-				final String male = getResources().getString(R.string.male);
-				final String female = getResources().getString(R.string.female);
-				String sexString = (String) personList1.get(mPosition).get(
-						"info");
-				int initSexCheck = male.equals(sexString) ? 0 : 1;
-				// TODO display null at first time !!!!!!!!!!!!!!!!!!!!!! fix:
-				// init female oncreate
-				ad = new AlertDialog.Builder(getActivity())
-						.setTitle(
-								(String) personList1.get(mPosition)
-										.get("title"))
-						.setSingleChoiceItems(new String[] { male, female },
-								initSexCheck,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										String sex = which == 0 ? male : female;
-										personList1.get(mPosition).put("info",
-												sex);
-										SharedPreferences.Editor e = Utils
-												.getSharedPpreferenceEdit(getActivity());
-										e.putString(
-												Utils.SHARE_PREFERENCE_CUP_PERSON_1[mPosition],
-												sex);
-										e.commit();
-										doUpdate1();
-									}
-								}).setNegativeButton(R.string.ok, null).show();
-			}
-				break;
-			case 2:
-				// could not change the phone number
-				Toast.makeText(getActivity(),
-						getResources().getString(R.string.phone_bind),
-						Toast.LENGTH_SHORT).show();
-				break;
-			case 3:
+				
 				LayoutInflater inflater = getActivity().getLayoutInflater();
-				final View layout = inflater.inflate(
-						R.layout.tab_home_person_dialog,
-						(ViewGroup) v.findViewById(R.id.dialog));
-				TextView person_title = (TextView) layout
-						.findViewById(R.id.person_title);
+				final View layout = inflater.inflate(R.layout.tab_home_person_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				TextView person_title = (TextView) layout.findViewById(R.id.person_title);
 				person_info = (EditText) layout.findViewById(R.id.person_info);
-				person_info
-						.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
-								5) });
-				person_info.setText((String) personList1.get(mPosition).get(
-						"info"));
+				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
+				person_info.setText("");  //默认为空的好了
 				person_title.setText(list1Title[mPosition]);
-				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										personList1.get(mPosition).put(
-												"info",
-												person_info.getText()
-														.toString());
-										SharedPreferences.Editor e = Utils
-												.getSharedPpreferenceEdit(getActivity());
-										e.putString(
-												Utils.SHARE_PREFERENCE_CUP_PERSON_1[mPosition],
-												person_info.getText()
-														.toString());
-										e.commit();
-										doUpdate1();
-									}
-								}).setNegativeButton(R.string.cancel, null)
-						.create();
+				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, person_info.getText().toString());
+						e.commit();
+						doUpdate1();
+					}
+				}).setNegativeButton(R.string.cancel, null).create();
 				ad.setTitle(R.string.personal_setting);
 				ad.setView(layout);
 				ad.show();
-				Message msg = new Message();
-				msg.what = 1;
-				msg.arg1 = 1;
-				mHandler.sendMessage(msg);
-				break;
+//				Message msg = new Message();
+//				msg.what = 1;
+//				msg.arg1 = 1;
+//				mHandler.sendMessage(msg);
 			}
-		}
-	}
-
-	private class PersonListViewAdapter2 extends SimpleAdapter {
-		public PersonListViewAdapter2(Context context,
-				List<Map<String, Object>> data, int resource, String[] from,
-				int[] to) {
-			super(context, data, resource, from, to);
-		}
-
-		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
-			View view = super.getView(position, convertView, parent);
-			view.setOnClickListener(new MyListener2(position));
-			return view;
-		}
-
-	}
-
-	private class MyListener2 implements OnClickListener {
-		Message msg;
-		int mPosition;
-
-		public MyListener2(int inPosition) {
-			mPosition = inPosition;
-		}
-
-		@Override
-		public void onClick(View v) {
-			LayoutInflater inflater = getActivity().getLayoutInflater();
-			final View layout = inflater.inflate(
-					R.layout.tab_home_person_dialog,
-					(ViewGroup) v.findViewById(R.id.dialog));
-			TextView person_title = (TextView) layout
-					.findViewById(R.id.person_title);
-			person_info = (EditText) layout.findViewById(R.id.person_info);
-			person_info
-					.setText((String) personList2.get(mPosition).get("info"));
-			person_title.setText(list2Title[mPosition]);
-
-			switch (mPosition) {
-			case 2:
+				break;
 			case 3:
-				person_info
-						.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
-								3) });
+			{
+				
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.tab_home_person_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				TextView person_title = (TextView) layout.findViewById(R.id.person_title);
+				person_title.setText(list1Title[mPosition]);
+				person_info = (EditText) layout.findViewById(R.id.person_info);
+				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
-				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										personList2.get(mPosition).put(
-												"info",
-												person_info.getText()
-														.toString());
-										SharedPreferences.Editor e = Utils
-												.getSharedPpreferenceEdit(getActivity());
-										e.putString(
-												Utils.SHARE_PREFERENCE_CUP_PERSON_2[mPosition],
-												person_info.getText()
-														.toString());
-										e.commit();
-										doUpdate2();
-									}
-								}).setNegativeButton(R.string.cancel, null)
-						.create();
+				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, person_info.getText().toString());
+						e.commit();
+						doUpdate1();
+					}
+				}).setNegativeButton(R.string.cancel, null).create();
 				ad.setTitle(R.string.personal_setting);
 				ad.setView(layout);
 				ad.show();
-				msg = new Message();
-				msg.what = 1;
-				msg.arg1 = 1;
-				mHandler.sendMessage(msg);
+//				Message msg = new Message();
+//				msg.what = 1;
+//				msg.arg1 = 1;
+//				mHandler.sendMessage(msg);
+			}
 				break;
-			case 0:
-			case 1:
-				if (mPosition == 0) {
-					person_info.setHint(R.string.company);
-					LinearLayout pd = (LinearLayout) layout
-							.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.office)));
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.home)));
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.outdoor)));
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.car)));
-
-				} else if (mPosition == 1) {
-					person_info.setHint(R.string.heath);
-					LinearLayout pd = (LinearLayout) layout
-							.findViewById(R.id.pre_define);
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.easy_sweat)));
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.less_sweat)));
-					pd.addView(addPredefineButton(getResources().getString(
-							R.string.normal)));
-				}
-				person_info
-						.setFilters(new InputFilter[] { new InputFilter.LengthFilter(
-								5) });
-				ad = new AlertDialog.Builder(getActivity())
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										personList2.get(mPosition).put(
-												"info",
-												person_info.getText()
-														.toString());
-										SharedPreferences.Editor e = Utils
-												.getSharedPpreferenceEdit(getActivity());
-										e.putString(
-												Utils.SHARE_PREFERENCE_CUP_PERSON_2[mPosition],
-												person_info.getText()
-														.toString());
-										e.commit();
-										doUpdate2();
-									}
-								}).setNegativeButton(R.string.cancel, null)
-						.create();
-
-				ad.setTitle(R.string.personal_setting);
-				ad.setView(layout);
-				ad.show();
-				msg = new Message();
-				msg.what = 1;
-				msg.arg1 = 1;
-				mHandler.sendMessage(msg);
-				break;
-
 			case 4:
+			{
+				
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.tab_home_person_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				TextView person_title = (TextView) layout.findViewById(R.id.person_title);
+				person_title.setText(list1Title[mPosition]);
+				person_info = (EditText) layout.findViewById(R.id.person_info);
+				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
+				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
+				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, person_info.getText().toString());
+						e.commit();
+						doUpdate1();
+					}
+				}).setNegativeButton(R.string.cancel, null).create();
+				ad.setTitle(R.string.personal_setting);
+				ad.setView(layout);
+				ad.show();
+//				Message msg = new Message();
+//				msg.what = 1;
+//				msg.arg1 = 1;
+//				mHandler.sendMessage(msg);
+			}
+				break;
+				
+			case 5:
+			{
 				Calendar c = Calendar.getInstance();
-				String birthday = (String) personList2.get(mPosition).get(
-						"info");
-				String[] dateSpilt = (TextUtils.isEmpty(birthday) ? "1990-01-01"
-						: birthday).split("-");
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
+				String[] dateSpilt = (TextUtils.isEmpty(birthday) ? "1990-01-01" : birthday).split("-");
 
-				DatePickerDialog dialog = new DatePickerDialog(getActivity(),
-						new DatePickerDialog.OnDateSetListener() {
-							@Override
-							public void onDateSet(DatePicker dp, int year,
-									int month, int dayOfMonth) {
-								// et.setText("您选择了：" + year + "年" + (month+1) +
-								// "月" +
-								// dayOfMonth + "日");
-								String dateFormat = year + "-" + (month + 1)
-										+ "-" + dayOfMonth;
-								personList2.get(mPosition).put("info",
-										dateFormat);
-								SharedPreferences.Editor e = Utils
-										.getSharedPpreferenceEdit(getActivity());
-								e.putString(
-										Utils.SHARE_PREFERENCE_CUP_PERSON_2[mPosition],
-										dateFormat);
-								e.commit();
-								doUpdate2();
-							}
-						}, Integer.parseInt(dateSpilt[0]), // 传入年份
+				DatePickerDialog dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+					@Override
+					public void onDateSet(DatePicker dp, int year, int month, int dayOfMonth) {
+						// et.setText("您选择了：" + year + "年" + (month+1) +
+						// "月" +
+						// dayOfMonth + "日");
+						String monthString = (month+1)<10?("0"+(month+1)):(month+1+"");
+						String dayOfMonthString = dayOfMonth<10?("0"+dayOfMonth):(dayOfMonth+"");
+						String dateFormat = year + "-" + monthString + "-" + dayOfMonthString;
+						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+						e.putString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, dateFormat);
+						e.commit();
+						doUpdate1();
+					}
+				}, Integer.parseInt(dateSpilt[0]), // 传入年份
 						Integer.parseInt(dateSpilt[1]) - 1, // 传入月份
 						Integer.parseInt(dateSpilt[2]) // 传入天数
 				);
 				dialog.show();
-				break;
+			}
+			break;
 			}
 		}
-
 	}
+
+
 
 	private TextView addPredefineButton(String text) {
 		final TextView btn = new TextView(getActivity());
-		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-				LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
 		layoutParams.setMargins(0, 5, 0, 5);
 		btn.setLayoutParams(layoutParams);
 		btn.setGravity(Gravity.CENTER);
@@ -795,8 +633,7 @@ public class FragmentHomePerson extends Fragment {
 		// btn.setTextSize(TypedValue.COMPLEX_UNIT_PX,25);
 		btn.setText(text);
 		btn.setTextColor(0xFFFFFFFF);
-		btn.setBackground(getResources()
-				.getDrawable(R.drawable.predefine_shape));
+		btn.setBackground(getResources().getDrawable(R.drawable.predefine_shape));
 		btn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -841,23 +678,7 @@ public class FragmentHomePerson extends Fragment {
 		}
 	}
 
-	private List<Map<String, Object>> getData2() {
-		return personList2;
-	}
 
-	private void initList2() {
-		Map<String, Object> map;
-		SharedPreferences p = Utils.getSharedPpreference(getActivity());
-		for (int i = 0; i < list2Title.length; i++) {
-			map = new HashMap<String, Object>();
-			map.put("title", list2Title[i]);
-			String info = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[i],
-					"");
-			map.put("info", info);
-			map.put("img", ">");
-			personList2.add(map);
-		}
-	}
 
 	private void doUpdate1() {
 		if (hlva1 != null) {
@@ -866,41 +687,27 @@ public class FragmentHomePerson extends Fragment {
 		}
 	}
 
-	private void doUpdate2() {
-		if (hlva2 != null) {
-			hlva2.notifyDataSetChanged();
-		}
-	}
-
 	@Override
 	public void onPause() {
 		super.onPause();
 		SharedPreferences p = Utils.getSharedPpreference(getActivity());
 		final JSONObject result = new JSONObject();
-		String nickname = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[0],
-				"");
+		String nickname = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[0], "");
 		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[1], "");
-		final String phone = p.getString(
-				Utils.SHARE_PREFERENCE_CUP_PERSON_1[2], "");
+		final String phone = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[2], "");
 
 		String scene = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[0], "");
-		String constitution = p.getString(
-				Utils.SHARE_PREFERENCE_CUP_PERSON_2[1], "");
+		String constitution = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[1], "");
 		String height = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[2], "");
 		String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[3], "");
-		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[4],
-				"");
+		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[4], "");
 
-		final String accountid = p.getString(
-				Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
-		final String avatarwebpath = p.getString(
-				Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH, "");
+		final String accountid = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
+		final String avatarwebpath = p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH, "");
 
-		final String avatar = p
-				.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
+		final String avatar = p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
 
-		final boolean avatarIsModify = p.getBoolean(
-				Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, false);
+		final boolean avatarIsModify = p.getBoolean(Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, false);
 
 		if (TextUtils.isEmpty(accountid) || TextUtils.isEmpty(phone)) {
 			// it must be a bug missing the accountid
@@ -922,15 +729,13 @@ public class FragmentHomePerson extends Fragment {
 			result.put("weight", weight);
 			result.put("birthday", birthday);
 			result.put("nickname", nickname);
-			Utils.Log("xxxxxxxxxxxxxxxxxx httpPut result:" + result
-					+ ",avatar:" + avatar + ",avatarIsModify:" + avatarIsModify);
+			Utils.Log("xxxxxxxxxxxxxxxxxx httpPut result:" + result + ",avatar:" + avatar + ",avatarIsModify:" + avatarIsModify);
 			// send to server
 			new Thread(new Runnable() {
 				@Override
 				public void run() {
 					// http://121.199.75.79:8280/user/saveme
-					Utils.httpPut(Utils.URL_PATH + "/user/saveme", result,
-							mHandler);
+					Utils.httpPut(Utils.URL_PATH + "/user/saveme", result, mHandler);
 
 					if (!TextUtils.isEmpty(avatar) && avatarIsModify) {
 						// Utils.httpPostFile(Utils.URL_PATH
@@ -952,8 +757,7 @@ public class FragmentHomePerson extends Fragment {
 	public void onDetach() {
 		super.onDetach();
 		try {
-			Field childFragmentManager = Fragment.class
-					.getDeclaredField("mChildFragmentManager");
+			Field childFragmentManager = Fragment.class.getDeclaredField("mChildFragmentManager");
 			childFragmentManager.setAccessible(true);
 			childFragmentManager.set(this, null);
 
@@ -965,5 +769,3 @@ public class FragmentHomePerson extends Fragment {
 
 	}
 }
-
-
