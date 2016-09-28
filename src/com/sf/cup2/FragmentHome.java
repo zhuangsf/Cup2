@@ -25,6 +25,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,6 +48,9 @@ public class FragmentHome extends Fragment {
 	ListView homeList2View;
 	String[] listTitle;
 	String[] list2Title;
+	
+	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
+	private static final String IMAGE_FILE_NAME_CROP = "avatarImage_crop.jpg";// 头像文件名称
 	
 	private int[] listDrawable;
 	private int[] list2Drawable;
@@ -103,6 +107,12 @@ public class FragmentHome extends Fragment {
         
         
     }
+    
+    
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -154,11 +164,36 @@ public class FragmentHome extends Fragment {
 			{
 				textView.setVisibility(View.GONE);
 				imageView1.setVisibility(View.VISIBLE);
-				imageView1.setImageResource(R.drawable.ic_launcher);
+				
+				String avatarFilePath = Utils.getInternelStoragePath(getActivity()) + "/" + IMAGE_FILE_NAME;
+				if (!TextUtils.isEmpty(avatarFilePath)) {
+					Drawable d = Drawable.createFromPath(avatarFilePath);
+					Utils.Log("avatar avatarFilePath:" + avatarFilePath + " ,d:" + d);
+					if (d == null) {
+						imageView1.setImageResource(R.drawable.ic_launcher);
+					} else {
+						imageView1.setImageDrawable(d);
+					}
+				} else {
+					imageView1.setImageResource(R.drawable.ic_launcher);
+				}
+				
+				
+			//	imageView1.setImageResource(R.drawable.ic_launcher);
 			}
 			else if(position == PLAN_INDEX)
 			{
-				textView.setText("2500");
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				String planValue = p.getString(Utils.SHARE_PREFERENCE_CUP_PLAN, "null");
+				
+				if("null".equals(planValue))
+				{
+					planValue = "2000";    //这个值要根据健康管理来生成,还没处理
+					SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+					e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
+					e.commit();
+				}
+				textView.setText(planValue);
 				
 				textView.setVisibility(View.VISIBLE);
 				imageView1.setVisibility(View.GONE);

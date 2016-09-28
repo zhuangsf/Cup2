@@ -146,6 +146,11 @@ public class FragmentHomePerson extends Fragment {
 	}
 
 	@Override
+	public void onResume() {
+		super.onResume();
+	}
+	
+	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		final View view = inflater.inflate(R.layout.tab_home_person_info, null);
 
@@ -163,59 +168,11 @@ public class FragmentHomePerson extends Fragment {
 		return view;
 	}
 
-	public static String getInternelStoragePath(Context context) {
-		ArrayList storagges = new ArrayList();
-		StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
-		try {
-			Class<?>[] paramClasses = {};
-			Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
-			getVolumeList.setAccessible(true);
-			Object[] params = {};
-			Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
-			if (invokes != null) {
-				StorageInfo info = null;
-				for (int i = 0; i < invokes.length; i++) {
-					Object obj = invokes[i];
-					Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
-					String path = (String) getPath.invoke(obj, new Object[0]);
-					info = new StorageInfo(path);
-					File file = new File(info.path);
-					if ((file.exists()) && (file.isDirectory()) && (file.canWrite())) {
-						Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
-						String state = null;
-						try {
-							Method getVolumeState = StorageManager.class.getMethod("getVolumeState", String.class);
-							state = (String) getVolumeState.invoke(storageManager, info.path);
-							info.state = state;
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-						info.isRemoveable = ((Boolean) isRemovable.invoke(obj, new Object[0])).booleanValue();
 
-						Log.e("jockeyTrack", "info.isRemoveable = " + info.isRemoveable + " path = " + path + " info.isMounted() = " + info.isMounted());
-						if (info.isMounted() && !info.isRemoveable) {
-							return info.path + "/MateCup";
-						}
-					}
-				}
-			}
-		} catch (NoSuchMethodException e1) {
-			e1.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		}
-		storagges.trimToSize();
-
-		return null;
-	}
 
 	// save and edit pic uri can not be same or it will 0byte
 	private Uri getTakePicSaveUri() {
-		String filePath = getInternelStoragePath(getActivity());
+		String filePath = Utils.getInternelStoragePath(getActivity());
 		File file = new File(filePath);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -226,7 +183,7 @@ public class FragmentHomePerson extends Fragment {
 
 	private Uri getCropPicSaveUri() {
 
-		String filePath = getInternelStoragePath(getActivity());
+		String filePath = Utils.getInternelStoragePath(getActivity());
 		File file = new File(filePath);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -322,7 +279,7 @@ public class FragmentHomePerson extends Fragment {
 			// Bitmap photo = extras.getParcelable("data");
 			Bitmap photo = getBitmapFromUri(getCropPicSaveUri(), getActivity());
 			Drawable drawable = new BitmapDrawable(null, photo);
-			urlpath = FileUtil.saveFile(getActivity(), getInternelStoragePath(getActivity()), IMAGE_FILE_NAME, photo);
+			urlpath = FileUtil.saveFile(getActivity(), Utils.getInternelStoragePath(getActivity()), IMAGE_FILE_NAME, photo);
 			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 			e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR, urlpath);
 			// e.putBoolean(Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, true);
@@ -391,7 +348,7 @@ public class FragmentHomePerson extends Fragment {
 
 				// SharedPreferences p =
 				// Utils.getSharedPpreference(getActivity());
-				String avatarFilePath = getInternelStoragePath(getActivity()) + "/" + IMAGE_FILE_NAME;
+				String avatarFilePath = Utils.getInternelStoragePath(getActivity()) + "/" + IMAGE_FILE_NAME;
 				if (!TextUtils.isEmpty(avatarFilePath)) {
 					Drawable d = Drawable.createFromPath(avatarFilePath);
 					Utils.Log("avatar avatarFilePath:" + avatarFilePath + " ,d:" + d);

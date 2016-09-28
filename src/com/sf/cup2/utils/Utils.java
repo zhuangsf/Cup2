@@ -12,6 +12,7 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -32,6 +33,8 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
+import com.sf.cup2.StorageInfo;
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
@@ -44,6 +47,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.os.PowerManager;
+import android.os.storage.StorageManager;
 import android.text.TextUtils;
 import android.util.Base64;
 import android.util.DisplayMetrics;
@@ -714,7 +718,55 @@ public class Utils {
 		return e;
 	}
     
-    
+	public static String getInternelStoragePath(Context context) {
+		ArrayList storagges = new ArrayList();
+		StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);
+		try {
+			Class<?>[] paramClasses = {};
+			Method getVolumeList = StorageManager.class.getMethod("getVolumeList", paramClasses);
+			getVolumeList.setAccessible(true);
+			Object[] params = {};
+			Object[] invokes = (Object[]) getVolumeList.invoke(storageManager, params);
+			if (invokes != null) {
+				StorageInfo info = null;
+				for (int i = 0; i < invokes.length; i++) {
+					Object obj = invokes[i];
+					Method getPath = obj.getClass().getMethod("getPath", new Class[0]);
+					String path = (String) getPath.invoke(obj, new Object[0]);
+					info = new StorageInfo(path);
+					File file = new File(info.path);
+					if ((file.exists()) && (file.isDirectory()) && (file.canWrite())) {
+						Method isRemovable = obj.getClass().getMethod("isRemovable", new Class[0]);
+						String state = null;
+						try {
+							Method getVolumeState = StorageManager.class.getMethod("getVolumeState", String.class);
+							state = (String) getVolumeState.invoke(storageManager, info.path);
+							info.state = state;
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						info.isRemoveable = ((Boolean) isRemovable.invoke(obj, new Object[0])).booleanValue();
+
+						Log.e("jockeyTrack", "info.isRemoveable = " + info.isRemoveable + " path = " + path + " info.isMounted() = " + info.isMounted());
+						if (info.isMounted() && !info.isRemoveable) {
+							return info.path + "/MateCup";
+						}
+					}
+				}
+			}
+		} catch (NoSuchMethodException e1) {
+			e1.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		}
+		storagges.trimToSize();
+
+		return null;
+	}
     
     public static int getDisplayDensity(Context c) {  
         DisplayMetrics metric = new DisplayMetrics();  

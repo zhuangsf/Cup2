@@ -50,6 +50,8 @@ public class FragmentHomePlan extends Fragment {
 	private ImageView save_success;
 	private View popupView;
 	PopupWindow popupWindow;
+	private Handler handler;
+	Runnable runnable;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -70,7 +72,23 @@ public class FragmentHomePlan extends Fragment {
 	    popupWindow.setFocusable(true);  
 	    popupWindow.setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.bounced_success) );
 	    save_success = (ImageView)popupView.findViewById(R.id.save_success);  
-		
+	    
+	    handler = new Handler();  
+	    runnable = new Runnable() {  
+	        @Override  
+	        public void run() {  
+	            // handler自带方法实现定时器  
+	            try {  
+	            	if(popupWindow != null && popupWindow.isShowing())
+	            	{
+	            		popupWindow.dismiss();
+	            	}
+	            } catch (Exception e) {  
+	                // TODO Auto-generated catch block  
+	                e.printStackTrace();  
+	            }  
+	        }  
+	    };  
 	}
 
 	
@@ -143,6 +161,7 @@ public class FragmentHomePlan extends Fragment {
 				SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 				e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
 				e.commit();
+				handler.postDelayed(runnable, 2000); 
 			}
 		});
 	}	
