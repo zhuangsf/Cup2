@@ -82,6 +82,7 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_CONSTITUTION="CONSTITUTION";
 	public static final String SHARE_PREFERENCE_CUP_WEIGHT="WEIGHT";
 	public static final String SHARE_PREFERENCE_CUP_AVATAR="AVATAR";
+	public static final String SHARE_PREFERENCE_CUP_PLAN="PLAN";
 	/**
 	 * upload to server  when avatar modify
 	 * @deprecated
