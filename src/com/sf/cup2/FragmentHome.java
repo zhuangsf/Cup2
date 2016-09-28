@@ -26,6 +26,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +49,7 @@ public class FragmentHome extends Fragment {
 	ListView homeList2View;
 	String[] listTitle;
 	String[] list2Title;
+	private ImageView exit;
 	
 	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
 	private static final String IMAGE_FILE_NAME_CROP = "avatarImage_crop.jpg";// 头像文件名称
@@ -134,7 +136,13 @@ public class FragmentHome extends Fragment {
     	homeList2View.setAdapter(hlva2);
     	
 
-    	
+		exit = (ImageView)view.findViewById(R.id.exit);
+		exit.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+			//todo 退出的操作
+
+			}
+		});
     	
         return view;
     }
@@ -315,11 +323,21 @@ public class FragmentHome extends Fragment {
             	//go to personal info
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
             	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentAccount());
+            	ft.remove(FragmentHome.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+            }else  if(1==mPosition){
+            	//go to personal info
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             	ft.add(R.id.fragmentfield, new FragmentHomePerson());
             	ft.remove(FragmentHome.this);
             	ft.addToBackStack(null);
 				ft.commit();
             }
+            
+            
         }  
           
     }  

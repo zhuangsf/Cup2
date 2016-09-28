@@ -80,7 +80,7 @@
             android:layout_centerInParent="true"
             android:text="每个人每日所需的饮水量根据个人身体情况有很大差异,选择推荐值,系统将自动为您推荐每天合理的饮水量"
             android:textColor="@color/text_color_gray"
-            android:textSize="10sp" />
+            android:textSize="13sp" />
 
         <RelativeLayout
             android:id="@+id/v_ruler"
