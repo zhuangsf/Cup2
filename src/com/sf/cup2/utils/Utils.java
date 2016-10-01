@@ -68,8 +68,8 @@ public class Utils {
 	public static final String FROM = "extra.from";
 	public static final int FROM_EXTERNAL = 0;
 	public static final int FROM_INTERNAL = 1;
-	public static final String SMS_APP_KEY="c104bd01f0ba";
-	public static final String SMS_APP_SECRET="35cca6958f0f1192aac5ddf7c4bebab9";
+	public static final String SMS_APP_KEY="17544ecca8d78";
+	public static final String SMS_APP_SECRET="46ce2bc7d261962f82093e6b3584dca2";
 	
 	public static final String SHARE_PREFERENCE_CUP_OPEN_COUNTS="OPEN_COUNTS";
 	
