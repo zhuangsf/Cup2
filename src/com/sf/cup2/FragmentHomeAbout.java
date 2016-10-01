@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
@@ -19,6 +20,7 @@ import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -27,12 +29,20 @@ public class FragmentHomeAbout extends Fragment {
 	Button goBackButton;
 	ListView about_list_view;
 	String[] listTitle;
+	private int[] listDrawable;
+	private ImageView goBack;
+	
 	private static final int GO_WEB_INDEX = 0;
 	private static final int GO_BUY_INDEX = 1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+        listDrawable = new int[]{
+        		R.drawable.icon_web,
+        		R.drawable.icon_buy,
+        };
 	}
 
 	@Override
@@ -41,11 +51,24 @@ public class FragmentHomeAbout extends Fragment {
 		Resources res = getResources();
 		listTitle = res.getStringArray(R.array.home_about_list_title);
 		about_list_view = (ListView) v.findViewById(R.id.about_list_view);
-		AboutListViewAdapter alva = new AboutListViewAdapter(this.getActivity(), getData(), R.layout.tab_home_list_item,
-				new String[] { "title", "info", "img" }, new int[] { R.id.title_text, R.id.info_text, R.id.right_img });
+		AboutListViewAdapter alva = new AboutListViewAdapter(this.getActivity(), getData(), R.layout.tab_home_list_item_down,
+				new String[]{"item_image","title_text","image_view"},
+				new int[]{R.id.item_image,R.id.title_text,R.id.image_view});
 		setHeight(alva, about_list_view);
 		about_list_view.setAdapter(alva);
 
+		
+		goBack = (ImageView)v.findViewById(R.id.goBack);
+		goBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHome());
+            	ft.remove(FragmentHomeAbout.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
 		return v;
 	}
 
@@ -105,9 +128,9 @@ public class FragmentHomeAbout extends Fragment {
 		Map<String, Object> map;
 		for (int i = 0; i < listTitle.length; i++) {
 			map = new HashMap<String, Object>();
-			map.put("title", listTitle[i]);
-			map.put("info", "");
-			map.put("img", ">");
+			map.put("item_image", listDrawable[i]);
+			map.put("title_text", listTitle[i]);
+			map.put("image_view", R.drawable.icon_next);
 			list.add(map);
 		}
 

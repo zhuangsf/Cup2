@@ -351,6 +351,14 @@ public class FragmentHome extends Fragment {
             	ft.remove(FragmentHome.this);
             	ft.addToBackStack(null);
 				ft.commit();
+            }else  if(4==mPosition){
+            	//go to personal info
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHomeAbout());
+            	ft.remove(FragmentHome.this);
+            	ft.addToBackStack(null);
+				ft.commit();
             }
             
             

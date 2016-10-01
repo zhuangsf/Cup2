@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/cup_light_gray" 
     android:orientation="vertical" >
 
     <RelativeLayout
@@ -12,32 +13,21 @@
         android:paddingBottom="5dp"
         android:paddingTop="5dp" >
 
-        <Button
+        <ImageView
             android:id="@+id/goBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="back" 
-            android:visibility="gone"
-            />
-        <!-- Logo Start -->
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:layout_toStartOf="@+id/title"
-            android:src="@drawable/ic_launcher" 
-            android:visibility="gone"
-            />
-        <!-- Logo Ends -->
+            android:src="@drawable/bar_icon_back_white" />
 
         <TextView
             android:id="@id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:text="关于我们"
+            android:text="关于"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </RelativeLayout>
@@ -45,41 +35,40 @@
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:orientation="vertical" >
+        android:orientation="vertical" 
+        android:background="@drawable/cup_light_gray" 
+        >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="3"
             android:gravity="center"
+            android:background="@drawable/cup_light_gray" 
             android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                 android:src="@drawable/login_logo" >
+                android:src="@drawable/logo" >
             </ImageView>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
+            android:layout_weight="2"
             android:orientation="vertical"
+            android:background="@drawable/cup_light_gray" 
             android:gravity="center" >
-            
-            <!-- draw line by myself -->
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:background="@drawable/cup_light_gray"
-                android:visibility="visible" />
 
+            
             <ListView
                 android:id="@+id/about_list_view"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:divider="@drawable/cup_light_gray"
+                android:background="@@color/background_color_white" 
                 android:dividerHeight="1dp"
                 android:footerDividersEnabled="true"
                 android:headerDividersEnabled="true" >
@@ -90,17 +79,19 @@
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:background="@drawable/cup_light_gray" >
+            android:layout_weight="5"
+            android:gravity="bottom"
+            android:background="@drawable/cup_light_gray" 
+            
+			 >
 
             <TextView
                 android:id="@+id/pair_info"
                 android:layout_width="fill_parent"
-                android:layout_height="60dp"
-                android:background="@drawable/cup_light_gray"
+                android:layout_height="wrap_content"
+                android:textColor="@color/text_color_gray"
                 android:gravity="center"
-                android:text="杭州未蓝智能科技有限公司"
+                android:text="贺迈新能源科技(上海)有限公司"
                 android:textSize="7pt" >
             </TextView>
         </LinearLayout>
