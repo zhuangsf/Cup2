@@ -3,18 +3,21 @@ package com.sf.cup2;
 import java.lang.reflect.Field;
 
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class FragmentHomePairInfo extends Fragment {
  
 	Button goBackButton;
 	TextView pair_info;
-	
+	private ImageView goBack;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,13 +25,23 @@ public class FragmentHomePairInfo extends Fragment {
  
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    	View v=inflater.inflate(R.layout.tab_home_pair_info, null);
-    	pair_info= (TextView)v.findViewById(R.id.pair_info);
+    	View view=inflater.inflate(R.layout.tab_home_pair_info, null);
+    	pair_info= (TextView)view.findViewById(R.id.pair_info);
     	if(true){//获取蓝牙配对信息
     		pair_info.setText(R.string.cup_number1);
     	}
-    	
-        return v; 
+		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHome());
+            	ft.remove(FragmentHomePairInfo.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+        return view; 
     }
     
     

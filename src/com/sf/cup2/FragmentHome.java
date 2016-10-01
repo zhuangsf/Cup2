@@ -335,6 +335,22 @@ public class FragmentHome extends Fragment {
             	ft.remove(FragmentHome.this);
             	ft.addToBackStack(null);
 				ft.commit();
+            }else  if(2==mPosition){
+            	//go to personal info
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHomePairInfo());
+            	ft.remove(FragmentHome.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+            }else  if(3==mPosition){
+            	//go to personal info
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHomeUpdate());
+            	ft.remove(FragmentHome.this);
+            	ft.addToBackStack(null);
+				ft.commit();
             }
             
             
