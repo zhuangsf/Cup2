@@ -19,6 +19,7 @@ import com.sf.cup2.utils.Utils;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -85,6 +86,8 @@ public class FragmentHomePerson extends Fragment {
 	RelativeLayout mainLayout;
 	LinearLayout avatar_layout;
 	ImageView avatar_image;
+	private ImageView goBack;
+	
 	private SelectPicPopupWindow menuWindow; // 自定义的头像编辑弹出框
 	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
 	private static final String IMAGE_FILE_NAME_CROP = "avatarImage_crop.jpg";// 头像文件名称
@@ -165,6 +168,19 @@ public class FragmentHomePerson extends Fragment {
 
 		mainLayout = (RelativeLayout) view.findViewById(R.id.mainLayout);
 
+		
+		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentHome());
+            	ft.remove(FragmentHomePerson.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+		
 		return view;
 	}
 
