@@ -11,6 +11,7 @@ import java.util.Map;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
 import android.graphics.Color;
 import android.os.Build;
@@ -73,7 +74,7 @@ public class FragmentHistory extends Fragment {
 	private ImageView buttonWeek;
 	private ImageView buttonMonth;
 	private LinearLayout month_view;
-	
+	private ImageView goBack;
 	//当前点击的按钮
 	private int currentClick = R.id.history_day;
 	public static FragmentHistory newInstance(Bundle b) {
@@ -113,6 +114,18 @@ public class FragmentHistory extends Fragment {
 	 */
 	public void initLayout(View view){
 		
+		
+		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentData());
+            	ft.remove(FragmentHistory.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
 		
 		month_view = (LinearLayout)view.findViewById(R.id.month_view);
 		mChart = (LineChart) view.findViewById(R.id.chart);
@@ -274,6 +287,18 @@ public class FragmentHistory extends Fragment {
 		//db.open();
 		Cursor cursor = mdbAdapter.getDataByDate(currentDateString);
 		if (cursor != null && mChart != null) {
+			
+			LimitLine ll = new LimitLine(500f, "500ml");
+			ll.setLineColor(Color.RED);
+			ll.setLineWidth(1f);
+			ll.enableDashedLine(10f, 5f, 0f);
+			ll.setTextColor(Color.GRAY);
+			ll.setTextSize(12f);
+			YAxis leftAxis = mChart.getAxisLeft();
+			//显示横方向线
+			leftAxis.setDrawGridLines(true);
+			leftAxis.addLimitLine(ll);
+			
 			mChart.setData(getLineData(cursor));
 			mChart.notifyDataSetChanged();
 			cursor.close();
@@ -289,11 +314,16 @@ public class FragmentHistory extends Fragment {
 		}
 		if(mChart != null)
 		{
+			YAxis leftAxis = mChart.getAxisLeft();
+			leftAxis.removeAllLimitLines();
+			
 			mChart.setData(getLineWeekData(currentDateString,bMonth));
 			mChart.notifyDataSetChanged();
 		}
 		
 	}	
+	
+
 	
 	
 	private void setChartStyle(LineChart mlinechart) {
