@@ -1,91 +1,135 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"  
-    android:layout_width="fill_parent"  
-    android:layout_height="fill_parent"  
-    android:orientation="vertical"
-    > 
-    
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
 
-     
-    
-       <RelativeLayout
-            android:id="@+id/header"
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:background="@layout/header_gradient"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp" >
+
+        <ImageView
+            android:id="@+id/goBack"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@drawable/bar_icon_back_white" />
+
+        <TextView
+            android:id="@id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="饮水记录"
+            android:textColor="@android:color/white"
+            android:textSize="20sp" />
+
+        <ImageView
+            android:id="@+id/share"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/icon_share" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/history_day"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
+            android:background="@drawable/record_icon_day"
+            android:gravity="center"
+            android:scaleType="center" />
+
+        <ImageView
+            android:id="@+id/history_week"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:background="@drawable/record_icon_week_initial"
+            android:gravity="center" />
+
+        <ImageView
+            android:id="@+id/history_month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/record_icon_month_initial"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </com.github.mikephil.charting.charts.LineChart>
+
+        <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:background="@layout/header_gradient"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp" >
-
+            android:id="@+id/month_view"
+            android:orientation="horizontal"
+            android:visibility="gone" >
+    <ImageView 
+        android:layout_width="wrap_content" 
+        android:layout_gravity="center"
+        android:paddingLeft="20dp"
+        android:layout_height="wrap_content"
+        android:src="@drawable/record_icon_time"
+        />
             <TextView
-                android:id="@id/title"
+                android:id="@+id/month_text"
+                android:paddingLeft="20dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:text="@string/waterdata_history"
-                android:textColor="@android:color/white"
+                android:text="10"
+                android:textColor="@color/text_color_red"
                 android:textSize="20sp" />
 
-        </RelativeLayout>
-
-       
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-		>
-
-              <Button  
-                  android:id="@+id/history_day"
-                  android:layout_width="fill_parent"
-                  android:layout_height="wrap_content"
-                  android:gravity="center"
-                  android:layout_weight="1"
-                  android:text="@string/history_day"
-                  android:textColor="@android:color/black"
-                  android:textSize="20sp" />
-                  
-                             <Button  
-                android:id="@+id/history_week"
-                android:layout_width="fill_parent"
+            <TextView
+                android:id="@+id/year_text"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/history_week"
-                android:layout_weight="1"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-                             
-                             
-               <Button  
-                android:id="@+id/history_month"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/history_month"
-                android:gravity="center"
-                android:layout_weight="1"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
-       
-       </LinearLayout>
-       
- 
-        
+                android:text="月2016"
+                android:textColor="@color/text_color_red"
+                android:textSize="12sp" />
+        </LinearLayout>
 
-       <com.github.mikephil.charting.charts.LineChart
-           android:id="@+id/chart"
-           android:layout_width="match_parent"
-           android:layout_height="200dp" >
-       </com.github.mikephil.charting.charts.LineChart>
+        <View
+            android:layout_width="fill_parent"
+            android:layout_height="2px"
+            android:background="?android:attr/listDivider" />
 
-   		<View  
-   android:layout_width="fill_parent"  
-    android:layout_height="2px" 
-   android:background="?android:attr/listDivider" 
-    />             
-			        <ListView  
-				        android:id="@+id/history_listview"  
-				        android:layout_width="fill_parent"  
-				        android:layout_height="fill_parent" >  
-			        </ListView>  
-       
-       
-</LinearLayout> 
+        <ListView
+            android:id="@+id/history_listview"
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" >
+        </ListView>
+    </LinearLayout>
+
+</LinearLayout>

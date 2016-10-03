@@ -34,6 +34,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.Switch;
@@ -68,9 +69,11 @@ public class FragmentHistory extends Fragment {
 	private ListView mHistoryList;
 	private SimpleAdapter historyListAdapter;
 	
-	private Button buttonDay;
-	private Button buttonWeek;
-	private Button buttonMonth;
+	private ImageView buttonDay;
+	private ImageView buttonWeek;
+	private ImageView buttonMonth;
+	private LinearLayout month_view;
+	
 	//当前点击的按钮
 	private int currentClick = R.id.history_day;
 	public static FragmentHistory newInstance(Bundle b) {
@@ -109,6 +112,9 @@ public class FragmentHistory extends Fragment {
 	 * 初始化控件
 	 */
 	public void initLayout(View view){
+		
+		
+		month_view = (LinearLayout)view.findViewById(R.id.month_view);
 		mChart = (LineChart) view.findViewById(R.id.chart);
 		mHistoryList = (ListView) view.findViewById(R.id.history_listview);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
@@ -116,27 +122,36 @@ public class FragmentHistory extends Fragment {
 		setChartStyle(mChart);
 		showDayData();
 
-		  buttonDay = (Button) view.findViewById(R.id.history_day);  
+		  buttonDay = (ImageView) view.findViewById(R.id.history_day);  
 		  buttonDay.setOnClickListener(new View.OnClickListener() {  
 	            public void onClick(View v) {  
 	                // Perform action on click  
 	                //增加自己的代码......  
 	            	showDayData();
+	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day);
+	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week_initial);
+	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month_initial);
 	            }  
 	        });  
-		  buttonWeek = (Button) view.findViewById(R.id.history_week);  
+		  buttonWeek = (ImageView) view.findViewById(R.id.history_week);  
 		  buttonWeek.setOnClickListener(new View.OnClickListener() {  
 	            public void onClick(View v) {  
 	                // Perform action on click  
 	                //增加自己的代码......  
 	            	showWeekData(); 
+	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day_initial);
+	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week);
+	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month_initial);
 	            }  
 	        });  
-		  buttonMonth = (Button) view.findViewById(R.id.history_month);  
+		  buttonMonth = (ImageView) view.findViewById(R.id.history_month);  
 		  buttonMonth.setOnClickListener(new View.OnClickListener() {  
 	            public void onClick(View v) {  
 	                // Perform action on click  
 	            	showMonthData();     
+	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day_initial);
+	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week_initial);
+	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month);
 	            }  
 	        });  
 		
@@ -149,12 +164,14 @@ public class FragmentHistory extends Fragment {
 	}
 	private void showDayData()
 	{
+		month_view.setVisibility(View.GONE);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
 		mHistoryList.setAdapter(historyListAdapter);		
 		reflashChartData(mClickDateString);
 	}
 	private void showWeekData()
 	{
+		month_view.setVisibility(View.VISIBLE);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(false), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
 		mHistoryList.setAdapter(historyListAdapter);
 		
@@ -163,6 +180,7 @@ public class FragmentHistory extends Fragment {
 	
 	private void showMonthData()
 	{
+		month_view.setVisibility(View.VISIBLE);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(true), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
 		mHistoryList.setAdapter(historyListAdapter);
 		
@@ -189,7 +207,7 @@ public class FragmentHistory extends Fragment {
 		//			+"DATA_COLUMN_WATER = "+cursor.getString(DBAdapter.DATA_COLUMN_WATER)
 		//			);
 			map = new HashMap<String, Object>();
-	        map.put("image", R.drawable.login_phone_pic);
+	        map.put("image", R.drawable.record_icon_time);
 	        map.put("time", cursor.getString(DBAdapter.DATA_COLUMN_TIME));
 	        map.put("value", "喝了"+cursor.getString(DBAdapter.DATA_COLUMN_WATER)+"ml");
 			maps.add(map);
@@ -233,8 +251,9 @@ public class FragmentHistory extends Fragment {
 				if(onedaywater != 0)
 				{
 					map = new HashMap<String, Object>();
-			        map.put("image", R.drawable.login_phone_pic);
-			        map.put("time", sf.format(date));
+			        map.put("image", R.drawable.record_icon_time);
+			        String[] weekdataString = sf.format(date).split("-");
+			        map.put("time", weekdataString[2]+"日");
 			        map.put("value", "已喝"+onedaywater+"ml");
 			        map.put("percent", "完成 35%");
 					maps.add(map);
@@ -281,11 +300,15 @@ public class FragmentHistory extends Fragment {
 
 		// 将x轴放到底部 默认在顶部
 		XAxis mXAxis = mlinechart.getXAxis();
-		mXAxis.setPosition(XAxisPosition.TOP);
+		mXAxis.setPosition(XAxisPosition.BOTTOM);
 
-		mXAxis.setDrawAxisLine(false);
+		//x轴底部线
+		mXAxis.setDrawAxisLine(true);
 		
-		LimitLine ll = new LimitLine(200f, "500ml");
+		//竖方向线不显示
+		mXAxis.setDrawGridLines(false);
+		
+		LimitLine ll = new LimitLine(500f, "500ml");
 		ll.setLineColor(Color.RED);
 		ll.setLineWidth(1f);
 		ll.enableDashedLine(10f, 5f, 0f);
@@ -294,8 +317,10 @@ public class FragmentHistory extends Fragment {
 		// .. and more styling options
 		YAxis leftAxis = mlinechart.getAxisLeft();
 		YAxis rightAxis = mlinechart.getAxisRight();
-		leftAxis.setDrawGridLines(false);
-		rightAxis.setDrawGridLines(false);
+		
+		//显示横方向线
+		leftAxis.setDrawGridLines(true);
+		rightAxis.setDrawGridLines(true);
 		rightAxis.setEnabled(false);
 		leftAxis.addLimitLine(ll);
 
@@ -333,6 +358,10 @@ public class FragmentHistory extends Fragment {
 		// 下方字体颜色
 		mLegend.setTextColor(Color.BLUE);
 		// 设置x轴的动画
+		
+		//是否显示表格下方表格的名称
+		mLegend.setEnabled(false);
+		
 		mlinechart.animateX(1000);
 
 	}
@@ -377,42 +406,41 @@ public class FragmentHistory extends Fragment {
 
 
 		// y轴的数据集
-		LineDataSet set = new LineDataSet(y, "   ");
-		// 用y轴的集合来设置参数
-		// 线宽
-		set.setLineWidth(3.0f);
-		// 显示圆形大小
-		set.setCircleRadius(0.0f);
-		// 折线的颜色
-		set.setColor(Color.BLACK);
-		// 圆球颜色
-		set.setCircleColor(Color.RED);
-		// 设置mLineDataSet.setDrawHighlightIndicators(false)后，
-		// Highlight的十字交叉的纵横线将不会显示，
-		// 同时，mLineDataSet.setHighLightColor()失效。
+			LineDataSet set = new LineDataSet(y, null);
+			// 用y轴的集合来设置参数
+			// 线宽
+			set.enableDashedLine(10f, 5f, 0f);
+			set.setLineWidth(1.0f);
+			// 显示圆形大小
+			set.setCircleSize(2.0f);
+			// 折线的颜色
+			set.setColor(Color.RED);
+			// 圆球颜色
+			set.setCircleColor(Color.RED);
+			set.setDrawCircleHole(false);
+			// 设置mLineDataSet.setDrawHighlightIndicators(false)后，
+			// Highlight的十字交叉的纵横线将不会显示，
+			// 同时，mLineDataSet.setHighLightColor()失效。
 
-		set.setDrawHighlightIndicators(true);
-		// 点击后，十字交叉线的颜色
-		set.setHighLightColor(Color.BLUE);
-		// 设置显示数据点字体大小
-		set.setValueTextSize(10.0f);
-		// mLineDataSet.setDrawCircleHole(true);
+			set.setDrawHighlightIndicators(true);
+			// 点击后，十字交叉线的颜色
+			set.setHighLightColor(Color.BLUE);
+			// 设置显示数据点字体大小
+			set.setValueTextSize(10.0f);
+			// mLineDataSet.setDrawCircleHole(true);
 
-		// 改变折线样式，用曲线。
-		set.setDrawCubic(true);
-		// 默认是直线
-		// 曲线的平滑度，值越大越平滑。
-		set.setCubicIntensity(0.2f);
+			// 改变折线样式，用曲线。
+			set.setDrawCubic(true);
+			// 默认是直线
+			// 曲线的平滑度，值越大越平滑。
+			set.setCubicIntensity(0.2f);
 
-		// 填充曲线下方的区域，红色，半透明。
-		set.setDrawFilled(true);
-		// 数值越小 透明度越大
-		set.setFillAlpha(50);
-		set.setFillColor(Color.RED);
-
-		// 填充折线上数据点、圆球里面包裹的中心空白处的颜色。
-		// set.setCircleColorHole(Color.YELLOW);
-		// 设置折线上显示数据的格式。如果不设置，将默认显示float数据格式。
+			// 填充曲线下方的区域，红色，半透明。
+			set.setDrawFilled(true);
+			// 数值越小 透明度越大
+		//	set.setFillAlpha(50);
+		//	set.setFillColor(Color.RED);
+			set.setFillDrawable(getActivity().getResources().getDrawable(R.drawable.background_linechart));
 
 		set.setValueFormatter(new ValueFormatter() {
 
@@ -455,16 +483,18 @@ public class FragmentHistory extends Fragment {
 		}
 
 		// y轴的数据集
-		LineDataSet set = new LineDataSet(y, "   ");
+		LineDataSet set = new LineDataSet(y, null);
 		// 用y轴的集合来设置参数
 		// 线宽
-		set.setLineWidth(3.0f);
+		set.enableDashedLine(10f, 5f, 0f);
+		set.setLineWidth(1.0f);
 		// 显示圆形大小
-		set.setCircleRadius(0.0f);
+		set.setCircleSize(2.0f);
 		// 折线的颜色
-		set.setColor(Color.BLACK);
+		set.setColor(Color.RED);
 		// 圆球颜色
 		set.setCircleColor(Color.RED);
+		set.setDrawCircleHole(false);
 		// 设置mLineDataSet.setDrawHighlightIndicators(false)后，
 		// Highlight的十字交叉的纵横线将不会显示，
 		// 同时，mLineDataSet.setHighLightColor()失效。
@@ -485,12 +515,9 @@ public class FragmentHistory extends Fragment {
 		// 填充曲线下方的区域，红色，半透明。
 		set.setDrawFilled(true);
 		// 数值越小 透明度越大
-		set.setFillAlpha(50);
-		set.setFillColor(Color.RED);
-
-		// 填充折线上数据点、圆球里面包裹的中心空白处的颜色。
-		// set.setCircleColorHole(Color.YELLOW);
-		// 设置折线上显示数据的格式。如果不设置，将默认显示float数据格式。
+	//	set.setFillAlpha(50);
+	//	set.setFillColor(Color.RED);
+		set.setFillDrawable(getActivity().getResources().getDrawable(R.drawable.background_linechart));
 
 		set.setValueFormatter(new ValueFormatter() {
 
