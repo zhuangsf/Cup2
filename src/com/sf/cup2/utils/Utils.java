@@ -12,7 +12,10 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -718,6 +721,58 @@ public class Utils {
 		e = getSharedPpreference(c).edit();
 		return e;
 	}
+    
+    public static String getSuggestPlan(Context context)
+    {
+    	
+    	Log.e("jockeyTrack", "getSuggestPlan start ");
+		SharedPreferences p = context.getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
+		int height = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160"));
+		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
+		int weight = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
+		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
+		String[] dateSpilt = birthday.split("-");
+		
+		
+		Calendar c = Calendar.getInstance();//首先要获取日历对象
+		int mYear = c.get(Calendar.YEAR);
+		int birthYear = Integer.parseInt(dateSpilt[0]);
+		int[] default_bmi = new int[] {17,19,21};
+		int[] default_water = new int[] {1050,1800,2100};
+		int ageIndex = 0;
+		Log.e("jockeyTrack", "getSuggestPlan mYear = "+mYear);
+		Log.e("jockeyTrack", "getSuggestPlan birthYear = "+birthYear);
+		if(mYear - birthYear >= 16)
+		{
+			ageIndex = 2;
+		}
+		else if(mYear - birthYear >= 10)
+		{
+			ageIndex = 1;
+		}else
+		{
+			ageIndex = 0;
+		}
+		Log.e("jockeyTrack", "getSuggestPlan ageIndex = "+ageIndex);
+		Log.e("jockeyTrack", "getSuggestPlan weight = "+weight);
+		Log.e("jockeyTrack", "getSuggestPlan height = "+height);
+		Log.e("jockeyTrack", "getSuggestPlan height/100 = "+height/100);
+		float my_bmi = weight/(height/100.0f)/(height/100.0f);
+		Log.e("jockeyTrack", "getSuggestPlan my_bmi = "+my_bmi);
+		float water1 = 35*weight;
+		Log.e("jockeyTrack", "getSuggestPlan water1 = "+water1);
+		float water2 = my_bmi*default_water[ageIndex]/default_bmi[ageIndex];
+		Log.e("jockeyTrack", "getSuggestPlan water2 = "+water2);
+		float water3 = (water1 - water2)/2 + water2;
+		Log.e("jockeyTrack", "getSuggestPlan water3 = "+water3);
+		int suggestPlan = (int)water3;
+		
+	//	SharedPreferences.Editor e = getSharedPpreference(context).edit();;
+	//	e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, suggestPlan+"");
+	//	e.commit();
+		
+		return suggestPlan+"";
+    }
     
 	public static String getInternelStoragePath(Context context) {
 		ArrayList storagges = new ArrayList();

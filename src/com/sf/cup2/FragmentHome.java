@@ -196,10 +196,11 @@ public class FragmentHome extends Fragment {
 				
 				if("null".equals(planValue))
 				{
-					planValue = "2000";    //这个值要根据健康管理来生成,还没处理
+					planValue = Utils.getSuggestPlan(getActivity());;    //这个值要根据健康管理来生成
 					SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 					e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
 					e.commit();
+	
 				}
 				textView.setText(planValue);
 				

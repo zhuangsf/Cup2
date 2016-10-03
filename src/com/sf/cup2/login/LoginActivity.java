@@ -287,16 +287,27 @@ public class LoginActivity extends Activity {
 		String constitution =result.optString("constitution","");
 		String weight =result.optString("weight","");
 
+		if(!"".equals(phone))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_PHONE, phone);
+		if(!"".equals(birthday))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, birthday);
+		if(!"".equals(nickname))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, nickname);
+		if(!"".equals(avatar))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH, avatar);
+		if(!"".equals(height))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, height);
+		if(!"".equals(city))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_CITY, city);
+		if(!"".equals(accountid))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, accountid);
+		if(!"".equals(sex))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, sex);
+		if(!"".equals(scene))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_SCENE, scene);
+		if(!"".equals(constitution))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_CONSTITUTION, constitution);
+		if(!"".equals(weight))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, weight);
 		
 		e.commit();

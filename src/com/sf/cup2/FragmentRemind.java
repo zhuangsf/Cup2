@@ -31,7 +31,7 @@ public class FragmentRemind extends Fragment {
         super.onCreate(savedInstanceState);
         
 		SharedPreferences p = Utils.getSharedPpreference(getActivity());
-		appPush_Value = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "on");
+		appPush_Value = p.getString(Utils.SHARE_PREFERENCE_CUP_REMIND, "on");
     }
  
     @Override
