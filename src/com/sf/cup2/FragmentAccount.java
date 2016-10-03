@@ -25,7 +25,7 @@ public class FragmentAccount extends Fragment {
         super.onCreate(savedInstanceState);
         
 		SharedPreferences p = Utils.getSharedPpreference(getActivity());
-		account = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "error");
+		account = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, "error");
     }
  
     @Override

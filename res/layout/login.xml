@@ -2,27 +2,24 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-     >
+    android:fillViewport="true" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/cup_light_gray"
         android:orientation="vertical" >
 
         <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
+            android:layout_weight="1"
             android:gravity="center"
             android:orientation="horizontal" >
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="10dp"
-                android:src="@drawable/login_logo" >
+                android:src="@drawable/logo" >
             </ImageView>
         </LinearLayout>
 
@@ -43,7 +40,8 @@
                 <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="40dp"
-                    android:background="@drawable/edittext_shape"
+                    android:background="@drawable/shape_background"
+                    android:gravity="center"
                     android:orientation="horizontal" >
 
                     <ImageView
@@ -51,45 +49,70 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginLeft="10dp"
-                        android:src="@drawable/login_phone_pic" >
+                        android:src="@drawable/icon_phone" >
                     </ImageView>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center_horizontal|center"
+                        android:layout_marginLeft="10dp"
+                        android:background="#ff0000" />
 
                     <EditText
                         android:id="@+id/phone_num"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="10dp"
                         android:background="@null"
                         android:hint="请填写手机号码"
                         android:inputType="phone"
                         android:singleLine="true"
-                        android:textSize="7pt" />
+                        android:textSize="6pt" />
                 </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="40dp"
-                android:orientation="horizontal"
-                  android:background="@drawable/edittext_shape"
-                android:layout_margin="20dp"
-                 >
+                android:layout_marginBottom="20dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/shape_background"
+                android:orientation="horizontal" >
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="40dp"
-                    android:layout_weight="3"
-                  
+                    android:layout_weight="8"
                     android:orientation="horizontal" >
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_password" >
+                    </ImageView>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="15dp"
+                        android:layout_gravity="center_horizontal|center"
+                        android:layout_marginLeft="10dp"
+                        android:background="#ff0000" />
 
                     <EditText
                         android:id="@+id/check_code"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
+                        android:layout_marginLeft="10dp"
                         android:background="@null"
-                        android:gravity="center"
-                        android:hint="请输入验证码"
-                        android:inputType="number" />
+                        android:gravity="left|center"
+                        android:hint="验证码"
+                        android:inputType="number"
+                        android:textSize="6pt" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -102,9 +125,10 @@
                         android:id="@+id/send_code"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:background="@drawable/long_button_shape_disable"
+                        android:background="#ffff0000"
                         android:text="获取验证码"
-                        android:textColor="@drawable/white" />
+                        android:textColor="@drawable/white"
+                        android:textSize="6pt" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -114,10 +138,25 @@
                 android:layout_height="40dp"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="20dp"
-                android:background="@drawable/long_button_shape_disable"
+                android:background="#ffff0000"
                 android:text="登录"
                 android:textColor="@drawable/white" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:gravity="bottom"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:scaleType="fitEnd"
+                    android:src="@drawable/bg_water" >
+                </ImageView>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
+
 </ScrollView>

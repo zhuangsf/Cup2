@@ -109,10 +109,10 @@ public class LoginActivity extends Activity {
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				if (s.length() > 0&& !isCountDown) {
 					send_code.setEnabled(true);
-					send_code.setBackgroundResource(R.drawable.long_button_selector);
+				//	send_code.setBackgroundResource(R.drawable.long_button_selector);
 				} else {
 					send_code.setEnabled(false);
-					send_code.setBackgroundResource(R.drawable.long_button_shape_disable);
+				//	send_code.setBackgroundResource(R.drawable.long_button_shape_disable);
 				}
 			}
 			@Override
@@ -125,7 +125,7 @@ public class LoginActivity extends Activity {
         phone_num.requestFocus();
 		if (phone_num.getText().length() > 0&& !isCountDown) {
 			send_code.setEnabled(true);
-				send_code.setBackgroundResource(R.drawable.long_button_selector);
+			//	send_code.setBackgroundResource(R.drawable.long_button_selector);
 		}
 
 		check_code = (EditText) findViewById(R.id.check_code);
@@ -134,10 +134,10 @@ public class LoginActivity extends Activity {
 				public void onTextChanged(CharSequence s, int start, int before, int count) {
 					if (s.length() > 0 ) {
 						btnLogin.setEnabled(true);
-						btnLogin.setBackgroundResource(R.drawable.long_button_selector);
+					//	btnLogin.setBackgroundResource(R.drawable.long_button_selector);
 					} else {
 						btnLogin.setEnabled(false);
-						btnLogin.setBackgroundResource(R.drawable.long_button_shape_disable);
+					//	btnLogin.setBackgroundResource(R.drawable.long_button_shape_disable);
 					}
 				}
 				@Override
@@ -235,7 +235,7 @@ public class LoginActivity extends Activity {
             	{
             		send_code.setText("发送验证码");
             		send_code.setEnabled(true);
-            		send_code.setBackgroundResource(R.drawable.long_button_selector);
+            	//	send_code.setBackgroundResource(R.drawable.long_button_selector);
             	}
             }else if(msg.what ==Utils.GET_SUCCESS_MSG){
             	JSONObject jsonObject=(JSONObject)msg.obj;
