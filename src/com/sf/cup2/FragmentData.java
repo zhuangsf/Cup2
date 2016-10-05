@@ -1,6 +1,10 @@
 package com.sf.cup2;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,9 +39,14 @@ import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Bitmap.Config;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -220,9 +229,57 @@ public class FragmentData extends Fragment {
 	}
 
 	
+	private String getScreenCaptureSavePath() {
+		String filePath = Utils.getInternelStoragePath(getActivity());
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		Log.e("jockeyTrack", "getScreenCaptureSavePath = "+filePath+"/capture.jpg"); 
+		return filePath+"/capture.jpg";
+	}
+
+	
+	
+	private void getScreenHot(View v)  
+	{          
+		String filePath = getScreenCaptureSavePath();
+		
+		File file = new File(filePath);  
+		if (file.exists()) { // 判断文件是否存在
+			file.delete(); // delete()方法
+		} 
+		
+	    try  
+	    {  
+	        Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Config.ARGB_8888);  
+	        Canvas canvas = new Canvas();  
+	        canvas.setBitmap(bitmap);  
+	        v.draw(canvas);  
+	  
+	        try  
+	        {  
+	            FileOutputStream fos = new FileOutputStream(filePath);  
+	            bitmap.compress(CompressFormat.PNG, 100, fos);  
+	        }  
+	        catch (FileNotFoundException e)  
+	        {  
+	            throw new InvalidParameterException();  
+	        }  
+	  
+	    }  
+	    catch (Exception e)  
+	    {  
+	      e.printStackTrace();  
+	    }  
+	}  
+	
+	
 	private void showShare() {
 		 ShareSDK.initSDK(getActivity());
 		 
+		 getScreenHot((View) getActivity().getWindow().getDecorView());
 //		 
 //		 ShareParams wechat = new ShareParams();
 //         wechat.setTitle("我是分享标题");
@@ -246,10 +303,10 @@ public class FragmentData extends Fragment {
 		 oks.setText("我是分享文本");
 		 //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
 		 //	 oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
-		 	oks.setImageUrl("http://img.redocn.com/sheji/20160728/daimengkatongxiaonvhai_6799783_small.jpg"); 
-		 	
+
+		 //新浪微博需要签名打包	
 		 // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
-		 //oks.setImagePath("/sdcard/test.jpg");//确保SDcard下面存在此张图片
+		 oks.setImagePath(getScreenCaptureSavePath());//确保SDcard下面存在此张图片
 		 // url仅在微信（包括好友和朋友圈）中使用
 	//	 oks.setUrl("http://sharesdk.cn");
 		 // comment是我对这条分享的评论，仅在人人网和QQ空间使用
