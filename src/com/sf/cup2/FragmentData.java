@@ -34,10 +34,12 @@ import com.sf.cup2.view.ArcProgressbar;
 import com.sf.cup2.view.CalendarView;
 import com.sf.cup2.view.CalendarView.OnItemClickListener;
 import com.sf.cup2.view.CricleProgressBar;
+import com.sf.cup2.view.PercentView;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
@@ -82,6 +84,10 @@ public class FragmentData extends Fragment {
 	private String mClickDate;
 	private View mask_view;
 	
+	private TextView water_today;
+	private TextView water_target;
+	private TextView complete_percent;
+	private PercentView percentView;
 	private ImageView share;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -99,15 +105,13 @@ public class FragmentData extends Fragment {
 		// setChartStyle(mChart, mLineData);
 		setChartStyle(mChart);
 		
+		water_today = (TextView) view.findViewById(R.id.water_today);
+		water_target = (TextView) view.findViewById(R.id.water_target);
+		complete_percent = (TextView) view.findViewById(R.id.complete_percent);
 		
+		
+		percentView = (PercentView) view.findViewById(R.id.arcProgressbar_view);
 
-		
-	//	cpb = (ArcProgressbar) view.findViewById(R.id.arcProgressbar_view);
-	//	ObjectAnimator oObjectAnimator = ObjectAnimator.ofInt(cpb, "progress",
-	//			0, 220);
-	//	oObjectAnimator.setDuration(2000L);
-		// oObjectAnimator.setInterpolator(new DecelerateInterpolator());
-	//	oObjectAnimator.start();
 
 		layout_calendar = (RelativeLayout) view
 				.findViewById(R.id.layout_calendar);
@@ -124,6 +128,7 @@ public class FragmentData extends Fragment {
 			// 设置日历日期
 			Date date = format.parse(format.format(new java.util.Date()));
 			calendar.setCalendarData(date);
+			initWaterData(format.format(date));
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -177,6 +182,7 @@ public class FragmentData extends Fragment {
 				mask_view.setVisibility(View.GONE);
 				
 				reflashChartData(format.format(downDate));
+				initWaterData(format.format(downDate));
 			}
 		});
 
@@ -304,7 +310,7 @@ public class FragmentData extends Fragment {
 		 //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
 		 //	 oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
 
-		 //新浪微博需要签名打包	
+		 //新浪微博需要签名打包,并且需要在网站上填上你的签名
 		 // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
 		 oks.setImagePath(getScreenCaptureSavePath());//确保SDcard下面存在此张图片
 		 // url仅在微信（包括好友和朋友圈）中使用
@@ -363,7 +369,7 @@ public class FragmentData extends Fragment {
 		leftAxis.setDrawGridLines(true);
 		rightAxis.setDrawGridLines(true);
 		rightAxis.setEnabled(false);
-		leftAxis.addLimitLine(ll);
+	//	leftAxis.addLimitLine(ll);   貌似没必要设置这条指示线
 
 		// 是否在折线上添加边框
 		mlinechart.setDrawBorders(false);
@@ -523,7 +529,49 @@ public class FragmentData extends Fragment {
 		fd.setArguments(b);
 		return fd;
 	}
+	
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+	}
 
+	private void initWaterData(String currentDateString)
+	{
+		DBAdapter db = new DBAdapter(getActivity());
+		db.open();
+		int currentWaterData = db.getOneDayWater(currentDateString);
+		db.close();
+		
+		water_today.setText(currentWaterData+"");
+		
+		SharedPreferences p = Utils.getSharedPpreference(getActivity());
+		String planValue = p.getString(Utils.SHARE_PREFERENCE_CUP_PLAN, "null");
+
+		if ("null".equals(planValue)) {
+			planValue = Utils.getSuggestPlan(getActivity());
+			; // 这个值要根据健康管理来生成
+			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+			e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
+			e.commit();
+
+		}
+		if("null".equals(planValue))
+		{
+			planValue = "1666";
+		}
+
+		water_target.setText(planValue);
+		
+		int percent = currentWaterData * 100 / Integer.parseInt(planValue);
+		complete_percent.setText(percent+"%");
+		
+		
+		if(percentView != null)
+		{
+			percentView.setRankText(currentWaterData+"",planValue);
+		}
+	}
 	/**
 	 * to avoid IllegalStateException: No activity
 	 */

@@ -157,8 +157,8 @@ public class PercentView extends View{
         tan = new float[2];
         mBitmapBackDeepRed= BitmapFactory.decodeResource(context.getResources(), R.mipmap.blur_back_deep_red);
         mMatrix=new Matrix();
-        setAngel(75);
-        setRankText("test1","test2");
+        
+
     }
 
     private int count=0;
@@ -302,7 +302,7 @@ public class PercentView extends View{
             textPaint.setTextSize(textSizeTag);
             textPaint.setTextAlign(Paint.Align.CENTER);
             textPaint.setStrokeWidth(2);
-            canvas.drawText("完成50%", width / 2, radius - textSizeTag, textPaint);
+            canvas.drawText("完成"+aimPercent+"%", width / 2, radius - textSizeTag, textPaint);
             textPaint.setColor(deepRedColor);
             textPaint.setTextSize(textSizeAim);
             textPaint.setStrokeWidth(1);
@@ -310,12 +310,12 @@ public class PercentView extends View{
 //            float rightLength=textPaint.measureText("的用户");
 //            float centerLength=textPaint.measureText(aim+"%");
 //            float rightOffest=textSizeAim/2;
-            canvas.drawText("1000",width/2,radius + textSizeAim/2, textPaint);
+            canvas.drawText(tag,width/2,radius + textSizeAim/2, textPaint);
             
             
             textPaint.setColor(grayColor);
             textPaint.setTextSize(textSizeTag);
-            canvas.drawText("目标  2000ml",width/2,radius + textSizeAim, textPaint);
+            canvas.drawText("目标  "+aim+"ml",width/2,radius + textSizeAim, textPaint);
 
             textPaint.setColor(greenColor);
             textPaint.setTextSize(textSizeTag);
@@ -335,10 +335,10 @@ public class PercentView extends View{
      */
     public void setAngel(double aimPercent){
         //两边监测
-        if (aimPercent<1){
-            aimPercent=1;
-        }else if (aimPercent>99){
-            aimPercent=99;
+        if (aimPercent<0){
+            aimPercent=0;
+        }else if (aimPercent>100){
+            aimPercent=100;
         }
         this.aimPercent=aimPercent;
         initListener();
@@ -358,6 +358,10 @@ public class PercentView extends View{
     public void setRankText(String tag,String aim){
         this.tag=tag;
         this.aim=aim;
+        
+        int percent = Integer.parseInt(tag) * 100 / Integer.parseInt(aim);
+        setAngel(percent);
+        
         mAnimatorHandler.sendEmptyMessage(1);
 
     }
@@ -407,6 +411,7 @@ public class PercentView extends View{
                         mValueAnimator.removeAllListeners();
                         break;
                     case 1:
+                    	
                         invalidate();
                         break;
                 }

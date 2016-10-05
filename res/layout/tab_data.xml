@@ -69,6 +69,7 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/water_today"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -92,6 +93,7 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/water_target"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
@@ -115,6 +117,7 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/complete_percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"

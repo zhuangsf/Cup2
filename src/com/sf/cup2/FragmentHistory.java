@@ -1,6 +1,10 @@
 package com.sf.cup2;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.security.InvalidParameterException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -13,7 +17,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentTransaction;
 import android.app.TimePickerDialog;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Bitmap.CompressFormat;
+import android.graphics.Bitmap.Config;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -43,6 +51,9 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
+import cn.sharesdk.framework.ShareSDK;
+import cn.sharesdk.onekeyshare.OnekeyShare;
+
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.LimitLine;
@@ -69,7 +80,7 @@ public class FragmentHistory extends Fragment {
 	private DBAdapter mdbAdapter;
 	private ListView mHistoryList;
 	private SimpleAdapter historyListAdapter;
-	
+	private ImageView share;
 	private ImageView buttonDay;
 	private ImageView buttonWeek;
 	private ImageView buttonMonth;
@@ -168,9 +179,105 @@ public class FragmentHistory extends Fragment {
 	            }  
 	        });  
 		
+			share = (ImageView) view.findViewById(R.id.share);
+			
+			share.setOnClickListener(new View.OnClickListener() {  
+			      
+			    @Override  
+			    public void onClick(View v) {  
+			        // TODO Auto-generated method stub  
+			    	showShare();
+			    }  
+			});  
 	}
+	
+	private void getScreenHot(View v)  
+	{          
+		String filePath = getScreenCaptureSavePath();
+		
+		File file = new File(filePath);  
+		if (file.exists()) { // 判断文件是否存在
+			file.delete(); // delete()方法
+		} 
+		
+	    try  
+	    {  
+	        Bitmap bitmap = Bitmap.createBitmap(v.getWidth(), v.getHeight(), Config.ARGB_8888);  
+	        Canvas canvas = new Canvas();  
+	        canvas.setBitmap(bitmap);  
+	        v.draw(canvas);  
+	  
+	        try  
+	        {  
+	            FileOutputStream fos = new FileOutputStream(filePath);  
+	            bitmap.compress(CompressFormat.PNG, 100, fos);  
+	        }  
+	        catch (FileNotFoundException e)  
+	        {  
+	            throw new InvalidParameterException();  
+	        }  
+	  
+	    }  
+	    catch (Exception e)  
+	    {  
+	      e.printStackTrace();  
+	    }  
+	}  
+	private void showShare() {
+		 ShareSDK.initSDK(getActivity());
+		 
+		 getScreenHot((View) getActivity().getWindow().getDecorView());
+//		 
+//		 ShareParams wechat = new ShareParams();
+//        wechat.setTitle("我是分享标题");
+//        wechat.setText("我是分享文本内容");
+//        wechat.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+//
+//        wechat.setUrl("http://mob.com");
+//        wechat.setShareType(Platform.SHARE_WEBPAGE);
+//		 
+		 OnekeyShare oks = new OnekeyShare();
+		 //关闭sso授权
+		 oks.disableSSOWhenAuthorize(); 
+
+		// 分享时Notification的图标和文字  2.5.9以后的版本不调用此方法
+		 //oks.setNotification(R.drawable.ic_launcher, getString(R.string.app_name));
+		 // title标题，印象笔记、邮箱、信息、微信、人人网和QQ空间使用
+		 oks.setTitle("分享");
+		 // titleUrl是标题的网络链接，仅在人人网和QQ空间使用
+		 oks.setTitleUrl("http://sharesdk.cn");
+		 // text是分享文本，所有平台都需要这个字段
+		 oks.setText("我是分享文本");
+		 //分享网络图片，新浪微博分享网络图片需要通过审核后申请高级写入接口，否则请注释掉测试新浪微博
+		 //	 oks.setImageUrl("http://f1.sharesdk.cn/imgs/2014/02/26/owWpLZo_638x960.jpg");
+
+		 //新浪微博需要签名打包,并且需要在网站上填上你的签名
+		 // imagePath是图片的本地路径，Linked-In以外的平台都支持此参数
+		 oks.setImagePath(getScreenCaptureSavePath());//确保SDcard下面存在此张图片
+		 // url仅在微信（包括好友和朋友圈）中使用
+	//	 oks.setUrl("http://sharesdk.cn");
+		 // comment是我对这条分享的评论，仅在人人网和QQ空间使用
+		 oks.setComment("我是测试评论文本");
+		 // site是分享此内容的网站名称，仅在QQ空间使用
+		 oks.setSite(getString(R.string.app_name));
+		 // siteUrl是分享此内容的网站地址，仅在QQ空间使用
+	//	 oks.setSiteUrl("http://sharesdk.cn");
+
+		// 启动分享GUI
+		 oks.show(getActivity());
+		 }	
 
 	
+	private String getScreenCaptureSavePath() {
+		String filePath = Utils.getInternelStoragePath(getActivity());
+		File file = new File(filePath);
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		Log.e("jockeyTrack", "getScreenCaptureSavePath = "+filePath+"/capture.jpg"); 
+		return filePath+"/capture.jpg";
+	}
 	public void setClickDate(String clickDateString)
 	{
 		mClickDateString = clickDateString;
@@ -297,7 +404,7 @@ public class FragmentHistory extends Fragment {
 			YAxis leftAxis = mChart.getAxisLeft();
 			//显示横方向线
 			leftAxis.setDrawGridLines(true);
-			leftAxis.addLimitLine(ll);
+		//	leftAxis.addLimitLine(ll);    貌似没必要设置这条指示线
 			
 			mChart.setData(getLineData(cursor));
 			mChart.notifyDataSetChanged();
