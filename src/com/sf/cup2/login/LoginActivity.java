@@ -66,6 +66,10 @@ public class LoginActivity extends Activity {
 		};
 		SMSSDK.registerEventHandler(eh);
 		
+		
+
+		
+		
 		//send code button may have 3 status  1:sending  2:wait 90seconds 3:send code
         send_code=(Button)findViewById(R.id.send_code);
         send_code.setOnClickListener(new OnClickListener() {
@@ -84,7 +88,7 @@ public class LoginActivity extends Activity {
 				if (!TextUtils.isEmpty(phoneNumString)) {
 					SMSSDK.getVerificationCode("86", phoneNumString);
 					send_code.setEnabled(false);
-					send_code.setBackgroundResource(R.drawable.long_button_shape_disable);
+				//	send_code.setBackgroundResource(R.drawable.long_button_shape_disable);
 					timestamp = System.currentTimeMillis();
 					countDownThread = new Thread(new Runnable() {
 						@Override
@@ -162,6 +166,9 @@ public class LoginActivity extends Activity {
 				}
 			}
 		});
+		
+
+		
 	}
 	
 	
@@ -250,8 +257,9 @@ public class LoginActivity extends Activity {
             		new Thread(new Runnable() {
 						@Override
 						public void run() {
-							File f=Utils.downLoadFile(avatar,Environment.getExternalStorageDirectory() + "/8CUP/web/","avatar.jpg");
+							File f=Utils.downLoadFile(avatar,Utils.getInternelStoragePath(getApplicationContext()),"avatar.jpg");
 							SharedPreferences.Editor e=Utils.getSharedPpreferenceEdit(LoginActivity.this);
+							Log.e("jockeyTrack", "f.getAbsolutePath() = "+f.getAbsolutePath()); 
 							e.putString(Utils.SHARE_PREFERENCE_CUP_AVATAR, f.getAbsolutePath());
 							e.commit();
 						}
@@ -287,6 +295,19 @@ public class LoginActivity extends Activity {
 		String constitution =result.optString("constitution","");
 		String weight =result.optString("weight","");
 
+		
+		Log.e("jockeyTrack", "saveAccountImfo phone = "+phone); 
+		Log.e("jockeyTrack", "saveAccountImfo birthday = "+birthday); 
+		Log.e("jockeyTrack", "saveAccountImfo nickname = "+nickname); 
+		Log.e("jockeyTrack", "saveAccountImfo avatar = "+avatar); 
+		Log.e("jockeyTrack", "saveAccountImfo height = "+height); 
+		Log.e("jockeyTrack", "saveAccountImfo sex = "+sex); 
+		Log.e("jockeyTrack", "saveAccountImfo weight = "+weight); 
+		
+		birthday = birthday.replace("年","-");
+		birthday = birthday.replace("月","-");
+		birthday = birthday.replace("日","");
+		
 		if(!"".equals(phone))
 		e.putString(Utils.SHARE_PREFERENCE_CUP_PHONE, phone);
 		if(!"".equals(birthday))

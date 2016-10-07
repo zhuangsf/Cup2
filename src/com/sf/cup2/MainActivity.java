@@ -609,8 +609,9 @@ public class MainActivity extends Activity {
 		}
 		// 2,login first
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
-	//	if (TextUtils.isEmpty(phonenum)) {
-		if(false){
+		if (TextUtils.isEmpty(phonenum)) {
+			
+		
 			Intent i = new Intent(this, LoginActivity.class);
 			startActivity(i);
 			finish();

@@ -665,44 +665,40 @@ public class FragmentHomePerson extends Fragment {
 		super.onPause();
 		SharedPreferences p = Utils.getSharedPpreference(getActivity());
 		final JSONObject result = new JSONObject();
-		String nickname = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[0], "");
-		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[1], "");
-		final String phone = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_1[2], "");
+		String nickname = p.getString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, "");
+		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "");
+		final String phone = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, "");
 
-		String scene = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[0], "");
-		String constitution = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[1], "");
-		String height = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[2], "");
-		String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[3], "");
-		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_PERSON_2[4], "");
+
+		String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "");
+		String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "");
+		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "");
 
 		final String accountid = p.getString(Utils.SHARE_PREFERENCE_CUP_ACCOUNTID, "");
 		final String avatarwebpath = p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR_WEB_PATH, "");
 
 		final String avatar = p.getString(Utils.SHARE_PREFERENCE_CUP_AVATAR, "");
 
-		final boolean avatarIsModify = p.getBoolean(Utils.SHARE_PREFERENCE_CUP_AVATAR_IS_MODIFY, false);
 
 		if (TextUtils.isEmpty(accountid) || TextUtils.isEmpty(phone)) {
 			// it must be a bug missing the accountid
 			return;
 		}
 		try {
-			result.put("accountid", accountid);
+	//		result.put("accountid", accountid);
 
-			result.put("avatar", avatarwebpath);// it must be upload this text
-												// every time
+	//		result.put("avatar", avatarwebpath);// it must be upload this text
+	//											// every time
 
 			result.put("nickname", nickname);
 			result.put("sex", sex);
 			result.put("phone", phone);
 
-			result.put("scene", scene);
-			result.put("constitution", constitution);
 			result.put("height", height);
 			result.put("weight", weight);
 			result.put("birthday", birthday);
-			result.put("nickname", nickname);
-			Utils.Log("xxxxxxxxxxxxxxxxxx httpPut result:" + result + ",avatar:" + avatar + ",avatarIsModify:" + avatarIsModify);
+
+			Utils.Log("xxxxxxxxxxxxxxxxxx httpPut result:" + result + ",avatar:" + avatar );
 			// send to server
 			new Thread(new Runnable() {
 				@Override
@@ -710,7 +706,7 @@ public class FragmentHomePerson extends Fragment {
 					// http://121.199.75.79:8280/user/saveme
 					Utils.httpPut(Utils.URL_PATH + "/user/saveme", result, mHandler);
 
-					if (!TextUtils.isEmpty(avatar) && avatarIsModify) {
+					if (!TextUtils.isEmpty(avatar)) {
 						// Utils.httpPostFile(Utils.URL_PATH
 						// +"/user/updateProfile.do", avatar,
 						// mHandler,accountid,phone);

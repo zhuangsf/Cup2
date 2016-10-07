@@ -12,6 +12,8 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,6 +21,13 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -65,7 +74,8 @@ public class Utils {
 	public final static String SEPARATOR_DOT = ".";
 	public final static String SEPARATOR_SLASH = "/";
 	public final static String DIR_PATH = Environment.getExternalStorageDirectory().getAbsolutePath();
-	public final static String URL_PATH="http://121.199.75.79:8280";
+	public final static String URL_PATH="http://114.55.91.36:8280";
+//	public final static String URL_PATH="http://121.199.75.79:8280";  旧项目
 	public static final int TARGET_ACTIVITY = 0;
 	public static final int TARGET_SERVICE = 1;
 	public static final String FROM = "extra.from";
@@ -297,6 +307,7 @@ public class Utils {
 		long timestamp = System.currentTimeMillis();
 		try {
 			// 设置参数
+			Utils.Log("httpPut jsonObj.toString() " + jsonObj.toString());
 //			httpPost.setEntity(new StringEntity(DesEncrypt.encrypt(jsonObj.toString(), DesEncrypt.KEY), HTTP.UTF_8));
 			httpPut.setEntity(new StringEntity(jsonObj.toString(), HTTP.UTF_8));
 //			httpPut.setHeader("accountid",accountid);
@@ -306,8 +317,12 @@ public class Utils {
 			HttpEntity entity = httpResponse.getEntity();
 			if (entity != null) {
 				Utils.Log(" httpPut status " + httpResponse.getStatusLine());
-				Utils.Log(" xxxxxxxxxxxxxxxxxxxxx http httpPut start output ");
-				String entitySrc = EntityUtils.toString(entity, "UTF-8");
+				Utils.Log(" xxxxxxxxxxxxxxxxxxxxx http httpPut start output HTTP.UTF_8 = "+HTTP.UTF_8);
+				String defaultCharset = EntityUtils.getContentCharSet(entity);
+                // EntityUtils.toString将获得的消息体转换成String
+				Utils.Log(" httpPut defaultCharset " + defaultCharset);
+				String entitySrc = EntityUtils.toString(entity,defaultCharset);
+				Utils.Log("entitySrc = "+entitySrc+" entity = "+entity);
 				JSONObject jsonObject=new JSONObject(entitySrc);
 				if (mHandler != null) {
 				Message msg=new Message();
@@ -616,6 +631,50 @@ public class Utils {
 		}
 	}
 	
+	
+	
+    final static HostnameVerifier DO_NOT_VERIFY = new HostnameVerifier() {
+        
+        public boolean verify(String hostname, SSLSession session) {
+            return true;
+        }
+    };
+   
+    /**
+     * Trust every server - dont check for any certificate
+     */
+    private static void trustAllHosts() {
+        final String TAG = "trustAllHosts";
+        // Create a trust manager that does not validate certificate chains
+        TrustManager[] trustAllCerts = new TrustManager[] { 
+                new X509TrustManager() {
+                    public java.security.cert.X509Certificate[] getAcceptedIssuers() {
+                            return new java.security.cert.X509Certificate[] {};
+                    }
+
+            public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                Log.i(TAG, "checkClientTrusted");
+            }
+
+            public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+                Log.i(TAG, "checkServerTrusted");
+            }
+        } 
+               
+        };
+     
+        // Install the all-trusting trust manager
+        try {
+            SSLContext sc = SSLContext.getInstance("TLS");
+            sc.init(null, trustAllCerts, new java.security.SecureRandom());
+            HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+	
+	
 	/**
 	 * 
 	 * @param httpUrl
@@ -636,9 +695,13 @@ public class Utils {
 				if (!file.exists()) {
 					file.createNewFile();
 					file.setWritable(Boolean.TRUE);
+				}else
+				{
+					file.delete();
 				}
+				trustAllHosts(); // 开启全部证书信任
 				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
+						.openConnection();		
 				InputStream is = conn.getInputStream();
 				FileOutputStream fos = new FileOutputStream(file);
 				byte[] buf = new byte[1024];
