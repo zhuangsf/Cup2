@@ -796,49 +796,31 @@ public class Utils {
 		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
 		int weight = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
 		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
-		String[] dateSpilt = birthday.split("-");
+		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE,"");
 		
-		
-		Calendar c = Calendar.getInstance();//首先要获取日历对象
-		int mYear = c.get(Calendar.YEAR);
-		int birthYear = Integer.parseInt(dateSpilt[0]);
-		int[] default_bmi = new int[] {17,19,21};
-		int[] default_water = new int[] {1050,1800,2100};
-		int ageIndex = 0;
-		Log.e("jockeyTrack", "getSuggestPlan mYear = "+mYear);
-		Log.e("jockeyTrack", "getSuggestPlan birthYear = "+birthYear);
-		if(mYear - birthYear >= 16)
-		{
-			ageIndex = 2;
-		}
-		else if(mYear - birthYear >= 10)
-		{
-			ageIndex = 1;
-		}else
-		{
-			ageIndex = 0;
-		}
-		Log.e("jockeyTrack", "getSuggestPlan ageIndex = "+ageIndex);
-		Log.e("jockeyTrack", "getSuggestPlan weight = "+weight);
-		Log.e("jockeyTrack", "getSuggestPlan height = "+height);
-		Log.e("jockeyTrack", "getSuggestPlan height/100 = "+height/100);
-		float my_bmi = weight/(height/100.0f)/(height/100.0f);
-		Log.e("jockeyTrack", "getSuggestPlan my_bmi = "+my_bmi);
-		float water1 = 35*weight;
-		Log.e("jockeyTrack", "getSuggestPlan water1 = "+water1);
-		float water2 = my_bmi*default_water[ageIndex]/default_bmi[ageIndex];
-		Log.e("jockeyTrack", "getSuggestPlan water2 = "+water2);
-		float water3 = (water1 - water2)/2 + water2;
-		Log.e("jockeyTrack", "getSuggestPlan water3 = "+water3);
-		int suggestPlan = (int)water3;
-		
-	//	SharedPreferences.Editor e = getSharedPpreference(context).edit();;
-	//	e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, suggestPlan+"");
-	//	e.commit();
-		
-		return suggestPlan+"";
+		return HealthPlanUtils.getSuggestPlan(sex, birthday, height, weight, null, phonenum);
     }
     
+    //不知道怎么命名，各个位相加直到保留个位
+    //请自觉确保传入的都是数字的string
+	public static int getSumInOne(String other){
+		String num=new String(other);
+		try {
+			while (num.length() > 1) {
+				int sum = 0;
+				char[] c = num.toCharArray();
+				for (char cc : c) {
+					sum += Integer.parseInt(cc + "");
+				}
+				num = sum + "";
+			}
+		} catch (Exception e) {
+			System.out.println("cant parseint:"+e);
+			return 0;
+		}
+		return Integer.parseInt(num);
+	}
+
 	public static String getInternelStoragePath(Context context) {
 		ArrayList storagges = new ArrayList();
 		StorageManager storageManager = (StorageManager) context.getSystemService(Context.STORAGE_SERVICE);

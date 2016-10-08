@@ -125,7 +125,7 @@ public class FragmentHomePlan extends Fragment {
 		});
 		
 		title1 = (TextView) v.findViewById(R.id.title1);
-		title1.setText("每天需要的饮水量(根据您的个人信息)推荐值约为 "+planValue+" ml");
+		title1.setText("每天需要的饮水量(根据您的个人信息)推荐值约为 "+Utils.getSuggestPlan(getActivity())+" ml");
 		
 		line_hint = (TextView) v.findViewById(R.id.line_hint);
 		line_hint.setText(planValue+" ml");
@@ -156,7 +156,7 @@ public class FragmentHomePlan extends Fragment {
 			public void onClick(View v) {
 			//todo 保存的操作
 				popupWindow.showAtLocation(popupView, Gravity.CENTER_VERTICAL, 0, 0); 
-				title1.setText("每天需要的饮水量(根据您的个人信息)推荐值约为 "+planValue+" ml");
+			//	title1.setText("每天需要的饮水量(根据您的个人信息)推荐值约为 "+planValue+" ml");
 				
 				SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 				e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
