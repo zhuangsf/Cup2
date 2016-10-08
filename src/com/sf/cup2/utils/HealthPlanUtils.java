@@ -42,7 +42,10 @@ public class HealthPlanUtils {
         float jobPower=getJobPower(job);
         float otherPower=getOtherPower(other);
 		float waterFinal=planWaterFinal(waterIII,sexPower,jobPower,otherPower);
-		return waterFinal+"";
+		
+		BigDecimal b = new BigDecimal(waterFinal);
+		int f1   =   b.setScale(0,   BigDecimal.ROUND_HALF_UP).intValue();  
+		return f1+"";
     }
 	
 	/**
@@ -120,9 +123,8 @@ public class HealthPlanUtils {
 	private static float planWaterFinal(float waterIII,float sexPower,float jobPower,float otherPower){
 		float waterFinal = waterIII * (1 + sexPower + jobPower + otherPower);
 		Utils.Log("planWaterFinal:" + waterFinal+" power:"+(1 + sexPower + jobPower + otherPower));
-		BigDecimal b = new BigDecimal(waterFinal);
-		float f1   =   b.setScale(2,   BigDecimal.ROUND_HALF_UP).floatValue();  
-		return f1;
+		
+		return waterFinal;
 	}
 	
 	/**
