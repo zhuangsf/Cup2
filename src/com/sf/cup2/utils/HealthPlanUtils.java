@@ -3,8 +3,6 @@ package com.sf.cup2.utils;
 import java.math.BigDecimal;
 import java.util.Calendar;
 
-import android.util.Log;
-
 /**
  * 饮水计划模块
  * @author soon
@@ -36,10 +34,6 @@ public class HealthPlanUtils {
 	 */
 	public static String getSuggestPlan(String sex,String birthday,int height,int weight,String job,String other)
     {
-    	Log.e("jockeyTrack", "getSuggestPlan start ");
-		Log.e("jockeyTrack", "getSuggestPlan weight = "+weight);
-		Log.e("jockeyTrack", "getSuggestPlan height = "+height);
-		
 		float waterI=planWaterI(weight);
 		float waterII=planWaterII(birthday,height,weight);
 		float waterIII=planWaterIII(waterI,waterII);
@@ -75,8 +69,6 @@ public class HealthPlanUtils {
 		int mYear = c.get(Calendar.YEAR);
 		int birthYear = Integer.parseInt(dateSpilt[0]);
 		int ageIndex = 0;
-		Log.e("jockeyTrack", "getSuggestPlan mYear = "+mYear);
-		Log.e("jockeyTrack", "getSuggestPlan birthYear = "+birthYear);
 		if(mYear - birthYear >= 16)
 		{
 			ageIndex = 2;
@@ -101,6 +93,7 @@ public class HealthPlanUtils {
 	 */
 	private static float getMyBmi(int height,int weight){
 		float my_bmi = weight/(height/100.0f)/(height/100.0f);
+		Utils.Log("getMyBmi:"+ my_bmi);
 		return my_bmi;
 	}
 	
