@@ -95,6 +95,8 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_CITY="CITY";
 	public static final String SHARE_PREFERENCE_CUP_ACCOUNTID="ACCOUNTID";
 	public static final String SHARE_PREFERENCE_CUP_SEX="SEX";
+	public static final String SHARE_PREFERENCE_CUP_SEX_MALE="MALE";
+	public static final String SHARE_PREFERENCE_CUP_SEX_FEMALE="FEMALE";
 	public static final String SHARE_PREFERENCE_CUP_SCENE="SCENE";
 	public static final String SHARE_PREFERENCE_CUP_CONSTITUTION="CONSTITUTION";
 	public static final String SHARE_PREFERENCE_CUP_WEIGHT="WEIGHT";
@@ -791,7 +793,7 @@ public class Utils {
     	Log.e("jockeyTrack", "getSuggestPlan start ");
 		SharedPreferences p = context.getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
 		int height = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160"));
-		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
+		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
 		int weight = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
 		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
 		String[] dateSpilt = birthday.split("-");

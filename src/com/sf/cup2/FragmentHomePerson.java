@@ -402,7 +402,7 @@ public class FragmentHomePerson extends Fragment {
 						
 
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
-						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "mail");
+						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_MALE);
 						e.commit();
 						
 
@@ -415,15 +415,15 @@ public class FragmentHomePerson extends Fragment {
 						imageView2.setImageResource(R.drawable.button_woman2);
 						
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
-						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, "mail");
+						e.putString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
 						e.commit();
 						
 					}
 				});
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, "femail");
+				String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
 
-				if ("femail".equals(sex)) {
+				if (Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE.equals(sex)) {
 					imageView1.setImageResource(R.drawable.button_man1);
 					imageView2.setImageResource(R.drawable.button_woman2);
 				} else {
