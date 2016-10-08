@@ -685,7 +685,7 @@ public class FragmentHomePerson extends Fragment {
 			return;
 		}
 		try {
-	//		result.put("accountid", accountid);
+			result.put("accountid", accountid);
 
 	//		result.put("avatar", avatarwebpath);// it must be upload this text
 	//											// every time

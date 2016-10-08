@@ -95,8 +95,8 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_CITY="CITY";
 	public static final String SHARE_PREFERENCE_CUP_ACCOUNTID="ACCOUNTID";
 	public static final String SHARE_PREFERENCE_CUP_SEX="SEX";
-	public static final String SHARE_PREFERENCE_CUP_SEX_MALE="MALE";
-	public static final String SHARE_PREFERENCE_CUP_SEX_FEMALE="FEMALE";
+	public static final String SHARE_PREFERENCE_CUP_SEX_MALE="男";
+	public static final String SHARE_PREFERENCE_CUP_SEX_FEMALE="女";
 	public static final String SHARE_PREFERENCE_CUP_SCENE="SCENE";
 	public static final String SHARE_PREFERENCE_CUP_CONSTITUTION="CONSTITUTION";
 	public static final String SHARE_PREFERENCE_CUP_WEIGHT="WEIGHT";
@@ -323,7 +323,7 @@ public class Utils {
 				String defaultCharset = EntityUtils.getContentCharSet(entity);
                 // EntityUtils.toString将获得的消息体转换成String
 				Utils.Log(" httpPut defaultCharset " + defaultCharset);
-				String entitySrc = EntityUtils.toString(entity,defaultCharset);
+				String entitySrc = EntityUtils.toString(entity,"UTF-8");
 				Utils.Log("entitySrc = "+entitySrc+" entity = "+entity);
 				JSONObject jsonObject=new JSONObject(entitySrc);
 				if (mHandler != null) {
