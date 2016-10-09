@@ -175,7 +175,7 @@ public class PercentView extends View{
         mCanvas =new Canvas(mBitmap);
 
         radius= (int) (9 * height/(16*(1+Math.sin(Math.toRadians(spaceAngle)))));//获取最外园的半径
-        insideArcRadius= radius-scrollCircleRadius-spaceWidth;//内弧半径
+        insideArcRadius= radius;//内弧半径
         Log.i("PercentVIew","最外园半径"+radius+" 高度为"+height+" 宽度为"+width);
 //        Log.i(TAG,"最外园半径"+Math.sin(Math.toRadians(spaceAngle)));
 //        paintPercentText(mCanvas);
@@ -225,7 +225,7 @@ public class PercentView extends View{
         paint.setColor(pinkColor);
         paint.setStrokeWidth(insideArcWidth);
         paint.setStyle(Paint.Style.STROKE);
-        canvas.drawArc(new RectF(width / 2 - insideArcRadius, radius - insideArcRadius, width / 2 + insideArcRadius, radius + insideArcRadius),
+        canvas.drawArc(new RectF(width / 2 - insideArcRadius, radius - insideArcRadius+insideArcWidth, width / 2 + insideArcRadius, radius + insideArcRadius+insideArcWidth),
                 (float) (180 - floatAngel),
                 (float) (180 + 2 * floatAngel), false, paint);
 
