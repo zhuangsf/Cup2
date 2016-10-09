@@ -158,6 +158,9 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_ALARM_IS_ON="ALARMON";
 	public static final String SHARE_PREFERENCE_CUP_ALARM_TIME="ALARMTIME";
 	public static final String SHARE_PREFERENCE_CUP_ALARM_ENABLE="ALARM_ENABLE";
+	
+	public static final boolean SHARE_PREFERENCE_CUP_ALARM_DEFAULT=true;
+	
 	public static final String SHARE_PREFERENCE_CUP_ALARM_VISIBILE="ALARM_VISIBILE";
 	//bluetooth
 	public static final String BT_GET_SERVICE_UUID="0000ffe0-0000-1000-8000-00805f9b34fb";

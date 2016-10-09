@@ -268,7 +268,7 @@ public class FragmentTime extends FragmentPack {
 
 		mSharedPreferences = Utils.getSharedPpreference(getActivity());
 		alarmEnable = mSharedPreferences.getBoolean(
-				Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE, true);
+				Utils.SHARE_PREFERENCE_CUP_ALARM_ENABLE, Utils.SHARE_PREFERENCE_CUP_ALARM_DEFAULT);
 
 		mAlarmManager = (AlarmManager) getActivity().getSystemService(
 				Context.ALARM_SERVICE);
@@ -371,6 +371,7 @@ public class FragmentTime extends FragmentPack {
 		});
 
 		mTogBtn = (ToggleButton) v.findViewById(R.id.mTogBtn); // 获取到控件
+		mTogBtn.setChecked(alarmEnable);
 		mTogBtn.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 
 			@Override

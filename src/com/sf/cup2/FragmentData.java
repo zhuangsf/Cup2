@@ -561,10 +561,15 @@ public class FragmentData extends FragmentPack {
 		}
 
 		water_target.setText(planValue);
-		
+		if(Integer.parseInt(planValue) == 0)
+		{
+			complete_percent.setText(0+"%");
+		}
+		else
+		{
 		int percent = currentWaterData * 100 / Integer.parseInt(planValue);
 		complete_percent.setText(percent+"%");
-		
+		}
 		
 		if(percentView != null)
 		{

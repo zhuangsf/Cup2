@@ -359,9 +359,16 @@ public class PercentView extends View{
         this.tag=tag;
         this.aim=aim;
         
-        int percent = Integer.parseInt(tag) * 100 / Integer.parseInt(aim);
+        if(Integer.parseInt(aim) == 0)
+        {
+        	setAngel(0);
+        }
+        else
+        	{
+        	int percent = Integer.parseInt(tag) * 100 / Integer.parseInt(aim);
+       
         setAngel(percent);
-        
+         	}
         mAnimatorHandler.sendEmptyMessage(1);
 
     }
