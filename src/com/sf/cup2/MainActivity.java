@@ -857,6 +857,7 @@ public class MainActivity extends Activity {
 	
 	
 	private void initView() {
+
 		myTabRg = (RadioGroup) findViewById(R.id.tab_menu);
 		myTabRg.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
@@ -872,6 +873,11 @@ public class MainActivity extends Activity {
 						ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
 //						ft.replace(R.id.fragmentfield, mTab.get(i),mFragmentTag[i]);
 						ft.show( mTab.get(i));
+						
+						if(checkedId == R.id.rbData && fData != null)
+						{
+							fData.updateUI();
+						}
 //						 ft.addToBackStack(null);
 						ft.commit();
 						break;

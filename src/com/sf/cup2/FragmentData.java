@@ -529,10 +529,34 @@ public class FragmentData extends FragmentPack {
 		return fd;
 	}
 	
+	public void updateUI()
+	{
+		try {
+			// 设置当前日历日期
+			if(format == null)
+			{
+				return;
+			}
+			Date date = format.parse(format.format(new java.util.Date()));
+			layout_calendar.setVisibility(View.GONE);
+			mask_view.setVisibility(View.GONE);
+			calendar.setCalendarData(date);
+			String[] ymd = format.format(new java.util.Date()).split("-");
+
+			dateTime.setText(ymd[0] + "年" + ymd[1] + "月" + ymd[2]	+ "日");
+			
+
+			reflashChartData(format.format(date));
+			initWaterData(format.format(date));
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
+
 	}
 
 	private void initWaterData(String currentDateString)
