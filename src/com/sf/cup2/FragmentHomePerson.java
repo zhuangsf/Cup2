@@ -434,7 +434,7 @@ public class FragmentHomePerson extends FragmentPack {
 				textView.setVisibility(View.VISIBLE);
 				
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160");
+				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, Utils.SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT);
 				textView.setText(height);
 
 				imageView1.setVisibility(View.GONE);
@@ -442,7 +442,7 @@ public class FragmentHomePerson extends FragmentPack {
 			} else if (position == 4) {
 				textView.setVisibility(View.VISIBLE);
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45");
+				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, Utils.SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT);
 				textView.setText(height);
 
 				imageView1.setVisibility(View.GONE);
@@ -450,7 +450,7 @@ public class FragmentHomePerson extends FragmentPack {
 			} else if (position == 5) {
 				textView.setVisibility(View.VISIBLE);
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
+				String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, Utils.SHARE_PREFERENCE_CUP_BIRTHDAY_DEFAULT);
 				textView.setText(birthday);
 
 				imageView1.setVisibility(View.GONE);
@@ -485,7 +485,10 @@ public class FragmentHomePerson extends FragmentPack {
 				TextView person_title = (TextView) layout.findViewById(R.id.person_title);
 				person_info = (EditText) layout.findViewById(R.id.person_info);
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(20) });
-				person_info.setText("");  //默认为空的好了
+				
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				final String nickName = p.getString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, "");
+				person_info.setText(nickName);  //默认为空的好了
 				person_title.setText(list1Title[mPosition]);
 				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
@@ -515,6 +518,11 @@ public class FragmentHomePerson extends FragmentPack {
 				person_info = (EditText) layout.findViewById(R.id.person_info);
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
+				
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				final String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, Utils.SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT);
+				person_info.setText(height);  
+				
 				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {
@@ -543,6 +551,11 @@ public class FragmentHomePerson extends FragmentPack {
 				person_info = (EditText) layout.findViewById(R.id.person_info);
 				person_info.setFilters(new InputFilter[] { new InputFilter.LengthFilter(3) });
 				person_info.setInputType(InputType.TYPE_CLASS_NUMBER);
+				
+				SharedPreferences p = Utils.getSharedPpreference(getActivity());
+				final String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, Utils.SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT);
+				person_info.setText(weight);  
+				
 				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 					@Override
 					public void onClick(DialogInterface dialog, int which) {

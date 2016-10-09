@@ -88,8 +88,10 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP="CUP";
 	public static final String SHARE_PREFERENCE_CUP_PHONE="PHONE";
 	public static final String SHARE_PREFERENCE_CUP_BIRTHDAY="BIRTHDAY";
+	public static final String SHARE_PREFERENCE_CUP_BIRTHDAY_DEFAULT="1990-01-01";
 	public static final String SHARE_PREFERENCE_CUP_NICKNAME="NICKNAME";
 	public static final String SHARE_PREFERENCE_CUP_HEIGHT="HEIGHT";
+	public static final String SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT="160";
 	public static final String SHARE_PREFERENCE_CUP_CITY="CITY";
 	public static final String SHARE_PREFERENCE_CUP_ACCOUNTID="ACCOUNTID";
 	public static final String SHARE_PREFERENCE_CUP_SEX="SEX";
@@ -98,6 +100,7 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_SCENE="SCENE";
 	public static final String SHARE_PREFERENCE_CUP_CONSTITUTION="CONSTITUTION";
 	public static final String SHARE_PREFERENCE_CUP_WEIGHT="WEIGHT";
+	public static final String SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT="45";
 	public static final String SHARE_PREFERENCE_CUP_AVATAR="AVATAR";
 	public static final String SHARE_PREFERENCE_CUP_PLAN="PLAN";
 	public static final String SHARE_PREFERENCE_CUP_REMIND="REMIND";
