@@ -10,14 +10,6 @@ import java.util.TimeZone;
 
 import org.json.JSONObject;
 
-import com.sf.cup2.utils.Utils;
-import com.sf.cup2.view.swipelistview.BaseSwipListAdapter;
-import com.sf.cup2.view.swipelistview.SwipeMenu;
-import com.sf.cup2.view.swipelistview.SwipeMenuCreator;
-import com.sf.cup2.view.swipelistview.SwipeMenuItem;
-import com.sf.cup2.view.swipelistview.SwipeMenuListView;
-
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
@@ -28,35 +20,34 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Message;
 import android.os.SystemClock;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.text.format.Time;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.sf.cup2.utils.Utils;
+import com.sf.cup2.view.swipelistview.BaseSwipListAdapter;
+import com.sf.cup2.view.swipelistview.SwipeMenu;
+import com.sf.cup2.view.swipelistview.SwipeMenuCreator;
+import com.sf.cup2.view.swipelistview.SwipeMenuItem;
+import com.sf.cup2.view.swipelistview.SwipeMenuListView;
+import com.umeng.analytics.MobclickAgent;
 
 public class FragmentTime extends FragmentPack {
 	private final static String TAG = FragmentTime.class.getPackage().getName()
@@ -412,6 +403,10 @@ public class FragmentTime extends FragmentPack {
 				e.commit();				
 				
 				
+				//add for umeng alarm switch on off
+				HashMap<String,String> map = new HashMap<String,String>();
+				map.put("alarmEnable",alarmEnable+"");
+				MobclickAgent.onEvent(getActivity(),Utils.UMENG_EVENT_ALARM_ON_OFF,map);
 				
 				
 			}

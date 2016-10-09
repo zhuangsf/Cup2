@@ -171,6 +171,11 @@ public class Utils {
 	public static final int POST_SUCCESS_MSG=0x8003; //post success msg
 	public static final int PUT_SUCCESS_MSG=0x8004; //put success msg
 	public static final int UPLOAD_SUCCESS_MSG=0x8005; //put success msg
+	
+	
+	//add for umeng
+	public static final String UMENG_EVENT_ALARM_ON_OFF="alarm_on_off";
+	
 	/**
 	 * running log
 	 * 
