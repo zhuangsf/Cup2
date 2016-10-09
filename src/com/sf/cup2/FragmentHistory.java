@@ -98,14 +98,12 @@ public class FragmentHistory extends FragmentPack {
         super.onCreate(savedInstanceState);
                
         mdbAdapter =  new DBAdapter(getActivity());
-        mdbAdapter.open();
         
     }	
    	@Override
    	public void onDetach() {
    	    super.onDetach();
 
-   	    mdbAdapter.close();
    	}
 	
 	@Override
@@ -316,6 +314,7 @@ public class FragmentHistory extends FragmentPack {
 		List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
+		mdbAdapter.open();
 		Cursor cursor = mdbAdapter.getDataByDate(mClickDateString);
 		if (cursor.moveToFirst())
 		{
@@ -337,6 +336,7 @@ public class FragmentHistory extends FragmentPack {
 		{
 			cursor.close();
 		}
+		mdbAdapter.close();
 		return maps;
 	}
 	
@@ -391,6 +391,7 @@ public class FragmentHistory extends FragmentPack {
 		}
 		//DBAdapter db = new DBAdapter(getActivity());
 		//db.open();
+		mdbAdapter.open();
 		Cursor cursor = mdbAdapter.getDataByDate(currentDateString);
 		if (cursor != null && mChart != null) {
 			
@@ -409,7 +410,7 @@ public class FragmentHistory extends FragmentPack {
 			mChart.notifyDataSetChanged();
 			cursor.close();
 		}
-		
+		mdbAdapter.close();
 		//db.close();
 	}
 	

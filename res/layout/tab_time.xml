@@ -5,33 +5,50 @@
     android:orientation="vertical"
     android:background="#f5f5f5" >
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:background="@layout/header_gradient"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/header"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="闹钟提醒"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-        
-	   <ImageView
-	       android:id="@+id/add_alarm_button"
-	       android:layout_width="wrap_content"
-	       android:layout_height="wrap_content"
-	       android:layout_alignParentRight="true"
-	       android:layout_centerInParent="true"
-	       android:layout_marginRight="10dp"
-	       android:background="@drawable/icon_add" />
-        
-    </RelativeLayout>
+            android:background="@layout/header_gradient"
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp" >
+
+                                   <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_weight="1"
+                 android:layout_gravity="center"
+                android:scaleType="fitStart"
+                android:src="@drawable/bar_icon_back_white" 
+                android:visibility="invisible"/>
+
+
+            <TextView
+                android:id="@id/title"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="闹钟提醒"
+                android:textColor="@android:color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/add_alarm_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:scaleType="fitEnd"
+                android:src="@drawable/icon_add"
+                 />
+
+    </LinearLayout>
+            
+
 
     <LinearLayout
         android:layout_width="fill_parent"

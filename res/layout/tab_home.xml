@@ -12,44 +12,47 @@
         android:background="@drawable/cup_light_gray"
         android:orientation="vertical" >
 
-        <RelativeLayout
+        <LinearLayout
             android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:background="@layout/header_gradient"
-            android:paddingBottom="5dp"
-            android:paddingTop="5dp" >
+            android:paddingBottom="15dp"
+            android:paddingTop="15dp" >
 
-            <!-- Logo Start -->
-
-            <ImageView
-                android:layout_width="wrap_content"
+                      <ImageView
+                android:id="@+id/goBack"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="10dp"
-                android:layout_toStartOf="@+id/title"
-                android:src="@drawable/ic_launcher"
-                android:visibility="gone" />
-            <!-- Logo Ends -->
+                android:layout_weight="1"
+                 android:layout_gravity="center"
+                android:scaleType="fitStart"
+                android:src="@drawable/bar_icon_back_white" 
+                android:visibility="invisible"/>
 
             <TextView
                 android:id="@id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:gravity="center"
                 android:text="个人中心"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
             
-                    <ImageView
-            android:id="@+id/exit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
-            android:background="@drawable/icon_exit" />
+                        <ImageView
+                android:id="@+id/exit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginRight="10dp"
+                android:layout_weight="1"
+                android:scaleType="fitEnd"
+                android:src="@drawable/icon_exit"
+                 />
             
-        </RelativeLayout>
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="fill_parent"
