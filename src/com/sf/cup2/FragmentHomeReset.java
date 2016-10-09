@@ -17,7 +17,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class FragmentHomeReset extends Fragment {
+public class FragmentHomeReset extends FragmentPack {
  
 	Button reset_cancel;
 	Button reset_ok;
@@ -139,4 +139,9 @@ public class FragmentHomeReset extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomeReset.class.getName();
+	}
 }

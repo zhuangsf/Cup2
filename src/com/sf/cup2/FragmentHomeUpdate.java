@@ -16,7 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FragmentHomeUpdate extends Fragment {
+public class FragmentHomeUpdate extends FragmentPack {
  
 	Button goBackButton;
 	TextView pair_info;
@@ -120,4 +120,9 @@ public class FragmentHomeUpdate extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomeUpdate.class.getName();
+	}
 }

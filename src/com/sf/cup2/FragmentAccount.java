@@ -15,7 +15,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FragmentAccount extends Fragment {
+public class FragmentAccount extends FragmentPack {
  
 	private TextView phone_number;
 	private String account;
@@ -91,4 +91,9 @@ public class FragmentAccount extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentAccount.class.getName();
+	}
 }

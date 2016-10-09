@@ -595,6 +595,8 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		//add for umeng
 	    MobclickAgent.setScenarioType(this, EScenarioType.E_UM_NORMAL);
+	    MobclickAgent.openActivityDurationTrack(false);
+	    MobclickAgent.setDebugMode(true);
 		
 		// 1,is first open app start guide
 		SharedPreferences p = Utils.getSharedPpreference(this);

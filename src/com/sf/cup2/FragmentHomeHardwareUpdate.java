@@ -12,7 +12,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-public class FragmentHomeHardwareUpdate extends Fragment {
+public class FragmentHomeHardwareUpdate extends FragmentPack {
  
 	Button goBackButton;
 	Button btn_hardware_update;
@@ -85,4 +85,9 @@ public class FragmentHomeHardwareUpdate extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomeHardwareUpdate.class.getName();
+	}
 }

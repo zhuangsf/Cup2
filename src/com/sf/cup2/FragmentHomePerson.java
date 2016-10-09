@@ -62,7 +62,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentHomePerson extends Fragment {
+public class FragmentHomePerson extends FragmentPack {
 	private final static String TAG = FragmentHomePerson.class.getPackage().getName() + "." + FragmentHomePerson.class.getSimpleName();
 
 	ListView personlist_view_pic;
@@ -685,7 +685,7 @@ public class FragmentHomePerson extends Fragment {
 			return;
 		}
 		try {
-			result.put("accountid", accountid);
+	//		result.put("accountid", accountid);
 
 	//		result.put("avatar", avatarwebpath);// it must be upload this text
 	//											// every time
@@ -736,5 +736,10 @@ public class FragmentHomePerson extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomePerson.class.getName();
 	}
 }

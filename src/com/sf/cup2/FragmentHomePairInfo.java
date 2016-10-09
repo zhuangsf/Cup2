@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class FragmentHomePairInfo extends Fragment {
+public class FragmentHomePairInfo extends FragmentPack {
  
 	Button goBackButton;
 	TextView pair_info;
@@ -94,4 +94,9 @@ public class FragmentHomePairInfo extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomePairInfo.class.getName();
+	}
 }

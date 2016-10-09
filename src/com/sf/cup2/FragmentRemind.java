@@ -19,7 +19,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-public class FragmentRemind extends Fragment {
+public class FragmentRemind extends FragmentPack {
  
 
 	private ImageView goBack;
@@ -125,4 +125,9 @@ public class FragmentRemind extends Fragment {
    	    }
 
    	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentRemind.class.getName();
+	}
 }

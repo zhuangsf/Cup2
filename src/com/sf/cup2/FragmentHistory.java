@@ -50,7 +50,6 @@ import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.CompoundButton.OnCheckedChangeListener;
-
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 
@@ -71,7 +70,7 @@ import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
 
-public class FragmentHistory extends Fragment {
+public class FragmentHistory extends FragmentPack {
 	
 	private final static String TAG = "FragmentHistory";
 	private View mView;
@@ -674,6 +673,11 @@ public class FragmentHistory extends Fragment {
 		LineData mLineData = new LineData(x, mLineDataSets);
 		return mLineData;
 
+	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHistory.class.getName();
 	}
 	
 	

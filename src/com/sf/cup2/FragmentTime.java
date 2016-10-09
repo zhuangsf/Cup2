@@ -58,7 +58,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
-public class FragmentTime extends Fragment {
+public class FragmentTime extends FragmentPack {
 	private final static String TAG = FragmentTime.class.getPackage().getName()
 			+ "." + FragmentTime.class.getSimpleName();
 
@@ -793,6 +793,17 @@ public class FragmentTime extends Fragment {
 			return convertView;
 		}
 
+	}
+
+
+
+
+
+
+
+	@Override
+	protected String getPageName() {
+		return FragmentTime.class.getName();
 	}
 
 }

@@ -43,7 +43,7 @@ import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class FragmentHome extends Fragment {
+public class FragmentHome extends FragmentPack {
 	private final static String TAG = FragmentHome.class.getPackage().getName() + "." + FragmentHome.class.getSimpleName();
 
 	Button buttonGet;
@@ -473,5 +473,10 @@ public class FragmentHome extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHome.class.getName();
 	}
 }

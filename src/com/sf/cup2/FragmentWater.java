@@ -56,7 +56,7 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshScrollView;
 import com.sf.cup2.utils.Utils;
 
-public class FragmentWater extends Fragment {
+public class FragmentWater extends FragmentPack {
 	private final static String TAG = FragmentWater.class.getPackage().getName() + "."
 			+ FragmentWater.class.getSimpleName();
 	ListView temperatureListView; 
@@ -1265,5 +1265,11 @@ public class FragmentWater extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+
+	@Override
+	protected String getPageName() {
+		return FragmentWater.class.getName();
 	}
 }

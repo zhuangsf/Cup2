@@ -24,7 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
-public class FragmentHomeAbout extends Fragment {
+public class FragmentHomeAbout extends FragmentPack {
 
 	Button goBackButton;
 	ListView about_list_view;
@@ -171,5 +171,10 @@ public class FragmentHomeAbout extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomeAbout.class.getName();
 	}
 }

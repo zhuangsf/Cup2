@@ -56,14 +56,13 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentData extends Fragment {
+public class FragmentData extends FragmentPack {
 
 	static final int COLOR_PUBLIC = Color.parseColor("#ff00cd66");
 	static final int COLOR_WARNING = Color.parseColor("#fff4511e");
@@ -590,6 +589,11 @@ public class FragmentData extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+	@Override
+	protected String getPageName() {
+		return FragmentData.class.getName();
 	}
 
 }

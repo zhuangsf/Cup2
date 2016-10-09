@@ -35,7 +35,7 @@ import android.widget.ScrollView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-public class FragmentHomePlan extends Fragment {
+public class FragmentHomePlan extends FragmentPack {
 
 	private ScrollView ruler;
 	private LinearLayout rulerlayout;
@@ -245,5 +245,11 @@ public class FragmentHomePlan extends Fragment {
 			throw new RuntimeException(e);
 		}
 
+	}
+
+
+	@Override
+	protected String getPageName() {
+		return FragmentHomePlan.class.getName();
 	}
 }
