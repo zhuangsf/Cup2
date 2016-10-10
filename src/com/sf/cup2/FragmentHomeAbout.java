@@ -97,7 +97,7 @@ public class FragmentHomeAbout extends FragmentPack {
 		@Override
 		public void onClick(View v) {
 			if (GO_WEB_INDEX == mPosition) {
-				Uri uri = Uri.parse("http://www.8amcup.com");
+				Uri uri = Uri.parse("http://www.heatmatetech.com");
 				Intent it = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(it);
 			} else if (GO_BUY_INDEX == mPosition) {
