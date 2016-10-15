@@ -814,6 +814,10 @@ public class Utils {
     //请自觉确保传入的都是数字的string
 	public static int getSumInOne(String other){
 		String num=new String(other);
+		if(TextUtils.isEmpty(num))
+		{
+			return 0;
+		}
 		try {
 			while (num.length() > 1) {
 				int sum = 0;
