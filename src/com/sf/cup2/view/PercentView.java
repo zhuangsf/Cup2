@@ -95,7 +95,7 @@ public class PercentView extends View{
     private String aim;
     private int textSizeTag;//名列前茅字体大小
     private int textSizeAim;//击败百分比字体大小
-
+    private String batteryLevel = "8";
     // 动效过程监听器
     private ValueAnimator.AnimatorUpdateListener mUpdateListener;
     private Animator.AnimatorListener mAnimatorListener;
@@ -319,9 +319,33 @@ public class PercentView extends View{
 
             textPaint.setColor(greenColor);
             textPaint.setTextSize(textSizeTag);
-            canvas.drawText("80%",width/2,2*radius - textSizeTag*2, textPaint);
             
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.icon_battery_hight);  
+            
+            int batteryDrawableID = R.drawable.icon_batterylevel_8;
+            if(batteryLevel.equals("8"))
+            {
+            	batteryDrawableID = R.drawable.icon_batterylevel_8;
+            	canvas.drawText("100%",width/2,2*radius - textSizeTag*2, textPaint);
+            }else if(batteryLevel.equals("4"))
+            {
+            	batteryDrawableID = R.drawable.icon_batterylevel_4;
+            	canvas.drawText("75%",width/2,2*radius - textSizeTag*2, textPaint);
+            }else if(batteryLevel.equals("2"))
+            {
+            	batteryDrawableID = R.drawable.icon_batterylevel_2;
+            	canvas.drawText("50%",width/2,2*radius - textSizeTag*2, textPaint);
+            }else if(batteryLevel.equals("1"))
+            {
+            	batteryDrawableID = R.drawable.icon_batterylevel_1;
+            	canvas.drawText("25%",width/2,2*radius - textSizeTag*2, textPaint);
+            }else if(batteryLevel.equals("0"))
+            {
+            	batteryDrawableID = R.drawable.icon_battery_low;
+            	canvas.drawText("0%",width/2,2*radius - textSizeTag*2, textPaint);
+            }
+            		
+            
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), batteryDrawableID);  
             canvas.drawBitmap(bitmap, (width - bitmap.getWidth())/2,2*radius - textSizeTag*2+3, textPaint);  
 
         }
@@ -350,6 +374,11 @@ public class PercentView extends View{
 
     }
 
+    
+    public void setBatteryLevel(String level)
+    {
+    	batteryLevel = level;
+    }
     /**
      * 设置文字
      * @param tag 名列前茅文案

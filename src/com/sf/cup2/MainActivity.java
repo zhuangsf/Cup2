@@ -223,25 +223,26 @@ public class MainActivity extends Activity {
                 
                 Utils.Log("ACTION_GATT_SERVICES_DISCOVERED");
                 
-                BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
-				BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));   
-				mBluetoothLeService.readCharacteristic(characteristic);
+        //        BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString("0000ffe0-0000-1000-8000-00805f9b34fb"));
+		//		BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString("0000ffe1-0000-1000-8000-00805f9b34fb"));   
+		//		mBluetoothLeService.readCharacteristic(characteristic);
 
                 // after discovered  set
                 //service 0000ffe0-0000-1000-8000-00805f9b34fb
                 //characteristic 0000ffe4-0000-1000-8000-00805f9b34fb
                 
-                /*     这里是上个项目的wuyx,可能uuid不对应,所以导致了会报错
+                //     这里是上个项目的wuyx,可能uuid不对应,所以导致了会报错
+                // 启动Notification服务,持续接收消息
                 BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString(Utils.BT_GET_SERVICE_UUID));
 				BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString(Utils.BT_GET_CHARACTERISTIC_UUID));
                 mBluetoothLeService.setCharacteristicNotification(characteristic, true);
                 Utils.Log("xxxxxxxxxxxxxxxxxx BroadcastReceiver ACTION_GATT_SERVICES_DISCOVERED");
-                sentAskTemperature();//ask the temperature after bt discovered        may before notification?????
+    //            sentAskTemperature();//ask the temperature after bt discovered        may before notification?????
                 if(progressDialog!=null&&progressDialog.isShowing()){
   					progressDialog.dismiss();
   					Utils.Log(" mHandler.removeMessages="+mHandler.hasMessages(MSG_STOP_WAIT_BT));
   					mHandler.removeMessages(MSG_STOP_WAIT_BT);//connect success remove the hint
-  				}*/
+  				}
             	try {
                 //TODO  if receiver ACTION_GATT_SERVICES_DISCOVERED not my btdevice. i dont want to handle it now.
             	} catch (Exception e) {
@@ -254,7 +255,13 @@ public class MainActivity extends Activity {
 	                Utils.Log("ACTION_DATA_AVAILABLE :"+intent.getStringExtra(BluetoothLeService.EXTRA_DATA));
 	                String responeString=intent.getStringExtra(BluetoothLeService.EXTRA_DATA_NEED);
 	                String[] responeStringArray=responeString.split(" ");
-	                if("02".equals(responeStringArray[1])){
+	                
+	                //电量	START	MODE	                DATA1（反馈）	DATA2（备用）	CHECK SUM	STOP	0x08：100%	0x04:75%		
+	            	//0x77	0x03	0x08、0x04、0x02、0x01、0x00	            0x00	MODE~DATA2之和，校验位	0xcc	0x02：50% 	0x01：25%	0x00：低压	
+	                //77 03 08 00 0B CC 77 03 08 00 0B CC 77 03 08 00 0B CC 77 03 
+	                
+	                if("77".equals(responeStringArray[0]) && "03".equals(responeStringArray[1]) && responeStringArray.length > 7){
+	                	handleBatteryRespone(responeStringArray);
 	                }else if("88".equals(responeStringArray[1])){
 	                }
 	                //TODO  if receiver FF means the cup is out of power. but i dont want to handle it now.
@@ -264,6 +271,45 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void handleBatteryRespone(String[] responeStringArray)
+    {
+    	if(!"cc".equals(responeStringArray[5]))
+    	{
+    		return;
+    	}
+    	if((Integer.parseInt(responeStringArray[2], 16) + Integer.parseInt(responeStringArray[3], 16) + Integer.parseInt(responeStringArray[4], 16)) == Integer.parseInt(responeStringArray[5], 16))
+    	{
+    		Utils.Log("responeStringArray[2] = "+responeStringArray[2]);
+    		if("08".equals(responeStringArray[2]))
+    		{
+    			SharedPreferences p = Utils.getSharedPpreference(this);
+    			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
+    			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "8");
+    			e.commit();
+    			
+    		}else if("04".equals(responeStringArray[2]))
+    		{
+    			SharedPreferences p = Utils.getSharedPpreference(this);
+    			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
+    			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "4");
+    			e.commit();    			
+    		}else if("02".equals(responeStringArray[2]))
+    		{
+    			SharedPreferences p = Utils.getSharedPpreference(this);
+    			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
+    			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "2");
+    			e.commit();    			
+    		}else if("01".equals(responeStringArray[2]))
+    		{
+    			SharedPreferences p = Utils.getSharedPpreference(this);
+    			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
+    			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "1");
+    			e.commit();
+    			
+    		}
+    	}
+    	return;
+    }
     private void displayGattServices(List<BluetoothGattService> gattServices) {
         if (gattServices == null) return;
         String uuid = null;
@@ -610,8 +656,9 @@ public class MainActivity extends Activity {
 		}
 		// 2,login first
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
-		if (TextUtils.isEmpty(phonenum)) {
-			
+	//	if (TextUtils.isEmpty(phonenum)) {
+		if(false)
+		{
 		
 			Intent i = new Intent(this, LoginActivity.class);
 			startActivity(i);
@@ -621,7 +668,7 @@ public class MainActivity extends Activity {
 		}
 
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
-		if (false) {
+		if (true) {
 		    Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 //			finish();

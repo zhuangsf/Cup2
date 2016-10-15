@@ -598,6 +598,8 @@ public class FragmentData extends FragmentPack {
 		if(percentView != null)
 		{
 			percentView.setRankText(currentWaterData+"",planValue);
+			String level = p.getString(Utils.SHARE_PREFERENCE_CUP_BATTERY, Utils.SHARE_PREFERENCE_CUP_BATTERY_DEFULT);
+			percentView.setBatteryLevel(level);
 		}
 	}
 	/**

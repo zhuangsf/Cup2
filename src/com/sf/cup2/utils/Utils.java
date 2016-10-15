@@ -104,6 +104,8 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_AVATAR="AVATAR";
 	public static final String SHARE_PREFERENCE_CUP_PLAN="PLAN";
 	public static final String SHARE_PREFERENCE_CUP_REMIND="REMIND";
+	public static final String SHARE_PREFERENCE_CUP_BATTERY="BATTERY";
+	public static final String SHARE_PREFERENCE_CUP_BATTERY_DEFULT="8";   //8 : 100%  4 : 75%   2:50%   1:25%   0:0%
 	/**
 	 * upload to server  when avatar modify
 	 * @deprecated
