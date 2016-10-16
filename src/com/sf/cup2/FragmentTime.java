@@ -157,6 +157,33 @@ public class FragmentTime extends FragmentPack {
 						firstTime,
 						ONE_DAY,
 						getPendingIntent(nextAlarmPosition));
+		
+		
+		//6602 01 时 分 00/0a校验  sum  bb
+		StringBuffer sb_celibrate = new StringBuffer("");
+		StringBuffer sb_send = new StringBuffer("");
+		
+		
+		Utils.Log("sentMsgToBt string hour:"+hour+" minute = "+minute);
+		sb_celibrate.append("6602");
+		sb_celibrate.append(String.format("%02X", nextAlarmPosition+1));
+		sb_celibrate.append(String.format("%02X", hour));
+		sb_celibrate.append(String.format("%02X", minute));
+		sb_celibrate.append("0A");
+		sb_celibrate.append(String.format("%02X", 02+nextAlarmPosition+1+hour+minute+10));
+		sb_celibrate.append("BB");
+		Utils.Log("sentMsgToBt string cmd:"+sb_celibrate.toString());
+		((MainActivity)getActivity()).sentMsgToBt(sb_celibrate.toString());
+		
+		sb_send.append("6602");
+		sb_send.append(String.format("%02X", nextAlarmPosition+1));
+		sb_send.append(String.format("%02X", Integer.parseInt(timeArray[0])));
+		sb_send.append(String.format("%02X", Integer.parseInt(timeArray[1])));
+		sb_send.append("00");
+		sb_send.append(String.format("%02X", 02+nextAlarmPosition+1+Integer.parseInt(timeArray[0])+Integer.parseInt(timeArray[1])));
+		sb_send.append("BB");
+		Utils.Log("sentMsgToBt string SEND cmd:"+sb_send.toString());
+		((MainActivity)getActivity()).sentMsgToBt(sb_send.toString());
 				
 	}
 	

@@ -1,6 +1,9 @@
 package com.sf.cup2;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -260,9 +263,19 @@ public class MainActivity extends Activity {
 	            	//0x77	0x03	0x08、0x04、0x02、0x01、0x00	            0x00	MODE~DATA2之和，校验位	0xcc	0x02：50% 	0x01：25%	0x00：低压	
 	                //77 03 08 00 0B CC 77 03 08 00 0B CC 77 03 08 00 0B CC 77 03 
 	                
+	                
+	            	//START	MODE	DATA1（喝水量）	DATA2（时）	DATA3（分）	DATA4（备用）	CHECK SUM	STOP
+	            	//喝水量	0x55	0x01	D1	H1	M1	0x00	MODE~DATA4之和，校验位	0xaa
+	            	//			            D2	H2	M2	0x00		0xaa
+	            	//			            ……	……	……	0x00		0xaa
+	            	//			            D20	H20	M20	0x00		0xaa
+	            	//						0                               x0a	接收到备用为0x0a时，喝水量发送完成	
+
+	                
 	                if("77".equals(responeStringArray[0]) && "03".equals(responeStringArray[1]) && responeStringArray.length > 7){
 	                	handleBatteryRespone(responeStringArray);
-	                }else if("88".equals(responeStringArray[1])){
+	                }else if("55".equals(responeStringArray[0]) && "01".equals(responeStringArray[1]) && responeStringArray.length > 7){
+	                	handleWaterData(responeStringArray);
 	                }
 	                //TODO  if receiver FF means the cup is out of power. but i dont want to handle it now.
             	} catch (Exception e) {
@@ -271,42 +284,143 @@ public class MainActivity extends Activity {
         }
     };
 
-    private void handleBatteryRespone(String[] responeStringArray)
+    private void handleWaterData(String[] responeStringArray)
     {
-    	if(!"cc".equals(responeStringArray[5]))
+    	Utils.Log("handleWaterData start  responeStringArray[7] = "+responeStringArray[7]);
+    	if(!"AA".equals(responeStringArray[7]))
     	{
     		return;
     	}
-    	if((Integer.parseInt(responeStringArray[2], 16) + Integer.parseInt(responeStringArray[3], 16) + Integer.parseInt(responeStringArray[4], 16)) == Integer.parseInt(responeStringArray[5], 16))
+    	
+    	Utils.Log("1+2+3+4+5 = "+(Integer.parseInt(responeStringArray[1], 16) + 
+    			Integer.parseInt(responeStringArray[2], 16) + 
+    			Integer.parseInt(responeStringArray[3], 16) +
+    			Integer.parseInt(responeStringArray[4], 16) +
+    			Integer.parseInt(responeStringArray[5], 16)) );
+    	Utils.Log("Integer.parseInt(responeStringArray[6], 16) = "+Integer.parseInt(responeStringArray[6], 16));
+    	
+    	if((Integer.parseInt(responeStringArray[1], 16) + 
+    			Integer.parseInt(responeStringArray[2], 16) + 
+    			Integer.parseInt(responeStringArray[3], 16) +
+    			Integer.parseInt(responeStringArray[4], 16) +
+    			Integer.parseInt(responeStringArray[5], 16)) 
+    			== Integer.parseInt(responeStringArray[6], 16))
+    	{
+    		int drinkWater = Integer.parseInt(responeStringArray[2], 16);
+    		
+
+    		//55 01   00 00 00 0A    0B AA
+    		if("00".equals(responeStringArray[2]) &&
+    				"00".equals(responeStringArray[3]) &&
+    				"00".equals(responeStringArray[4]) &&
+    				"0A".equals(responeStringArray[5]))
+    		{
+    			sentMsgToBt("5501010002AA");
+    			return;
+    		}
+    		
+    		if(drinkWater == 0)
+    		{
+    			return; //无效数据,返回
+    		}
+    		
+    		String hour = responeStringArray[3];
+    		String minute = Integer.parseInt(responeStringArray[4], 16)+"";
+    		
+    		Utils.Log("drinkWater = "+drinkWater);
+    		Utils.Log("hour = "+hour);
+    		Utils.Log("minute = "+minute);
+    		
+    		
+    		try {
+    			// 设置日历日期
+    			
+    			
+    			
+        		SimpleDateFormat format  = new SimpleDateFormat("yyyy-MM-dd");
+    			Date date = format.parse(format.format(new java.util.Date()));
+    			Utils.Log("format.format(date) = "+format.format(date));
+	    		DBAdapter db = new DBAdapter(this);
+	    		db.open();
+	//     		long id = db.insertWaterData(
+	//     		format.format(date),
+	//    		hour+":"+minute,
+	//    		Integer.toString(drinkWater));
+	     			     		
+	     		db.close();
+	     		
+	     		if(fData != null)
+	     		{
+	     			fData.updateUI();
+	     		}
+	     		
+	     		
+    		} catch (ParseException e) {
+    			e.printStackTrace();
+    		}
+
+    	}
+    	
+
+    }
+    
+    private void handleBatteryRespone(String[] responeStringArray)
+    {
+    	Utils.Log("handleBatteryRespone responeStringArray[5] = "+responeStringArray[5]);
+    	if(!"CC".equals(responeStringArray[5]))
+    	{
+    		return;
+    	}
+    	Utils.Log("handleBatteryRespone 1234 = "+(Integer.parseInt(responeStringArray[1], 16) + Integer.parseInt(responeStringArray[2], 16) + Integer.parseInt(responeStringArray[3], 16)));
+    	Utils.Log("responeStringArray[4] = "+responeStringArray[4]);
+    	if((Integer.parseInt(responeStringArray[1], 16) + Integer.parseInt(responeStringArray[2], 16) + Integer.parseInt(responeStringArray[3], 16)) == Integer.parseInt(responeStringArray[4], 16))
     	{
     		Utils.Log("responeStringArray[2] = "+responeStringArray[2]);
+    		
+    		
+    		//电量	START	MODE	DATA1（反馈）	DATA2（备用）	CHECK SUM	STOP
+    		//0x77	0x03	0x08、0x04、0x02、0x01、0x00	0x00	MODE~DATA2之和，校验位	0xcc
+
+    		
     		if("08".equals(responeStringArray[2]))
     		{
     			SharedPreferences p = Utils.getSharedPpreference(this);
     			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
     			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "8");
     			e.commit();
-    			
+    			sentMsgToBt("770308000BCC");
     		}else if("04".equals(responeStringArray[2]))
     		{
     			SharedPreferences p = Utils.getSharedPpreference(this);
     			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
     			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "4");
     			e.commit();    			
+    			sentMsgToBt("7703040007CC");
     		}else if("02".equals(responeStringArray[2]))
     		{
     			SharedPreferences p = Utils.getSharedPpreference(this);
     			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
     			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "2");
     			e.commit();    			
+    			sentMsgToBt("7703020005CC");
     		}else if("01".equals(responeStringArray[2]))
     		{
     			SharedPreferences p = Utils.getSharedPpreference(this);
     			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
     			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "1");
     			e.commit();
+    			sentMsgToBt("7703010004CC");
+    			
+    		}else if("00".equals(responeStringArray[2]))
+    		{
+    			SharedPreferences p = Utils.getSharedPpreference(this);
+    			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(this);
+    			e.putString(Utils.SHARE_PREFERENCE_CUP_BATTERY, "0");
+    			e.commit();
+    			sentMsgToBt("7703000003CC");
     			
     		}
+    		
     	}
     	return;
     }
@@ -394,59 +508,15 @@ public class MainActivity extends Activity {
         return b2;
     }
 	
-    public void sentSetTemperature(int temperature){
-    	int t=temperature*10;
-    	String tHex=Integer.toHexString(t);
-    	if(tHex.length()==1){
-    		tHex="000"+tHex;	
-    	}else if(tHex.length()==2){
-    		tHex="00"+tHex;	
-    	}else if(tHex.length()==3){
-    		tHex="0"+tHex;	
-    	}
-    	sentMsgToBt("01",tHex.substring(2, 4),tHex.substring(0, 2));
-    }
-    public void sentAskTemperature(){
-    	sentMsgToBt("02","00","00");
-    }
-    public void sentSetTime(int time){
-    	String tHex=Integer.toHexString(time);
-    	if(tHex.length()==1){
-    		tHex="000"+tHex;	
-    	}else if(tHex.length()==2){
-    		tHex="00"+tHex;	
-    	}else if(tHex.length()==3){
-    		tHex="0"+tHex;	
-    	}
-    	sentMsgToBt("03",tHex.substring(2, 4),tHex.substring(0, 2));
-    }
     
-	private void sentMsgToBt(String action, String arg1, String arg2) {
-		
-
-		
+	public void sentMsgToBt(String action) {
 		
 		try {
 			if (mBluetoothLeService == null) {
 				return ;
 			}
-			StringBuffer sb = new StringBuffer("");
-			String sum = Integer.toHexString(Integer.parseInt(action, 16) + Integer.parseInt(arg1, 16)
-					+ Integer.parseInt(arg2, 16) + Integer.parseInt("00", 16) + Integer.parseInt("00", 16));
-			if(sum.length()==1){
-				sum="0"+sum;	
-	    	}
-			sb.append("55") // head
-			  .append("00") // action 01:set temp , 02:ask temp ,03 :set time
-			  .append("01")
-			  .append("00")
-			  .append("00")
-			  .append("00")
-			  .append("00")
-			  .append("00")
-			  .append("01")
-			  .append("aa");
-			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt:" + sb);
+
+			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt:" + action);
 			BluetoothGattService gattService = mBluetoothLeService
 					.getGattService(UUID.fromString(Utils.BT_SEND_SERVICE_UUID));
 			BluetoothGattCharacteristic characteristic = gattService
@@ -454,7 +524,7 @@ public class MainActivity extends Activity {
 			byte[] value = new byte[20];
 			value[0] = (byte) 0x00;
 			characteristic.setValue(value[0], BluetoothGattCharacteristic.FORMAT_UINT8, 0);
-			characteristic.setValue(hex2byte(sb.toString().getBytes())); 
+			characteristic.setValue(hex2byte(action.getBytes())); 
 			mBluetoothLeService.writeCharacteristic(characteristic);
 		} catch (Exception e) {
 			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt error:" + e);

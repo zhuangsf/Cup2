@@ -81,6 +81,8 @@ public class DBAdapter {
 		initialValues.put(KEY_WATER, water);
 		return db.insert(DATABASE_TABLE, null, initialValues);
 	}
+	
+	
 
 	// ---删除一个指定数据----
 

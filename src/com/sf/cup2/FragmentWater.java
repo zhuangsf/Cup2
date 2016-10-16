@@ -1121,7 +1121,7 @@ public class FragmentWater extends FragmentPack {
 	
 	private void setSelectTemperatureFromMode(int temp,String info){
 		//1 send to BT
-		((MainActivity) getActivity()).sentSetTemperature(temp);
+	//	((MainActivity) getActivity()).sentSetTemperature(temp);
 		
 		//2 send to Server
 		saveTemperatureAction(temp,info);
