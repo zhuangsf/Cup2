@@ -237,8 +237,14 @@ public class MainActivity extends Activity {
                 //     这里是上个项目的wuyx,可能uuid不对应,所以导致了会报错
                 // 启动Notification服务,持续接收消息
                 BluetoothGattService gattService=mBluetoothLeService.getGattService(UUID.fromString(Utils.BT_GET_SERVICE_UUID));
-				BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString(Utils.BT_GET_CHARACTERISTIC_UUID));
-                mBluetoothLeService.setCharacteristicNotification(characteristic, true);
+                if(gattService != null)
+				{
+                	BluetoothGattCharacteristic characteristic =gattService.getCharacteristic(UUID.fromString(Utils.BT_GET_CHARACTERISTIC_UUID));
+					if(characteristic != null)   //如果连接的是其他设备的蓝牙,则没有这个UUI
+					{
+						mBluetoothLeService.setCharacteristicNotification(characteristic, true);
+					}
+				}
                 Utils.Log("xxxxxxxxxxxxxxxxxx BroadcastReceiver ACTION_GATT_SERVICES_DISCOVERED");
     //            sentAskTemperature();//ask the temperature after bt discovered        may before notification?????
                 if(progressDialog!=null&&progressDialog.isShowing()){
@@ -738,7 +744,7 @@ public class MainActivity extends Activity {
 		}
 
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
-		if (true) {
+		if (false) {
 		    Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 //			finish();
