@@ -419,6 +419,10 @@ public class FragmentData extends FragmentPack {
 		if (!cursor.moveToFirst()) {
 			bEmptyData = true;
 		}
+		else
+		{
+			
+		}
 		
 		for (int i = 0; i < 24; i++) {
 			String times = getString(R.string.times);
