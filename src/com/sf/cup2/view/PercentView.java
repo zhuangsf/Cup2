@@ -286,7 +286,7 @@ public class PercentView extends View{
         shaderPaint.setStrokeWidth(insideArcWidth);
         shaderPaint.setStyle(Paint.Style.STROKE);
         //内弧半径
-        canvas.drawArc(new RectF(width / 2 - insideArcRadius, radius - insideArcRadius, width / 2 + insideArcRadius, radius + insideArcRadius),
+        canvas.drawArc(new RectF(width / 2 - insideArcRadius, radius - insideArcRadius+insideArcWidth, width / 2 + insideArcRadius, radius + insideArcRadius+insideArcWidth),
                 formDegree,
                 toDegree, false, shaderPaint);
 
