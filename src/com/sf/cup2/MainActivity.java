@@ -545,14 +545,20 @@ public class MainActivity extends Activity {
 		{
 				long id;
 				String date = "2016-09-21";
-				for(int i = 0;i < 30;i++)
+				for(int i = 0;i < 300;i++)
 				{
 					int hour = (int)(Math.random()*23);
 					int minute = (int)(Math.random()*59);
 					int water = (int)(Math.random()*500);
+
+					date = "2016-09-"+(int)(Math.random()*30);
+					
+					String time = String.format("%02d:%02d", hour,minute);
+					Utils.Log("waters[" +i+ "] :"+hour+":"+minute+" water = "+water);
+					
 					id = db.insertWaterData(
 							date,
-							hour+":"+minute,
+							time,
 							water+"");
 					
 				}

@@ -415,36 +415,42 @@ public class FragmentData extends FragmentPack {
 	private LineData getLineData(Cursor cursor) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
+		int[] waters = new int[24];
 		boolean bEmptyData = false;
 		if (!cursor.moveToFirst()) {
 			bEmptyData = true;
 		}
 		else
 		{
-			
+			if (cursor.moveToFirst()) {
+				do {			
+					String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
+					waters[(Integer.parseInt(drinkTIme[0]) + 18) % 24] += Integer.parseInt(cursor.getString(DBAdapter.DATA_COLUMN_WATER));
+				} while (cursor.moveToNext());
+			}
 		}
 		
 		for (int i = 0; i < 24; i++) {
 			String times = getString(R.string.times);
 			times = String.format(times, (i + 6)%24);
 			x.add(times);
-			if(bEmptyData && i == 0)
+			
+			if(bEmptyData && (i == 0 || i == 23))
 			{
 				Entry entry = new Entry(0.0f, i);
+				y.add(entry);
+			}else if(!bEmptyData)
+			{
+				Utils.Log("waters[" +i+ "] :"+waters[i]);
+				Entry entry = new Entry((float)(waters[i]), i);
 				y.add(entry);
 			}
 		}
 
-		if (cursor.moveToFirst()) {
-			do {
-				
 
-				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
-				Entry entry = new Entry(
-						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
-				y.add(entry);
-			} while (cursor.moveToNext());
-		}
+
+		
+		
 
 		// y轴的数据集
 		LineDataSet set = new LineDataSet(y, null);
@@ -577,7 +583,7 @@ public class FragmentData extends FragmentPack {
 
 		if ("null".equals(planValue)) {
 			planValue = Utils.getSuggestPlan(getActivity());
-			; // 这个值要根据健康管理来生成
+			// 这个值要根据健康管理来生成
 			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 			e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
 			e.commit();

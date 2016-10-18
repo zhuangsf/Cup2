@@ -364,9 +364,9 @@ public class FragmentHistory extends FragmentPack {
 				ca.add(Calendar.DATE, +1); //月份减1 
 				Date date = ca.getTime(); //结果 
 				Log.w(TAG, "sf.format(date) = "+sf.format(date));
-				
-				int onedaywater = DBAdapter.getOneDayWater(sf.format(date));
-
+				mdbAdapter.open();
+				int onedaywater = mdbAdapter.getOneDayWater(sf.format(date));
+				mdbAdapter.close();
 				if(onedaywater != 0)
 				{
 					map = new HashMap<String, Object>();
@@ -374,7 +374,23 @@ public class FragmentHistory extends FragmentPack {
 			        String[] weekdataString = sf.format(date).split("-");
 			        map.put("time", weekdataString[2]+"日");
 			        map.put("value", "已喝"+onedaywater+"ml");
-			        map.put("percent", "完成 35%");
+			        
+			        
+					SharedPreferences p = Utils.getSharedPpreference(getActivity());
+					String planValue = p.getString(Utils.SHARE_PREFERENCE_CUP_PLAN, "null");
+					if(Integer.parseInt(planValue) == 0)
+					{
+						map.put("percent", "完成 0%");
+					}
+					else
+					{
+					int percent = onedaywater * 100 / Integer.parseInt(planValue);
+					if(percent > 100)
+					{
+						percent = 100;
+					}
+						map.put("percent", "完成 "+percent+"%");
+					}
 					maps.add(map);
 				}
 			}while(++i < days);
@@ -528,7 +544,9 @@ public class FragmentHistory extends FragmentPack {
 				Date date = ca.getTime(); //结果 
 				Log.w(TAG, "sf.format(date) = "+sf.format(date));
 				x.add(sf.format(date));
-				int onedaywater = DBAdapter.getOneDayWater(sf.format(date));
+				mdbAdapter.open();
+				int onedaywater = mdbAdapter.getOneDayWater(sf.format(date));
+				mdbAdapter.close();
 				if(onedaywater == 0)
 				{
 					onedaywater = 1;
@@ -603,20 +621,36 @@ public class FragmentHistory extends FragmentPack {
 	private LineData getLineData(Cursor cursor) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
-
+		int[] waters = new int[24];
+		boolean bEmptyData = false;
+		if (!cursor.moveToFirst()) {
+			bEmptyData = true;
+		}
+		else
+		{
+			if (cursor.moveToFirst()) {
+				do {			
+					String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
+					waters[(Integer.parseInt(drinkTIme[0]) + 18) % 24] += Integer.parseInt(cursor.getString(DBAdapter.DATA_COLUMN_WATER));
+				} while (cursor.moveToNext());
+			}
+		}
+		
 		for (int i = 0; i < 24; i++) {
 			String times = getString(R.string.times);
 			times = String.format(times, (i + 6)%24);
 			x.add(times);
-		}
-
-		if (cursor.moveToFirst()) {
-			do {
-				String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
-				Entry entry = new Entry(
-						Float.parseFloat(cursor.getString(DBAdapter.DATA_COLUMN_WATER)), (Integer.parseInt(drinkTIme[0]) - 6) % 24);
+			
+			if(bEmptyData && (i == 0 || i == 23))
+			{
+				Entry entry = new Entry(0.0f, i);
 				y.add(entry);
-			} while (cursor.moveToNext());
+			}else if(!bEmptyData)
+			{
+				Utils.Log("waters[" +i+ "] :"+waters[i]);
+				Entry entry = new Entry((float)(waters[i]), i);
+				y.add(entry);
+			}
 		}
 
 		// y轴的数据集
