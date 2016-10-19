@@ -325,28 +325,28 @@ public class PercentView extends View{
             if(batteryLevel.equals("8"))
             {
             	batteryDrawableID = R.drawable.icon_batterylevel_8;
-            	canvas.drawText("100%",width/2,2*radius - textSizeTag*2, textPaint);
+            	canvas.drawText("100%",width/2,2*radius , textPaint);
             }else if(batteryLevel.equals("4"))
             {
             	batteryDrawableID = R.drawable.icon_batterylevel_4;
-            	canvas.drawText("75%",width/2,2*radius - textSizeTag*2, textPaint);
+            	canvas.drawText("75%",width/2,2*radius , textPaint);
             }else if(batteryLevel.equals("2"))
             {
             	batteryDrawableID = R.drawable.icon_batterylevel_2;
-            	canvas.drawText("50%",width/2,2*radius - textSizeTag*2, textPaint);
+            	canvas.drawText("50%",width/2,2*radius , textPaint);
             }else if(batteryLevel.equals("1"))
             {
             	batteryDrawableID = R.drawable.icon_batterylevel_1;
-            	canvas.drawText("25%",width/2,2*radius - textSizeTag*2, textPaint);
+            	canvas.drawText("25%",width/2,2*radius , textPaint);
             }else if(batteryLevel.equals("0"))
             {
             	batteryDrawableID = R.drawable.icon_battery_low;
-            	canvas.drawText("0%",width/2,2*radius - textSizeTag*2, textPaint);
+            	canvas.drawText("0%",width/2,2*radius , textPaint);
             }
             		
             
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), batteryDrawableID);  
-            canvas.drawBitmap(bitmap, (width - bitmap.getWidth())/2,2*radius - textSizeTag*2+3, textPaint);  
+            canvas.drawBitmap(bitmap, (width - bitmap.getWidth())/2,2*radius + 5, textPaint);  
 
         }
 

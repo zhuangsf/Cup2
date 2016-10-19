@@ -541,7 +541,7 @@ public class MainActivity extends Activity {
 	{
 		DBAdapter db = new DBAdapter(this);
 		db.open();
-	//	if(db.bIsEmptyData())
+		if(db.bIsEmptyData())
 		{
 				long id;
 				String date = "2016-09-21";
