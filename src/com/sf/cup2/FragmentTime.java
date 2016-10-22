@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.app.TimePickerDialog.OnTimeSetListener;
@@ -393,7 +394,14 @@ public class FragmentTime extends FragmentPack {
 		add_alarm_button.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				addAlarm();
+			//	addAlarm();
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentTimeEdit());
+            	ft.remove(FragmentTime.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+				
 			}
 		});
 

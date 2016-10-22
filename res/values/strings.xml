@@ -72,6 +72,9 @@
     <string name="history_day">"日"</string>
     <string name="history_week">"周"</string>
     <string name="history_month">"月"</string>
+        <string name="Year">Y</string>
+    <string name="Month">M</string>
+    <string name="Day">D</string>
     
     
     <declare-styleable name="GifTextureView"><attr format="reference|string" name="gifSource"/><attr format="boolean" name="isOpaque"/></declare-styleable>
