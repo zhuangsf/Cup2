@@ -67,6 +67,8 @@ public class FragmentHome extends FragmentPack {
 	private static final int PAIRING_INDEX = 2;
 	private static final int UPDATE_INDEX = 3;
 	private static final int ABOUT_INDEX = 4;
+	
+	AlertDialog ad;	
 	Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message paramAnonymousMessage) {
@@ -124,13 +126,17 @@ public class FragmentHome extends FragmentPack {
 		exit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// todo 退出的操作
-
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-				 builder.setTitle("个人中心");
-				builder.setMessage("确定要退出当前账号?");
-				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
+				
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.red_title_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				
+				TextView title = (TextView)layout.findViewById(R.id.title);
+				title.setText("个人中心");
+				TextView summary = (TextView)layout.findViewById(R.id.summary);
+				summary.setText("确定要退出当前账号?");
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 						e.putString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
 						e.commit();
@@ -138,17 +144,47 @@ public class FragmentHome extends FragmentPack {
 						Intent i = new Intent(getActivity(), LoginActivity.class);
 						startActivity(i);
 						getActivity().finish();
-						dialog.dismiss();
+						ad.dismiss();
+								
 					}
 				});
-				builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
-						dialog.dismiss();
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						ad.dismiss();
 					}
 				});
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				ad = alertBuiler.create();
+				ad.setView(layout);
+				ad.show();
+				
 
-				builder.show();
+//				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//				 builder.setTitle("个人中心");
+//				builder.setMessage("确定要退出当前账号?");
+//				builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+//						e.putString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
+//						e.commit();
+//
+//						Intent i = new Intent(getActivity(), LoginActivity.class);
+//						startActivity(i);
+//						getActivity().finish();
+//						dialog.dismiss();
+//					}
+//				});
+//				builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+//					@Override
+//					public void onClick(DialogInterface dialog, int which) {
+//						dialog.dismiss();
+//					}
+//				});
+//
+//				builder.show();
 
 				return;
 			}

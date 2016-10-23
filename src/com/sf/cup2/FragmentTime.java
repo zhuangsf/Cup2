@@ -45,6 +45,7 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+import com.sf.cup2.login.LoginActivity;
 import com.sf.cup2.utils.Utils;
 import com.sf.cup2.view.swipelistview.BaseSwipListAdapter;
 import com.sf.cup2.view.swipelistview.SwipeMenu;
@@ -76,7 +77,7 @@ public class FragmentTime extends FragmentPack {
 	private ToggleButton mTogBtn;
 	
 	private FragmentTimeEdit fTimeEdit;
-	
+	AlertDialog ad;	
 	public void setNextAlarm()    //获得最近一个闹钟
 	{
 		int nextAlarmPosition = -1;
@@ -334,7 +335,7 @@ public class FragmentTime extends FragmentPack {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.tab_time, null);
+		final View v = inflater.inflate(R.layout.tab_time, null);
 		c = Calendar.getInstance();
 				
 		mAlarmsList = (SwipeMenuListView) v.findViewById(R.id.alarm_listview);
@@ -372,19 +373,49 @@ public class FragmentTime extends FragmentPack {
         mAlarmsList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
-				new AlertDialog.Builder(getActivity())
-				.setMessage(R.string.delete_alarm)
-				.setTitle(R.string.tips)
-				.setPositiveButton(R.string.ok,
-						new DialogInterface.OnClickListener() {
-							@Override
-							public void onClick(
-									DialogInterface dialog,
-									int which) {
-								deleteAlarm(position);
-							}
-						}).setNegativeButton(R.string.cancel, null)
-				.create().show();
+            	
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.red_title_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				
+				TextView title = (TextView)layout.findViewById(R.id.title);
+				title.setText(R.string.tips);
+				TextView summary = (TextView)layout.findViewById(R.id.summary);
+				summary.setText(R.string.delete_alarm);
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						deleteAlarm(position);
+						ad.dismiss();
+								
+					}
+				});
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				ad = alertBuiler.create();
+				ad.setView(layout);
+				ad.show();
+            	
+            	
+            	
+//				new AlertDialog.Builder(getActivity())
+//				.setMessage(R.string.delete_alarm)
+//				.setTitle(R.string.tips)
+//				.setPositiveButton(R.string.ok,
+//						new DialogInterface.OnClickListener() {
+//							@Override
+//							public void onClick(
+//									DialogInterface dialog,
+//									int which) {
+//								deleteAlarm(position);
+//							}
+//						}).setNegativeButton(R.string.cancel, null)
+//				.create().show();
                 return false;
             }
         });

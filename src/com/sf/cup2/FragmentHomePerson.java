@@ -490,22 +490,32 @@ public class FragmentHomePerson extends FragmentPack {
 				final String nickName = p.getString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, "");
 				person_info.setText(nickName);  //默认为空的好了
 				person_title.setText(list1Title[mPosition]);
-				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
+				
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
-						e.putString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, person_info.getText().toString());
-						e.commit();
-						doUpdate1();
+								e.putString(Utils.SHARE_PREFERENCE_CUP_NICKNAME, person_info.getText().toString());
+								e.commit();
+								doUpdate1();
+								ad.dismiss();
 					}
-				}).setNegativeButton(R.string.cancel, null).create();
-				ad.setTitle(R.string.personal_setting);
+				});
+				
+				
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+								ad.dismiss();
+					}
+				});
+				ad = alertBuiler.create();
 				ad.setView(layout);
 				ad.show();
-//				Message msg = new Message();
-//				msg.what = 1;
-//				msg.arg1 = 1;
-//				mHandler.sendMessage(msg);
+
 			}
 				break;
 			case 3:
@@ -523,22 +533,32 @@ public class FragmentHomePerson extends FragmentPack {
 				final String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, Utils.SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT);
 				person_info.setText(height);  
 				
-				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 						e.putString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, person_info.getText().toString());
-						e.commit();
-						doUpdate1();
+								e.commit();
+								doUpdate1();
+								ad.dismiss();
 					}
-				}).setNegativeButton(R.string.cancel, null).create();
-				ad.setTitle(R.string.personal_setting);
+				});
+				
+				
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+								ad.dismiss();
+					}
+				});
+				ad = alertBuiler.create();
 				ad.setView(layout);
 				ad.show();
-//				Message msg = new Message();
-//				msg.what = 1;
-//				msg.arg1 = 1;
-//				mHandler.sendMessage(msg);
+
+				
 			}
 				break;
 			case 4:
@@ -556,22 +576,32 @@ public class FragmentHomePerson extends FragmentPack {
 				final String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, Utils.SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT);
 				person_info.setText(weight);  
 				
-				ad = new AlertDialog.Builder(getActivity()).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
-					@Override
-					public void onClick(DialogInterface dialog, int which) {
+				
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
 						SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 						e.putString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, person_info.getText().toString());
-						e.commit();
-						doUpdate1();
+								e.commit();
+								doUpdate1();
+								ad.dismiss();
 					}
-				}).setNegativeButton(R.string.cancel, null).create();
-				ad.setTitle(R.string.personal_setting);
+				});
+				
+				
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+								ad.dismiss();
+					}
+				});
+				ad = alertBuiler.create();
 				ad.setView(layout);
 				ad.show();
-//				Message msg = new Message();
-//				msg.what = 1;
-//				msg.arg1 = 1;
-//				mHandler.sendMessage(msg);
+
 			}
 				break;
 				

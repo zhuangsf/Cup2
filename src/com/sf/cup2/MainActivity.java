@@ -34,9 +34,14 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.Toast;
 
@@ -100,20 +105,53 @@ public class MainActivity extends Activity {
 					progressDialog.dismiss();
 				}
 				if (connectFailAlertDialog == null) {
-					connectFailAlertDialog=new AlertDialog.Builder(MainActivity.this)
-							.setTitle("温馨提示")
-							.setMessage("蓝牙连接失败")
-//							.setCancelable(false)
-							.setPositiveButton("重连", new DialogInterface.OnClickListener() {
-								@Override
-								public void onClick(DialogInterface dialog, int which) {
-									 boolean result= MainActivity.this.reConnect();
-									 if(!result){
-										 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
-									 }
-								}
-							})
-							.setNegativeButton("取消",null).create();
+					
+					LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+					final View layout = inflater.inflate(R.layout.red_title_dialog, null);
+					
+					TextView title = (TextView)layout.findViewById(R.id.title);
+					title.setText("温馨提示");
+					TextView summary = (TextView)layout.findViewById(R.id.summary);
+					summary.setText("蓝牙连接失败");
+					TextView ok = (TextView) layout.findViewById(R.id.ok);
+					ok.setText("重连");
+					ok.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							boolean result= MainActivity.this.reConnect();
+							 if(!result){
+								 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
+							 }
+							connectFailAlertDialog.dismiss();
+									
+						}
+					});
+					
+					TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+					cancel.setOnClickListener(new OnClickListener() {
+						public void onClick(View v) {
+							connectFailAlertDialog.dismiss();
+						}
+					});
+					AlertDialog.Builder alertBuiler = new AlertDialog.Builder(MainActivity.this);
+					connectFailAlertDialog = alertBuiler.create();
+					connectFailAlertDialog.setView(layout);
+
+
+					
+//					connectFailAlertDialog=new AlertDialog.Builder(MainActivity.this)
+//							.setTitle("温馨提示")
+//							.setMessage("蓝牙连接失败")
+////							.setCancelable(false)
+//							.setPositiveButton("重连", new DialogInterface.OnClickListener() {
+//								@Override
+//								public void onClick(DialogInterface dialog, int which) {
+//									 boolean result= MainActivity.this.reConnect();
+//									 if(!result){
+//										 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备", Toast.LENGTH_SHORT).show();
+//									 }
+//								}
+//							})
+//							.setNegativeButton("取消",null).create();
 				}
 				try {
 					connectFailAlertDialog.show();
@@ -601,6 +639,7 @@ public class MainActivity extends Activity {
 		if (false) {
 		    Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
+			
 //			finish();
 //			onDestroy();
 //			return;
@@ -907,9 +946,36 @@ public class MainActivity extends Activity {
 			// 初始化音乐资源
 			try {
 				showNotification(this,"喝水提醒","喝水时间到啦",3344);
-				timeUpAlertDialog=new AlertDialog.Builder(this).setMessage("亲！已到设定饮水时间咯！\n请及时享用哦 ").setTitle("温馨提示")
-						.setPositiveButton("确定", null).create();
+				
+				LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.red_title_dialog, null);
+				
+				TextView title = (TextView)layout.findViewById(R.id.title);
+				title.setText("温馨提示");
+				TextView summary = (TextView)layout.findViewById(R.id.summary);
+				summary.setText("亲！已到设定饮水时间咯！\n请及时享用哦 ");
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+
+						timeUpAlertDialog.dismiss();
+								
+					}
+				});
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setVisibility(View.GONE);
+
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(MainActivity.this);
+				timeUpAlertDialog = alertBuiler.create();
+				timeUpAlertDialog.setView(layout);
 				timeUpAlertDialog.show();
+				
+				
+				
+//				timeUpAlertDialog=new AlertDialog.Builder(this).setMessage("亲！已到设定饮水时间咯！\n请及时享用哦 ").setTitle("温馨提示")
+//						.setPositiveButton("确定", null).create();
+//				timeUpAlertDialog.show();
 				if(fTime != null)
 				{
 					fTime.setNextAlarm();

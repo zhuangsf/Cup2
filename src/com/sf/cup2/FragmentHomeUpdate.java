@@ -22,6 +22,7 @@ public class FragmentHomeUpdate extends FragmentPack {
 	TextView pair_info;
 	private ImageView goBack;
 	private TextView update;
+	AlertDialog ad;	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,15 +53,30 @@ public class FragmentHomeUpdate extends FragmentPack {
 			public void onClick(View v) {
 
 				
-				AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-			    builder.setTitle("温馨提醒")
-			    .setMessage("您当前版本为最新版本")
-			    .setPositiveButton("确定", new DialogInterface.OnClickListener(){
-			    @Override
-			public void onClick(DialogInterface dialog,int which){
-			    	dialog.dismiss();
-			    }
-			    }).show();		
+				LayoutInflater inflater = getActivity().getLayoutInflater();
+				final View layout = inflater.inflate(R.layout.red_title_dialog, (ViewGroup) v.findViewById(R.id.dialog));
+				
+				TextView title = (TextView)layout.findViewById(R.id.title);
+				title.setText("温馨提醒");
+				TextView summary = (TextView)layout.findViewById(R.id.summary);
+				summary.setText("您当前版本为最新版本");
+				TextView ok = (TextView) layout.findViewById(R.id.ok);
+				ok.setOnClickListener(new OnClickListener() {
+					public void onClick(View v) {
+						ad.dismiss();
+					}
+				});
+				
+				TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+				cancel.setVisibility(View.GONE);
+
+				AlertDialog.Builder alertBuiler = new AlertDialog.Builder(getActivity());
+				ad = alertBuiler.create();
+				ad.setView(layout);
+				ad.show();
+				
+				
+
 				
 				
 				
