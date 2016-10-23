@@ -1,8 +1,11 @@
 package com.sf.cup2;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +57,7 @@ public class FragmentTime extends FragmentPack {
 	private final static String TAG = FragmentTime.class.getPackage().getName()
 			+ "." + FragmentTime.class.getSimpleName();
 
-	private final static int MAX_ALARM_NUMBER = 20;
-	private final static int MAX_ALARM_VISABLE_NUMBER = 4; // 初始3个可见
+	private final static int MAX_ALARM_NUMBER = 15;
 	public static final long ONE_DAY = 1000L * 60 * 60 * 24;
 	Calendar c;
 
@@ -73,6 +75,8 @@ public class FragmentTime extends FragmentPack {
 	AlarmManager mAlarmManager;
 	private ToggleButton mTogBtn;
 	
+	private FragmentTimeEdit fTimeEdit;
+	
 	public void setNextAlarm()    //获得最近一个闹钟
 	{
 		int nextAlarmPosition = -1;
@@ -86,7 +90,7 @@ public class FragmentTime extends FragmentPack {
 		int minute = t.minute;
 		int second = t.second;
 		int timeNow = hour * 60 + minute;
-		Log.e("jockey", "setNextAlarm hour =" + hour+" minute ="+minute+" second"+second);
+
         int minMinutes = 24*60;
         //获得下个最接近的闹钟
 		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
@@ -111,7 +115,7 @@ public class FragmentTime extends FragmentPack {
 				}
 			}
 		}
-		Log.e("jockey", "setNextAlarm nextAlarmPosition =" + nextAlarmPosition+" minMinutes ="+minMinutes);
+
 		//没有闹钟了
 		if(nextAlarmPosition == -1)
 		{
@@ -152,7 +156,11 @@ public class FragmentTime extends FragmentPack {
 		long time = selectTime - systemTime;
 		firstTime += time;
 		
-		mAlarmManager.cancel(getPendingIntent(nextAlarmPosition));
+		
+		for(int i = 0;i < MAX_ALARM_NUMBER;i++)
+		{
+			mAlarmManager.cancel(getPendingIntent(i));
+		}
 		mAlarmManager.setRepeating(
 						AlarmManager.ELAPSED_REALTIME_WAKEUP,
 						firstTime,
@@ -199,8 +207,8 @@ public class FragmentTime extends FragmentPack {
 			}
 		}
 
-		Log.e("jockey", "updateAddButtonStatus size =" + size);
-		if (size == 20) {
+
+		if (size == MAX_ALARM_NUMBER) {
 			add_alarm_button.setEnabled(false);
 			add_alarm_button.setClickable(false);
 //			add_alarm_button.setBackground(getActivity().getResources()
@@ -213,6 +221,27 @@ public class FragmentTime extends FragmentPack {
 		}
 	}
 
+	
+	private int getFirstMatchNumber()
+	{
+		int firstMatchNumber = 0;
+		for (int i = 0; i < MAX_ALARM_NUMBER; i++) {
+			boolean bVisable = mSharedPreferences.getBoolean(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
+			if (bVisable) { // 如果为true,则继续查找
+				firstMatchNumber++;
+			} else {
+				break;
+			}
+		}
+		if (firstMatchNumber > 20) {
+			return -1;
+		}
+		
+		return firstMatchNumber;
+	}
+	
+	
 	// 找到第一个不显示的序号
 	private void addAlarm() {
 		int firstMatchNumber = 0;
@@ -253,8 +282,6 @@ public class FragmentTime extends FragmentPack {
 			}
 
 			if (matchAlarmIDIndex == alarmID) {
-				Log.e("jockey", "getRealIndex matchAlarmIDIndex = "
-						+ matchAlarmIDIndex + " alarmID = " + alarmID);
 				return i;
 			}
 
@@ -300,6 +327,8 @@ public class FragmentTime extends FragmentPack {
 
 		mAlarmManager = (AlarmManager) getActivity().getSystemService(
 				Context.ALARM_SERVICE);
+		
+		fTimeEdit = new FragmentTimeEdit();
 	}
 
 	@Override
@@ -395,9 +424,24 @@ public class FragmentTime extends FragmentPack {
 			@Override
 			public void onClick(View v) {
 			//	addAlarm();
+				
+				
+
+				
+				//获取当前时间
+				Time t = new Time("GMT+8"); 
+				t.setToNow(); // 取得系统时间。
+				int hour = (t.hour +8) % 24; // 0-23
+				int minute = t.minute;
+				Utils.Log("timeNow hour = " + hour+" minute = "+minute);
+				fTimeEdit.setDefaultTime(hour,minute);
+				fTimeEdit.setBooleanEditMode(false);
+				//把当前的index传入fragment,用于操作数据
+				fTimeEdit.setAlarmIndex(getFirstMatchNumber());
+				
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
             	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            	ft.add(R.id.fragmentfield, new FragmentTimeEdit());
+            	ft.add(R.id.fragmentfield, fTimeEdit);
             	ft.remove(FragmentTime.this);
             	ft.addToBackStack(null);
 				ft.commit();
@@ -502,8 +546,10 @@ public class FragmentTime extends FragmentPack {
 			boolean bVisable = mSharedPreferences.getBoolean(
 					Utils.SHARE_PREFERENCE_CUP_ALARM_VISIBILE + i, false);
 
+			String titleString = mSharedPreferences.getString(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_TITLE + i, "该喝水啦");
 			Utils.Log(" index = " + i + " checked = " + checked
-					+ " bVisable = " + bVisable);
+					+ " bVisable = " + bVisable+ " title = "+titleString);
 		}
 	}
 
@@ -625,7 +671,12 @@ public class FragmentTime extends FragmentPack {
 	}
 
 
-	
+	@Override
+	public void onResume() {
+		super.onResume();
+		Utils.Log("onResume setNextAlarm");
+		setNextAlarm();
+	}
 	
 	
 	
@@ -670,61 +721,32 @@ public class FragmentTime extends FragmentPack {
 			alarm_time.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
+				
+					boolean switchOn = mSharedPreferences.getBoolean(
+							Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON
+									+ getRealIndex(position), false);
+					if(!switchOn)
+					{
+						return;
+					}
 
 					String timeString = alarm_time.getText().toString();
 					String[] timeArray = timeString.split(":");
-					c.set(Calendar.HOUR_OF_DAY, Integer.parseInt(timeArray[0]));
-					c.set(Calendar.MINUTE, Integer.parseInt(timeArray[1]));
 
-					if (c.getTimeInMillis() < Calendar.getInstance()
-							.getTimeInMillis()) {
-						c.add(Calendar.DAY_OF_MONTH, 1);
-					}
-					int hour = c.get(Calendar.HOUR_OF_DAY);
-					int minute = c.get(Calendar.MINUTE);
-
-					TimePickerDialog tpd = new TimePickerDialog(getActivity(),
-							new OnTimeSetListener() {
-								@Override
-								public void onTimeSet(TimePicker view,
-										int hourOfDay, int minute) {
-									if (!isTimePickerOk) {
-										return;
-									}
-									c = timePicker(alarm_time, hourOfDay,
-											minute, position);
-									// TODO there is a bug that cant cancel or
-									// return fix it
-									Log.e("jockey", "onTimeSet position = "
-											+ position + " bChecked = "
-											+ bChecked);
-								}
-							}, hour, minute, true);
-					if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-						Utils.Log("android version newer than L");
-						isTimePickerOk = true;
-					} else {
-						Utils.Log("android version older than KK");
-						tpd.setButton(DialogInterface.BUTTON_POSITIVE,
-								getResources().getString(R.string.ok),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										isTimePickerOk = true;
-									}
-								});
-						tpd.setButton(DialogInterface.BUTTON_NEGATIVE,
-								getResources().getString(R.string.cancel),
-								new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog,
-											int which) {
-										isTimePickerOk = false;
-									}
-								});
-					}
-					tpd.show();
+					fTimeEdit.setDefaultTime(timeString);
+					fTimeEdit.setBooleanEditMode(true);
+					fTimeEdit.setAlarmIndex(getRealIndex(position));//总的数据表格的index
+					
+					String alarmTitleString = mSharedPreferences.getString(
+							Utils.SHARE_PREFERENCE_CUP_ALARM_TITLE	+ getRealIndex(position), "该喝水啦");
+					fTimeEdit.setDefaultTitle(alarmTitleString);
+					
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, fTimeEdit);
+            	ft.remove(FragmentTime.this);
+            	ft.addToBackStack(null);
+				ft.commit();
 				}
 			});
 		}
@@ -774,8 +796,7 @@ public class FragmentTime extends FragmentPack {
 				convertView = mInflator.inflate(R.layout.listview_item, null);
 			}
 			final int alarmPosition = position;
-			TextView alarm_index = (TextView) convertView
-					.findViewById(R.id.alarm_index);
+
 			ToggleButton switchView = (ToggleButton) convertView
 					.findViewById(R.id.alarm_switch);
 			boolean switchOn = mSharedPreferences.getBoolean(
@@ -789,9 +810,16 @@ public class FragmentTime extends FragmentPack {
 							+ getRealIndex(alarmPosition), "00:00");
 			alarm_time.setText(time);
 			setAlarmTextClickListener(alarm_time, position, switchOn);
+			
+			
+			TextView alarmTitle = (TextView) convertView.findViewById(R.id.alarm_title);
+			String alarmTitleString = mSharedPreferences.getString(
+					Utils.SHARE_PREFERENCE_CUP_ALARM_TITLE	+ getRealIndex(alarmPosition), "该喝水啦");
+			
+			alarmTitle.setText(alarmTitleString);
+			
 
-			Log.e("jockey", "getView switchOn = " + switchOn
-					+ " alarmPosition = " + alarmPosition);
+
 			supressEvent = true;
 			switchView.setChecked(switchOn);
 			supressEvent = false;
@@ -807,10 +835,7 @@ public class FragmentTime extends FragmentPack {
 							// SharedPreferences保存数据
 							SharedPreferences.Editor e = mSharedPreferences
 									.edit();
-							Log.e("jockey", "onCheckedChanged isChecked = "
-									+ isChecked
-									+ " getRealIndex(alarmPosition) = "
-									+ getRealIndex(alarmPosition));
+
 							e.putBoolean(Utils.SHARE_PREFERENCE_CUP_ALARM_IS_ON
 									+ getRealIndex(alarmPosition), isChecked);
 							e.commit();
@@ -819,7 +844,6 @@ public class FragmentTime extends FragmentPack {
 						}
 					});
 
-			alarm_index.setText(Integer.toString(position + 1));
 
 			return convertView;
 		}

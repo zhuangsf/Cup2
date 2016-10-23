@@ -130,7 +130,7 @@
         android:layout_height="50dp">
         
                     <TextView
-                android:id="@id/title"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center"
@@ -157,4 +157,30 @@
         
     </LinearLayout>
 
+    
+        <LinearLayout
+        android:id="@+id/delete_button"
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:background="#ffffffff"
+        android:layout_marginTop="30dp"
+        android:layout_height="50dp">
+        
+                    <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="删除闹钟"
+                android:layout_marginLeft="10dp"
+                android:textColor="#ffff0000"
+                android:textSize="20sp" />
+                
+
+        
+        
+    </LinearLayout>
+    
+    
 </LinearLayout>

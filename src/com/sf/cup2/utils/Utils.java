@@ -163,6 +163,7 @@ public class Utils {
 	public static final String SHARE_PREFERENCE_CUP_ALARM_IS_ON="ALARMON";
 	public static final String SHARE_PREFERENCE_CUP_ALARM_TIME="ALARMTIME";
 	public static final String SHARE_PREFERENCE_CUP_ALARM_ENABLE="ALARM_ENABLE";
+	public static final String SHARE_PREFERENCE_CUP_ALARM_TITLE="ALARM_TITLE";
 	
 	public static final boolean SHARE_PREFERENCE_CUP_ALARM_DEFAULT=true;
 	
