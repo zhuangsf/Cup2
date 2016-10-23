@@ -906,8 +906,8 @@ public class MainActivity extends Activity {
 			// 如果是闹钟响起跳转来的，播个音乐
 			// 初始化音乐资源
 			try {
-				showNotification(this,"喝水提醒","喝水时间到啦"+" 来自闹钟"+index,3344);
-				timeUpAlertDialog=new AlertDialog.Builder(this).setMessage("亲！已到设定饮水时间咯！\n请及时享用哦 来自闹钟"+index).setTitle("温馨提示")
+				showNotification(this,"喝水提醒","喝水时间到啦",3344);
+				timeUpAlertDialog=new AlertDialog.Builder(this).setMessage("亲！已到设定饮水时间咯！\n请及时享用哦 ").setTitle("温馨提示")
 						.setPositiveButton("确定", null).create();
 				timeUpAlertDialog.show();
 				if(fTime != null)
