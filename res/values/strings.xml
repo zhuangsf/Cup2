@@ -76,7 +76,8 @@
     <string name="Month">M</string>
     <string name="Day">D</string>
     
-    
+    <drawable name="label_state_check_false">#ffffff</drawable>
+    <drawable name="label_state_check_true">#ff0000</drawable>
     <declare-styleable name="GifTextureView"><attr format="reference|string" name="gifSource"/><attr format="boolean" name="isOpaque"/></declare-styleable>
     <declare-styleable name="GifView"><attr format="boolean" name="freezesAnimation"/></declare-styleable>
 </resources>

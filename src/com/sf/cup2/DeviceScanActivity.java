@@ -63,6 +63,7 @@ public class DeviceScanActivity extends Activity {
     
     LinearLayout bt_device_layout;
     TextView device_status_text;
+    TextView device_status_text2;
     CircleWaveView device_circle_wave_view;
     ListView device_list;
     AlertDialog alertDialog;
@@ -80,40 +81,77 @@ public class DeviceScanActivity extends Activity {
     	     {
 				case 1:
 					if (alertDialog == null) {
-						alertDialog=new AlertDialog.Builder(DeviceScanActivity.this)
-								.setTitle(R.string.tips)
-								.setMessage(R.string.not_find_device)
-								.setCancelable(false)
-								.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										scanLeDevice(true);
-									}
-								})
-								.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										Intent intent = new Intent();
-										setResult(RESULT_CANCELED, intent);
-										finish();
-									}
-								}).create();
+						
+						LayoutInflater inflater = DeviceScanActivity.this.getLayoutInflater();
+						final View layout = inflater.inflate(R.layout.red_title_dialog, null);
+						
+						TextView title = (TextView)layout.findViewById(R.id.title);
+						title.setText("温馨提示");
+						TextView summary = (TextView)layout.findViewById(R.id.summary);
+						summary.setText(R.string.not_find_device);
+						TextView ok = (TextView) layout.findViewById(R.id.ok);
+						ok.setText(R.string.retry);
+						ok.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								scanLeDevice(true);
+								alertDialog.dismiss();
+										
+							}
+						});
+						
+						TextView cancel = (TextView) layout.findViewById(R.id.cancel);
+						cancel.setText(R.string.quit);
+						cancel.setOnClickListener(new OnClickListener() {
+							public void onClick(View v) {
+								
+								Intent intent = new Intent();
+								setResult(RESULT_CANCELED, intent);
+								alertDialog.dismiss();
+								finish();
+								
+							}
+						});
+						AlertDialog.Builder alertBuiler = new AlertDialog.Builder(DeviceScanActivity.this);
+						alertDialog = alertBuiler.create();
+						alertDialog.setView(layout);
+						
+						
+						
+						
+//						alertDialog=new AlertDialog.Builder(DeviceScanActivity.this)
+//								.setTitle(R.string.tips)
+//								.setMessage(R.string.not_find_device)
+//								.setCancelable(false)
+//								.setPositiveButton(R.string.retry, new DialogInterface.OnClickListener() {
+//									@Override
+//									public void onClick(DialogInterface dialog, int which) {
+//										scanLeDevice(true);
+//									}
+//								})
+//								.setNegativeButton(R.string.quit, new DialogInterface.OnClickListener() {
+//									@Override
+//									public void onClick(DialogInterface dialog, int which) {
+//										Intent intent = new Intent();
+//										setResult(RESULT_CANCELED, intent);
+//										finish();
+//									}
+//								}).create();
 					}
 					try {
 						if(!isFindBtDevices){
 							alertDialog.show();
 							
-							alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnLongClickListener(new OnLongClickListener() {
-								@Override
-								public boolean onLongClick(View v) {
-									  Intent intent=new Intent();  
-								        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, "");
-								        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, "");
-								        setResult(RESULT_OK, intent);  
-								        finish();
-									return false;
-								}
-							});
+//							alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setOnLongClickListener(new OnLongClickListener() {
+//								@Override
+//								public boolean onLongClick(View v) {
+//									  Intent intent=new Intent();  
+//								        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, "");
+//								        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, "");
+//								        setResult(RESULT_OK, intent);  
+//								        finish();
+//									return false;
+//								}
+//							});
 						}
 					} catch (Exception e) {
 						alertDialog=null;
@@ -149,7 +187,7 @@ public class DeviceScanActivity extends Activity {
         bt_device_layout=(LinearLayout)findViewById(R.id.bt_device_layout);
         
         device_status_text=(TextView)findViewById(R.id.device_status_text);
-        
+        device_status_text2=(TextView)findViewById(R.id.device_status_text2);
         device_circle_wave_view=(CircleWaveView)findViewById(R.id.device_circle_wave_view);
         
         device_list=(ListView)findViewById(R.id.device_list);
@@ -310,7 +348,7 @@ public class DeviceScanActivity extends Activity {
             if (view == null) {
                 view = mInflator.inflate(R.layout.listitem_device, null);
                 viewHolder = new ViewHolder();
-                viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
+                //viewHolder.deviceAddress = (TextView) view.findViewById(R.id.device_address);
                 viewHolder.deviceName = (TextView) view.findViewById(R.id.device_name);
                 view.setTag(viewHolder);
             } else {
@@ -322,8 +360,11 @@ public class DeviceScanActivity extends Activity {
             if (deviceName != null && deviceName.length() > 0)
                 viewHolder.deviceName.setText(deviceName);
             else
-                viewHolder.deviceName.setText(R.string.unknown_device);
-            viewHolder.deviceAddress.setText(device.getAddress());
+            {
+                //viewHolder.deviceName.setText(R.string.unknown_device);
+                viewHolder.deviceName.setText(device.getAddress());
+            }
+            //viewHolder.deviceAddress.setText(device.getAddress());
 
             
             view.setOnClickListener(new OnClickListener() {
@@ -337,7 +378,8 @@ public class DeviceScanActivity extends Activity {
         @Override
 		public void notifyDataSetChanged() {
 			super.notifyDataSetChanged();
-			device_status_text.setText("设备：");
+			device_status_text.setText("发现智能水杯");
+			device_status_text2.setVisibility(View.GONE);
 			device_circle_wave_view.setVisibility(View.GONE);
 			isFindBtDevices=true;
 		}
