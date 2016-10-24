@@ -14,12 +14,14 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-public class FragmentAccount extends FragmentPack {
+public class FragmentHomeAccount extends FragmentPack {
  
 	private TextView phone_number;
 	private String account;
 	private ImageView goBack;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,18 +51,27 @@ public class FragmentAccount extends FragmentPack {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
             	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
             	ft.add(R.id.fragmentfield, new FragmentHome());
-            	ft.remove(FragmentAccount.this);
+            	ft.remove(FragmentHomeAccount.this);
             	ft.addToBackStack(null);
 				ft.commit();
 			}
 		});
-    	
+		
+		View phone_account=view.findViewById(R.id.phone_account);
+		phone_account.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(getActivity(),
+						getResources().getString(R.string.phone_bind),
+						Toast.LENGTH_SHORT).show();
+			}
+		});
         return view;
     }
  
     
-    public static FragmentAccount newInstance(Bundle b){
-    	FragmentAccount fd=new FragmentAccount();
+    public static FragmentHomeAccount newInstance(Bundle b){
+    	FragmentHomeAccount fd=new FragmentHomeAccount();
 			fd.setArguments(b);
 			return fd;
 		}
@@ -94,6 +105,6 @@ public class FragmentAccount extends FragmentPack {
 
 	@Override
 	protected String getPageName() {
-		return FragmentAccount.class.getName();
+		return FragmentHomeAccount.class.getName();
 	}
 }

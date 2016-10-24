@@ -376,7 +376,7 @@ public class FragmentHome extends FragmentPack {
 				// go to personal info
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-				ft.add(R.id.fragmentfield, new FragmentAccount());
+				ft.add(R.id.fragmentfield, new FragmentHomeAccount());
 				ft.remove(FragmentHome.this);
 				ft.addToBackStack(null);
 				ft.commit();
