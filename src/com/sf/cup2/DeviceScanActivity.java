@@ -111,6 +111,19 @@ public class DeviceScanActivity extends Activity {
 								
 							}
 						});
+						
+						cancel.setOnLongClickListener(new OnLongClickListener() {
+							@Override
+							public boolean onLongClick(View v) {
+								  Intent intent=new Intent();  
+							        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, "");
+							        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, "");
+							        setResult(RESULT_OK, intent);  
+							        finish();
+								return false;
+							}
+						});
+							
 						AlertDialog.Builder alertBuiler = new AlertDialog.Builder(DeviceScanActivity.this);
 						alertDialog = alertBuiler.create();
 						alertDialog.setView(layout);
