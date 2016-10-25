@@ -8,6 +8,7 @@ import java.util.Arrays;
 
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -58,7 +59,20 @@ public class FragmentTimeEdit extends FragmentPack {
 	    popupWindow.setFocusable(true);  
 	    popupWindow.setBackgroundDrawable(getActivity().getResources().getDrawable(R.drawable.bounced_success) );
 	   
-	    
+	    popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+
+			public void onDismiss() {
+			// TODO Auto-generated method stub
+				defaultTitle = null;
+            	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+            	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            	ft.add(R.id.fragmentfield, new FragmentTime());
+            	ft.remove(FragmentTimeEdit.this);
+            	ft.addToBackStack(null);
+				ft.commit();
+			}
+		});
+
 	    handler = new Handler();  
 	    runnable = new Runnable() {  
 	        @Override  
@@ -69,14 +83,14 @@ public class FragmentTimeEdit extends FragmentPack {
 	            	{
 	            		popupWindow.dismiss();
 	            		
-	            		defaultTitle = null;
 	            		
-	                	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
-	                	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-	                	ft.add(R.id.fragmentfield, new FragmentTime());
-	                	ft.remove(FragmentTimeEdit.this);
-	                	ft.addToBackStack(null);
-	    				ft.commit();
+	            		
+//	                	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
+//	                	ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//	                	ft.add(R.id.fragmentfield, new FragmentTime());
+//	                	ft.remove(FragmentTimeEdit.this);
+//	                	ft.addToBackStack(null);
+//	    				ft.commit();
 	            		
 	            	}
 	            } catch (Exception e) {  
