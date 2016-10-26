@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -22,7 +23,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 public class FragmentRemind extends FragmentPack {
  
 
-	private ImageView goBack;
+	private LinearLayout goBack;
 	private String appPush_Value;
 	private TextView hintText;
 	private ToggleButton mTogBtn;
@@ -77,7 +78,7 @@ public class FragmentRemind extends FragmentPack {
     		mTogBtn.setChecked(false);
     	}
     	
-		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack = (LinearLayout)view.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();

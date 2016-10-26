@@ -14,13 +14,14 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class FragmentHomeUpdate extends FragmentPack {
  
 	Button goBackButton;
 	TextView pair_info;
-	private ImageView goBack;
+	private LinearLayout goBack;
 	private TextView update;
 	AlertDialog ad;	
     @Override
@@ -35,7 +36,7 @@ public class FragmentHomeUpdate extends FragmentPack {
     	if(true){//获取蓝牙配对信息
     		pair_info.setText(R.string.cup_number1);
     	}
-		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack = (LinearLayout)view.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();

@@ -86,7 +86,7 @@ public class FragmentHomePerson extends FragmentPack {
 	RelativeLayout mainLayout;
 	LinearLayout avatar_layout;
 	ImageView avatar_image;
-	private ImageView goBack;
+	private LinearLayout goBack;
 	
 	private SelectPicPopupWindow menuWindow; // 自定义的头像编辑弹出框
 	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
@@ -169,7 +169,7 @@ public class FragmentHomePerson extends FragmentPack {
 		mainLayout = (RelativeLayout) view.findViewById(R.id.mainLayout);
 
 		
-		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack = (LinearLayout)view.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();

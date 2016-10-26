@@ -40,6 +40,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -70,7 +71,7 @@ public class FragmentTime extends FragmentPack {
 
 	private SwipeMenuListView mAlarmsList;
 	private AlarmsListAdapter alarmsListAdapter;
-	ImageView add_alarm_button;
+	LinearLayout add_alarm_button;
 	private SharedPreferences mSharedPreferences;
 	List<Map<String, Object>> mListData = new ArrayList<Map<String, Object>>();
 	AlarmManager mAlarmManager;
@@ -448,7 +449,7 @@ public class FragmentTime extends FragmentPack {
 
 		
 		water_alarm = (ImageView) v.findViewById(R.id.img_alarm);
-		add_alarm_button = (ImageView) v.findViewById(R.id.add_alarm_button);
+		add_alarm_button = (LinearLayout) v.findViewById(R.id.add_alarm_button);
 		updateAddButtonStatus();
 
 		add_alarm_button.setOnClickListener(new OnClickListener() {

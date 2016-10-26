@@ -58,6 +58,7 @@ import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,7 +88,7 @@ public class FragmentData extends FragmentPack {
 	private TextView water_target;
 	private TextView complete_percent;
 	private PercentView percentView;
-	private ImageView share;
+	private LinearLayout share;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -219,7 +220,7 @@ public class FragmentData extends FragmentPack {
 		    }  
 		});  		
 		
-		share = (ImageView) view.findViewById(R.id.share);
+		share = (LinearLayout) view.findViewById(R.id.share);
 		
 		share.setOnClickListener(new View.OnClickListener() {  
 		      

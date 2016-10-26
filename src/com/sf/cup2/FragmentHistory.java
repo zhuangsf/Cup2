@@ -79,12 +79,12 @@ public class FragmentHistory extends FragmentPack {
 	private DBAdapter mdbAdapter;
 	private ListView mHistoryList;
 	private SimpleAdapter historyListAdapter;
-	private ImageView share;
+	private LinearLayout share;
 	private ImageView buttonDay;
 	private ImageView buttonWeek;
 	private ImageView buttonMonth;
 	private LinearLayout month_view;
-	private ImageView goBack;
+	private LinearLayout goBack;
 	//当前点击的按钮
 	private int currentClick = R.id.history_day;
 	public static FragmentHistory newInstance(Bundle b) {
@@ -123,7 +123,7 @@ public class FragmentHistory extends FragmentPack {
 	public void initLayout(View view){
 		
 		
-		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack = (LinearLayout)view.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
@@ -176,7 +176,7 @@ public class FragmentHistory extends FragmentPack {
 	            }  
 	        });  
 		
-			share = (ImageView) view.findViewById(R.id.share);
+			share = (LinearLayout) view.findViewById(R.id.share);
 			
 			share.setOnClickListener(new View.OnClickListener() {  
 			      

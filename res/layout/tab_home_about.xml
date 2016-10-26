@@ -7,41 +7,46 @@
 
         <LinearLayout
             android:id="@+id/header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
             android:background="@layout/header_gradient"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp" >
-            
+		 >
+                    <LinearLayout
+            android:id="@+id/goBack"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
                         <ImageView
-                android:id="@+id/goBack"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                 android:layout_gravity="center"
                 android:scaleType="fitStart"
                 android:src="@drawable/bar_icon_back_white" />
+        </LinearLayout>
             <TextView
                 android:id="@id/title"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:layout_height="wrap_content"
+                android:layout_height="fill_parent"
                 android:gravity="center"
                 android:text="关于"
                 android:textColor="@android:color/white"
                 android:textSize="20sp" />
-
+                    <LinearLayout
+            android:id="@+id/share"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
             <ImageView
-                android:id="@+id/share"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitEnd"
                 android:src="@drawable/icon_share"
                 android:visibility="invisible" />
+        </LinearLayout>
 
     </LinearLayout>
 

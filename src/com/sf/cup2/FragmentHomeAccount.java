@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ public class FragmentHomeAccount extends FragmentPack {
  
 	private TextView phone_number;
 	private String account;
-	private ImageView goBack;
+	private LinearLayout goBack;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class FragmentHomeAccount extends FragmentPack {
     	}
     	
     	
-		goBack = (ImageView)view.findViewById(R.id.goBack);
+		goBack = (LinearLayout)view.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();

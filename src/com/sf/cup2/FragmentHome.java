@@ -39,6 +39,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -52,7 +53,7 @@ public class FragmentHome extends FragmentPack {
 	ListView homeList2View;
 	String[] listTitle;
 	String[] list2Title;
-	private ImageView exit;
+	private LinearLayout exit;
 
 	private static final String IMAGE_FILE_NAME = "avatarImage.jpg";// 头像文件名称
 	private static final String IMAGE_FILE_NAME_CROP = "avatarImage_crop.jpg";// 头像文件名称
@@ -122,7 +123,7 @@ public class FragmentHome extends FragmentPack {
 		setHeight(hlva2, homeList2View);
 		homeList2View.setAdapter(hlva2);
 
-		exit = (ImageView) view.findViewById(R.id.exit);
+		exit = (LinearLayout) view.findViewById(R.id.exit);
 		exit.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// todo 退出的操作

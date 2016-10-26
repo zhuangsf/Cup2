@@ -40,8 +40,8 @@ public class FragmentHomePlan extends FragmentPack {
 	private ScrollView ruler;
 	private LinearLayout rulerlayout;
 
-	private ImageView goBack;
-	private ImageView save;
+	private LinearLayout goBack;
+	private LinearLayout save;
 	
 	private TextView line_hint;
 	private TextView title1;
@@ -140,7 +140,7 @@ public class FragmentHomePlan extends FragmentPack {
 			}
 		}), 10);
 
-		goBack = (ImageView)v.findViewById(R.id.goBack);
+		goBack = (LinearLayout)v.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();
@@ -151,7 +151,7 @@ public class FragmentHomePlan extends FragmentPack {
 				ft.commit();
 			}
 		});
-		save = (ImageView)v.findViewById(R.id.save);
+		save = (LinearLayout)v.findViewById(R.id.save);
 		save.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 			//todo 保存的操作

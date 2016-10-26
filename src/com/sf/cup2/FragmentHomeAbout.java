@@ -21,6 +21,7 @@ import android.view.ViewGroup.LayoutParams;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 
@@ -30,7 +31,7 @@ public class FragmentHomeAbout extends FragmentPack {
 	ListView about_list_view;
 	String[] listTitle;
 	private int[] listDrawable;
-	private ImageView goBack;
+	private LinearLayout goBack;
 	
 	private static final int GO_WEB_INDEX = 0;
 	private static final int GO_BUY_INDEX = 1;
@@ -58,7 +59,7 @@ public class FragmentHomeAbout extends FragmentPack {
 		about_list_view.setAdapter(alva);
 
 		
-		goBack = (ImageView)v.findViewById(R.id.goBack);
+		goBack = (LinearLayout)v.findViewById(R.id.goBack);
 		goBack.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
             	FragmentTransaction ft=getActivity().getFragmentManager().beginTransaction();

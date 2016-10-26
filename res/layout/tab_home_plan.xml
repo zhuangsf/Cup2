@@ -6,44 +6,51 @@
     android:orientation="vertical" >
 
 
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:background="@android:color/white" >
+
         <LinearLayout
-            android:id="@+id/header"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@android:color/white"
-            android:paddingBottom="15dp"
-            android:paddingTop="15dp" >
-
-                      <ImageView
-                android:id="@+id/goBack"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_weight="1"
-                 android:layout_gravity="center"
-                android:scaleType="fitStart"
-                android:src="@drawable/bar_icon_back" />
-
-                                  <TextView
-                android:id="@id/title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                 android:text="饮水计划设置"
-                android:textColor="@android:color/black"
-                android:textSize="20sp" />
+            android:id="@+id/goBack"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
 
             <ImageView
-                android:id="@+id/save"
-                android:layout_width="0dp"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:scaleType="fitStart"
+                android:src="@drawable/bar_icon_back" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@id/title"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="计划设置"
+            android:textColor="@android:color/black"
+            android:textSize="20sp" />
+
+        <LinearLayout
+            android:id="@+id/save"
+            android:layout_width="0dp"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginRight="10dp"
-                android:layout_weight="1"
                 android:scaleType="fitEnd"
-                android:src="@drawable/bar_icon_save"
-                />
-
+                android:src="@drawable/bar_icon_save" />
+        </LinearLayout>
     </LinearLayout>
                       
 
