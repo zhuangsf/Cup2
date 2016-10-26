@@ -105,6 +105,9 @@ public class FragmentHomePlan extends FragmentPack {
 				int action = event.getAction();
 				planValue = String.valueOf((int) Math.ceil(ruler.getScrollY()));
 				line_hint.setText(String.valueOf((int) Math.ceil(ruler.getScrollY())) +"ml");
+				
+				Utils.Log("onTouch action = "+action+" planValue = "+planValue);
+				
 				switch (action) {
 				case MotionEvent.ACTION_DOWN:
 				case MotionEvent.ACTION_MOVE:
@@ -113,6 +116,7 @@ public class FragmentHomePlan extends FragmentPack {
 					new Handler().postDelayed(new Runnable() {
 						@Override
 						public void run() {
+							planValue = String.valueOf((int) Math.ceil(ruler.getScrollY()));
 							line_hint.setText(String.valueOf((int) Math.ceil(ruler.getScrollY())) +"ml");
 						}
 					}, 1000);
@@ -157,6 +161,9 @@ public class FragmentHomePlan extends FragmentPack {
 			//todo 保存的操作
 				popupWindow.showAtLocation(popupView, Gravity.CENTER_VERTICAL, 0, 0); 
 			//	title1.setText("每天需要的饮水量(根据您的个人信息)推荐值约为 "+planValue+" ml");
+				
+				
+				Utils.Log("save planValue = "+planValue);
 				
 				SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
 				e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
