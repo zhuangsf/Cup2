@@ -97,7 +97,9 @@ public class FragmentHome extends FragmentPack {
 		listTitle = res.getStringArray(R.array.home_list_top_title);
 		list2Title = res.getStringArray(R.array.home_list_down_title);
 		listDrawable = new int[] { R.drawable.icon_modify, R.drawable.icon_plan, };
-		list2Drawable = new int[] { R.drawable.icon_account, R.drawable.icon_warn, R.drawable.icon_pairing, R.drawable.icon_nickname, R.drawable.icon_about, };
+		list2Drawable = new int[] { R.drawable.icon_account, 
+				                    // R.drawable.icon_warn, 
+				                     R.drawable.icon_pairing, R.drawable.icon_nickname, R.drawable.icon_about, };
 
 	}
 
@@ -381,15 +383,17 @@ public class FragmentHome extends FragmentPack {
 				ft.remove(FragmentHome.this);
 				ft.addToBackStack(null);
 				ft.commit();
-			} else if (1 == mPosition) {
-				// go to personal info
-				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
-				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-				ft.add(R.id.fragmentfield, new FragmentRemind());
-				ft.remove(FragmentHome.this);
-				ft.addToBackStack(null);
-				ft.commit();
-			} else if (2 == mPosition) {
+			} 
+//			else if (1 == mPosition) {
+//				// go to personal info
+//				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+//				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+//				ft.add(R.id.fragmentfield, new FragmentRemind());
+//				ft.remove(FragmentHome.this);
+//				ft.addToBackStack(null);
+//				ft.commit();
+//			}
+			else if (1 == mPosition) {
 				// go to personal info
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -397,7 +401,7 @@ public class FragmentHome extends FragmentPack {
 				ft.remove(FragmentHome.this);
 				ft.addToBackStack(null);
 				ft.commit();
-			} else if (3 == mPosition) {
+			} else if (2 == mPosition) {
 				// go to personal info
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
@@ -405,7 +409,7 @@ public class FragmentHome extends FragmentPack {
 				ft.remove(FragmentHome.this);
 				ft.addToBackStack(null);
 				ft.commit();
-			} else if (4 == mPosition) {
+			} else if (3 == mPosition) {
 				// go to personal info
 				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
 				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
