@@ -34,6 +34,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -223,6 +224,27 @@ public class MainActivity extends Activity {
         }
     };
 
+    private void adjustCupTime()
+    {
+		Time t = new Time("GMT+8"); 
+		t.setToNow(); // 取得系统时间。
+		int hour = (t.hour +8) % 24; // 0-23
+		int minute = t.minute;
+		StringBuffer sb_celibrate = new StringBuffer("");
+		StringBuffer sb_send = new StringBuffer("");
+		
+		
+		Utils.Log("sentMsgToBt string hour:"+hour+" minute = "+minute);
+		sb_celibrate.append("660200");
+		sb_celibrate.append(String.format("%02X", hour));
+		sb_celibrate.append(String.format("%02X", minute));
+		sb_celibrate.append("0A");
+		sb_celibrate.append(String.format("%02X", 02+hour+minute+10));
+		sb_celibrate.append("BB");
+		Utils.Log("sentMsgToBt string cmd:"+sb_celibrate.toString());
+		sentMsgToBt(sb_celibrate.toString());
+    }
+    
     // Handles various events fired by the Service.
     // ACTION_GATT_CONNECTED: connected to a GATT server.
     // ACTION_GATT_DISCONNECTED: disconnected from a GATT server.
@@ -244,6 +266,7 @@ public class MainActivity extends Activity {
    					mHandler.removeMessages(MSG_STOP_WAIT_BT);//connect success remove the hint
    		        }
                 Toast.makeText(MainActivity.this, "蓝牙水杯已连接", Toast.LENGTH_SHORT).show();
+                
             } else if (BluetoothLeService.ACTION_GATT_DISCONNECTED.equals(action)) {
                 mConnected = false;
                 Utils.Log("xxxxxxxxxxxxxxxxxx BroadcastReceiver ACTION_GATT_DISCONNECTED mConnected:"+mConnected);
@@ -258,9 +281,11 @@ public class MainActivity extends Activity {
             } else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED.equals(action)) {
             
                 // Show all the supported services and characteristics on the user interface.
-                displayGattServices(mBluetoothLeService.getSupportedGattServices());
+                //displayGattServices(mBluetoothLeService.getSupportedGattServices());
                 
                 //sentMsgToBt("test","test","test");
+            	
+            	adjustCupTime();
                 
                 Utils.Log("ACTION_GATT_SERVICES_DISCOVERED");
                 
@@ -368,7 +393,7 @@ public class MainActivity extends Activity {
     			return; //无效数据,返回
     		}
     		
-    		String hour = responeStringArray[3];
+    		String hour = Integer.parseInt(responeStringArray[3], 16)+"";
     		String minute = Integer.parseInt(responeStringArray[4], 16)+"";
     		
     		Utils.Log("drinkWater = "+drinkWater);
@@ -386,10 +411,10 @@ public class MainActivity extends Activity {
     			Utils.Log("format.format(date) = "+format.format(date));
 	    		DBAdapter db = new DBAdapter(this);
 	    		db.open();
-	//     		long id = db.insertWaterData(
-	//     		format.format(date),
-	//    		hour+":"+minute,
-	//    		Integer.toString(drinkWater));
+	     		long id = db.insertWaterData(
+	     		format.format(date),
+	    		hour+":"+minute,
+	    		Integer.toString(drinkWater));
 	     			     		
 	     		db.close();
 	     		
@@ -560,7 +585,7 @@ public class MainActivity extends Activity {
 				return ;
 			}
 
-			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt:" + action);
+			Utils.Log("sentMsgToBt:" + action);
 			BluetoothGattService gattService = mBluetoothLeService
 					.getGattService(UUID.fromString(Utils.BT_SEND_SERVICE_UUID));
 			BluetoothGattCharacteristic characteristic = gattService
@@ -571,7 +596,7 @@ public class MainActivity extends Activity {
 			characteristic.setValue(hex2byte(action.getBytes())); 
 			mBluetoothLeService.writeCharacteristic(characteristic);
 		} catch (Exception e) {
-			Utils.Log("xxxxxxxxxxxxxxxxxx sentMsgToBt error:" + e);
+			Utils.Log("sentMsgToBt error:" + e);
 		}
 	}
     
@@ -579,7 +604,8 @@ public class MainActivity extends Activity {
 	{
 		DBAdapter db = new DBAdapter(this);
 		db.open();
-		if(db.bIsEmptyData())
+		boolean bSimulateData = false;
+		if(bSimulateData)
 		{
 				long id;
 				String date = "2016-09-21";
@@ -624,8 +650,8 @@ public class MainActivity extends Activity {
 		}
 		// 2,login first
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
-		if (TextUtils.isEmpty(phonenum)) {
-	//	if(false){
+	//	if (TextUtils.isEmpty(phonenum)) {
+		if(false){
 			Intent i = new Intent(this, LoginActivity.class);
 			startActivity(i);
 			finish();

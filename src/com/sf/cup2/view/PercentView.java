@@ -166,7 +166,7 @@ public class PercentView extends View{
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.i("PercentVIew", "开始绘制" + count);
+  //      Log.i("PercentVIew", "开始绘制" + count);
         long startTime=System.currentTimeMillis();
         count++;
         width = getWidth(); //获取宽度
@@ -176,7 +176,7 @@ public class PercentView extends View{
 
         radius= (int) (9 * height/(16*(1+Math.sin(Math.toRadians(spaceAngle)))));//获取最外园的半径
         insideArcRadius= radius;//内弧半径
-        Log.i("PercentVIew","最外园半径"+radius+" 高度为"+height+" 宽度为"+width);
+//        Log.i("PercentVIew","最外园半径"+radius+" 高度为"+height+" 宽度为"+width);
 //        Log.i(TAG,"最外园半径"+Math.sin(Math.toRadians(spaceAngle)));
 //        paintPercentText(mCanvas);
         paintPercentBack(mCanvas);
@@ -186,7 +186,7 @@ public class PercentView extends View{
         paintText(mCanvas);
         canvas.drawBitmap(mBitmap, 0, 0, null);
         long endTime=System.currentTimeMillis();
-        Log.i("PercentVIew", "绘制结束" + (endTime-startTime));
+    //    Log.i("PercentVIew", "绘制结束" + (endTime-startTime));
     }
 
     /**

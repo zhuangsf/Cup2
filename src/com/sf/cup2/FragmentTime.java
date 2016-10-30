@@ -184,17 +184,17 @@ public class FragmentTime extends FragmentPack {
 		StringBuffer sb_celibrate = new StringBuffer("");
 		StringBuffer sb_send = new StringBuffer("");
 		
-		
-		Utils.Log("sentMsgToBt string hour:"+hour+" minute = "+minute);
-		sb_celibrate.append("6602");
-		sb_celibrate.append(String.format("%02X", nextAlarmPosition+1));
-		sb_celibrate.append(String.format("%02X", hour));
-		sb_celibrate.append(String.format("%02X", minute));
-		sb_celibrate.append("0A");
-		sb_celibrate.append(String.format("%02X", 02+nextAlarmPosition+1+hour+minute+10));
-		sb_celibrate.append("BB");
-		Utils.Log("sentMsgToBt string cmd:"+sb_celibrate.toString());
-		((MainActivity)getActivity()).sentMsgToBt(sb_celibrate.toString());
+		//时间校准放到蓝牙连接上之后
+//		Utils.Log("sentMsgToBt string hour:"+hour+" minute = "+minute);
+//		sb_celibrate.append("6602");
+//		sb_celibrate.append(String.format("%02X", nextAlarmPosition+1));
+//		sb_celibrate.append(String.format("%02X", hour));
+//		sb_celibrate.append(String.format("%02X", minute));
+//		sb_celibrate.append("0A");
+//		sb_celibrate.append(String.format("%02X", 02+nextAlarmPosition+1+hour+minute+10));
+//		sb_celibrate.append("BB");
+//		Utils.Log("sentMsgToBt string cmd:"+sb_celibrate.toString());
+//		((MainActivity)getActivity()).sentMsgToBt(sb_celibrate.toString());
 		
 		sb_send.append("6602");
 		sb_send.append(String.format("%02X", nextAlarmPosition+1));
