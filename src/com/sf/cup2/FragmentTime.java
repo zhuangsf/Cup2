@@ -82,7 +82,7 @@ public class FragmentTime extends FragmentPack {
 	public void setNextAlarm()    //获得最近一个闹钟
 	{
 		int nextAlarmPosition = -1;
-		
+		Utils.Log("setNextAlarm start");
 		Time t = new Time("GMT+8"); 
 		t.setToNow(); // 取得系统时间。
 		int year = t.year;
@@ -118,6 +118,8 @@ public class FragmentTime extends FragmentPack {
 			}
 		}
 
+		Utils.Log("setNextAlarm nextAlarmPosition = "+nextAlarmPosition);
+		
 		//没有闹钟了
 		if(nextAlarmPosition == -1)
 		{
@@ -156,6 +158,9 @@ public class FragmentTime extends FragmentPack {
 		}
 		// 计算现在时间到设定时间的时间差
 		long time = selectTime - systemTime;
+		
+		Utils.Log("sentMsgToBt 距离现在 "+time+" 毫秒");
+		
 		firstTime += time;
 		
 		
@@ -163,11 +168,16 @@ public class FragmentTime extends FragmentPack {
 		{
 			mAlarmManager.cancel(getPendingIntent(i));
 		}
-		mAlarmManager.setRepeating(
-						AlarmManager.ELAPSED_REALTIME_WAKEUP,
-						firstTime,
-						ONE_DAY,
-						getPendingIntent(nextAlarmPosition));
+		
+		 mAlarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP,
+				 firstTime, getPendingIntent(nextAlarmPosition));		
+		
+		
+//		mAlarmManager.setRepeating(
+//						AlarmManager.ELAPSED_REALTIME_WAKEUP,
+//						firstTime,
+//						ONE_DAY,
+//						getPendingIntent(nextAlarmPosition));
 		
 		
 		//6602 01 时 分 00/0a校验  sum  bb
@@ -708,6 +718,7 @@ public class FragmentTime extends FragmentPack {
 		super.onResume();
 		Utils.Log("onResume setNextAlarm");
 		setNextAlarm();
+		//dumpData();
 	}
 	
 	
