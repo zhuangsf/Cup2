@@ -90,7 +90,8 @@ public class FragmentHistory extends FragmentPack {
 	private ImageView buttonMonth;
 	private LinearLayout month_view;
 	private LinearLayout goBack;
-	
+	private TextView month_text;
+	private TextView year_text;
 	List<HashMap<String, Object>> maps_day = new ArrayList<HashMap<String,Object>>();
 	List<HashMap<String, Object>> maps_weekAndmonth = new ArrayList<HashMap<String,Object>>();
 	//当前点击的按钮
@@ -299,7 +300,11 @@ public class FragmentHistory extends FragmentPack {
 	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month);
 	            }  
 	        });  
-		
+		  
+		  month_text = (TextView) view.findViewById(R.id.month_text);  	
+		  year_text = (TextView) view.findViewById(R.id.year_text);  
+		 
+		  
 			share = (LinearLayout) view.findViewById(R.id.share);
 			
 			share.setOnClickListener(new View.OnClickListener() {  
@@ -406,6 +411,7 @@ public class FragmentHistory extends FragmentPack {
 	private void showDayData()
 	{
 		month_view.setVisibility(View.GONE);
+		
 		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
 		mHistoryList.setAdapter(historyListAdapter);		
 		reflashChartData(mClickDateString);
@@ -413,6 +419,10 @@ public class FragmentHistory extends FragmentPack {
 	private void showWeekData()
 	{
 		month_view.setVisibility(View.VISIBLE);
+		  String[] dataString = mClickDateString.split("-");
+		  month_text.setText(dataString[1]);
+		  year_text.setText("月"+dataString[0]);
+		
 		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(false), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
 		mHistoryList.setAdapter(historyListAdapter);
 		
@@ -422,6 +432,10 @@ public class FragmentHistory extends FragmentPack {
 	private void showMonthData()
 	{
 		month_view.setVisibility(View.VISIBLE);
+		  String[] dataString = mClickDateString.split("-");
+		  month_text.setText(dataString[1]);
+		  year_text.setText("月"+dataString[0]);
+		  
 		historyListAdapter =  new SimpleAdapter(getActivity(), getWeekData(true), R.layout.simple_week_item, new String[]{"image", "time", "value","percent"}, new int[]{R.id.img, R.id.time, R.id.value,R.id.percent});
 		mHistoryList.setAdapter(historyListAdapter);
 		
