@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.app.Instrumentation;
@@ -23,6 +24,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
@@ -59,6 +62,9 @@ public class FragmentAddData extends FragmentPack {
 	
 	private EditText water_value;
 	private String sWaterValue;
+	
+    private View inflate;
+    private Dialog dialog;	
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -170,6 +176,7 @@ public class FragmentAddData extends FragmentPack {
 
 			}
 		});
+		
 		Time t = new Time("GMT+8"); 
 		t.setToNow(); // 取得系统时间。
 		nHour = (t.hour +8) % 24; // 0-23
@@ -177,7 +184,25 @@ public class FragmentAddData extends FragmentPack {
 		time_string  = (TextView) view.findViewById(R.id.time_string);
 		time_string.setText(String.format("%02d:%02d",nHour,nMinute));
 		
-		wheelPickerHour = (WheelPicker) view.findViewById(R.id.wheelPickerHour);
+		
+		time = (LinearLayout) view.findViewById(R.id.time);
+		time.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				showTimeSelectWidget();
+			}
+		});
+
+		return view;
+	}
+
+	
+	public void showTimeSelectWidget( ){
+        dialog = new Dialog(getActivity(),R.style.ActionSheetDialogStyle);
+        //填充对话框的布局
+        inflate = LayoutInflater.from(getActivity()).inflate(R.layout.time_select_widget, null);
+        //初始化控件
+		
+		wheelPickerHour = (WheelPicker) inflate.findViewById(R.id.wheelPickerHour);
 		wheelPickerHour.setData(Arrays.asList(getResources().getStringArray(
 				R.array.WheelArrayHour)));
 		wheelPickerHour.setSelectedItemPosition(nHour);
@@ -209,7 +234,7 @@ public class FragmentAddData extends FragmentPack {
 		
 		// 设置默认值
 
-		wheelPickerMinute = (WheelPicker) view
+		wheelPickerMinute = (WheelPicker) inflate
 				.findViewById(R.id.wheelPickerMinute);
 		wheelPickerMinute.setData(Arrays.asList(getResources().getStringArray(
 				R.array.WheelArrayMinute)));
@@ -240,9 +265,23 @@ public class FragmentAddData extends FragmentPack {
 					
 				}
 		);
-		return view;
-	}
-
+        
+        
+        //将布局设置给Dialog
+        dialog.setContentView(inflate);
+        //获取当前Activity所在的窗体
+        Window dialogWindow = dialog.getWindow();
+        //设置Dialog从窗体底部弹出
+        dialogWindow.setGravity( Gravity.BOTTOM);
+        //获得窗体的属性
+        WindowManager.LayoutParams lp = dialogWindow.getAttributes();
+        lp.y = 20;//设置Dialog距离底部的距离
+//       将属性设置给窗体
+        dialogWindow.setAttributes(lp);
+        dialog.show();//显示对话框
+    }	
+	
+	
 	public static FragmentAddData newInstance(Bundle b) {
 		FragmentAddData fd = new FragmentAddData();
 		fd.setArguments(b);
