@@ -89,6 +89,7 @@ public class FragmentData extends FragmentPack {
 	private TextView complete_percent;
 	private PercentView percentView;
 	private LinearLayout share;
+	private LinearLayout add_data;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -230,6 +231,22 @@ public class FragmentData extends FragmentPack {
 		    	showShare();
 		    }  
 		});  
+		
+		add_data = (LinearLayout) view.findViewById(R.id.add_data);
+		
+		add_data.setOnClickListener(new View.OnClickListener() {  
+		      
+		    @Override  
+		    public void onClick(View v) {  
+				FragmentTransaction ft = getActivity().getFragmentManager().beginTransaction();
+				ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+				ft.add(R.id.fragmentfield, new FragmentAddData());
+				ft.remove(FragmentData.this);
+				ft.addToBackStack(null);
+				ft.commit();	    	
+		    }  
+		});  
+		
 		
 		return view;
 	}

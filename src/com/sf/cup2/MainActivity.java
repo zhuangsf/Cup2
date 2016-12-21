@@ -660,7 +660,7 @@ public class MainActivity extends Activity {
 		}
 
 		// TODO 3,must connect bt                     get info from preference   try to connect bt direct. if can not connect bt  try to scan  #########################################
-		if (true) {
+		if (false) {
 		    Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 			

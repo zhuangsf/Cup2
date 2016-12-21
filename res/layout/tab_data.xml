@@ -19,7 +19,7 @@
 
             
                                 <LinearLayout
-            android:id="@+id/logo"
+            android:id="@+id/add_data"
             android:layout_width="0dp"
             android:layout_height="fill_parent"
             android:layout_weight="1" >
@@ -29,7 +29,7 @@
                 android:layout_gravity="center"
                 android:layout_marginLeft="10dp"
                 android:scaleType="fitStart"
-                android:src="@drawable/icon_logo" />
+                android:src="@drawable/icon_add" />
  </LinearLayout>
             <TextView
                 android:id="@id/title"
