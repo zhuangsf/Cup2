@@ -138,12 +138,12 @@
             android:layout_height="2px"
             android:background="?android:attr/listDivider" />
 
-        <ListView
+        <com.sf.cup2.view.swipelistview.SwipeMenuListView
             android:id="@+id/history_listview"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
             android:layout_weight="1" >
-        </ListView>
+        </com.sf.cup2.view.swipelistview.SwipeMenuListView>
     </LinearLayout>
 
 </LinearLayout>

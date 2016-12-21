@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.Bitmap.Config;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -69,6 +70,10 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.utils.ViewPortHandler;
 import com.sf.cup2.R;
 import com.sf.cup2.utils.Utils;
+import com.sf.cup2.view.swipelistview.SwipeMenu;
+import com.sf.cup2.view.swipelistview.SwipeMenuCreator;
+import com.sf.cup2.view.swipelistview.SwipeMenuItem;
+import com.sf.cup2.view.swipelistview.SwipeMenuListView;
 
 public class FragmentHistory extends FragmentPack {
 	
@@ -77,7 +82,7 @@ public class FragmentHistory extends FragmentPack {
 	private LineChart mChart;
 	private String mClickDateString;
 	private DBAdapter mdbAdapter;
-	private ListView mHistoryList;
+	private SwipeMenuListView mHistoryList;
 	private SimpleAdapter historyListAdapter;
 	private LinearLayout share;
 	private ImageView buttonDay;
@@ -85,6 +90,9 @@ public class FragmentHistory extends FragmentPack {
 	private ImageView buttonMonth;
 	private LinearLayout month_view;
 	private LinearLayout goBack;
+	
+	List<HashMap<String, Object>> maps_day = new ArrayList<HashMap<String,Object>>();
+	List<HashMap<String, Object>> maps_weekAndmonth = new ArrayList<HashMap<String,Object>>();
 	//当前点击的按钮
 	private int currentClick = R.id.history_day;
 	public static FragmentHistory newInstance(Bundle b) {
@@ -137,18 +145,132 @@ public class FragmentHistory extends FragmentPack {
 		
 		month_view = (LinearLayout)view.findViewById(R.id.month_view);
 		mChart = (LineChart) view.findViewById(R.id.chart);
-		mHistoryList = (ListView) view.findViewById(R.id.history_listview);
+		mHistoryList = (SwipeMenuListView) view.findViewById(R.id.history_listview);
 		historyListAdapter =  new SimpleAdapter(getActivity(), getDayData(), R.layout.simple_day_item, new String[]{"image", "time", "value"}, new int[]{R.id.img, R.id.time, R.id.value});
 		mHistoryList.setAdapter(historyListAdapter);
 		setChartStyle(mChart);
 		showDayData();
 
+		
+	     // step 1. create a MenuCreator
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem deleteItem = new SwipeMenuItem(
+                		getActivity());
+                // set item background
+                deleteItem.setBackground(new ColorDrawable(Color.rgb(0xFF,
+                        0x00, 0x00)));
+                // set item width
+                deleteItem.setWidth(100);
+
+                // set a icon
+            //    deleteItem.setIcon(R.drawable.ic_delete);
+                // add to menu
+                deleteItem.setTitle("删除");
+                // set item title fontsize
+                deleteItem.setTitleSize(18);
+                // set item title font color
+                deleteItem.setTitleColor(Color.WHITE);
+                menu.addMenuItem(deleteItem);
+            }
+        };
+        // set creator
+        mHistoryList.setMenuCreator(creator);
+
+        // step 2. listener item click event
+        mHistoryList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(final int position, SwipeMenu menu, int index) {
+            	if(currentClick == R.id.history_day)
+            	{
+            		Log.e("jockeyTrack", "position = "+position+" index = "+index); 
+            		
+            		if(maps_day.size() == 0)
+            		{
+            			return false;
+            		}
+            		
+            		HashMap<String, Object> map = maps_day.get(position);
+            		Long columnID = (Long)map.get("columnID");
+            		Log.e("jockeyTrack", "columnID = "+columnID);
+            		//mClickDateString
+            		mdbAdapter.open();
+           			mdbAdapter.deleteDataByID(columnID);
+            		mdbAdapter.close();
+            		
+            		showDayData();
+            	}
+            	else
+            	{
+            		if(maps_weekAndmonth.size() == 0)
+            		{
+            			return false;
+            		}
+            		HashMap<String, Object> map = maps_weekAndmonth.get(position);
+            		String date = (String)map.get("date");
+            		Log.e("jockeyTrack", "date = "+date);
+            		//mClickDateString
+            		mdbAdapter.open();
+           			mdbAdapter.deleteDataByDate(date);
+            		mdbAdapter.close();
+            		
+            		if(currentClick == R.id.history_week)
+            		{
+            			showWeekData();
+            		}
+            		else
+            		{
+            			showMonthData();
+            		}
+            	}
+            		
+
+
+            		
+        
+           	
+            	
+
+                return false;
+            }
+        });
+
+        // set SwipeListener
+        mHistoryList.setOnSwipeListener(new SwipeMenuListView.OnSwipeListener() {
+
+            @Override
+            public void onSwipeStart(int position) {
+                // swipe start
+            }
+
+            @Override
+            public void onSwipeEnd(int position) {
+                // swipe end
+            }
+        });
+
+        // set MenuStateChangeListener
+        mHistoryList.setOnMenuStateChangeListener(new SwipeMenuListView.OnMenuStateChangeListener() {
+            @Override
+            public void onMenuOpen(int position) {
+            }
+
+            @Override
+            public void onMenuClose(int position) {
+            }
+        });		
+		
+		
 		  buttonDay = (ImageView) view.findViewById(R.id.history_day);  
 		  buttonDay.setOnClickListener(new View.OnClickListener() {  
 	            public void onClick(View v) {  
 	                // Perform action on click  
 	                //增加自己的代码......  
 	            	showDayData();
+	            	currentClick = R.id.history_day;
 	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day);
 	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week_initial);
 	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month_initial);
@@ -160,6 +282,7 @@ public class FragmentHistory extends FragmentPack {
 	                // Perform action on click  
 	                //增加自己的代码......  
 	            	showWeekData(); 
+	            	currentClick = R.id.history_week;
 	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day_initial);
 	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week);
 	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month_initial);
@@ -170,6 +293,7 @@ public class FragmentHistory extends FragmentPack {
 	            public void onClick(View v) {  
 	                // Perform action on click  
 	            	showMonthData();     
+	            	currentClick = R.id.history_month;
 	            	buttonDay.setBackgroundResource(R.drawable.record_icon_day_initial);
 	            	buttonWeek.setBackgroundResource(R.drawable.record_icon_week_initial);
 	            	buttonMonth.setBackgroundResource(R.drawable.record_icon_month);
@@ -311,7 +435,9 @@ public class FragmentHistory extends FragmentPack {
 		{
 			return null;
 		}
-		List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
+		//List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
+		
+		maps_day.clear();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		
 		mdbAdapter.open();
@@ -328,7 +454,8 @@ public class FragmentHistory extends FragmentPack {
 	        map.put("image", R.drawable.record_icon_time);
 	        map.put("time", cursor.getString(DBAdapter.DATA_COLUMN_TIME));
 	        map.put("value", "喝了"+cursor.getString(DBAdapter.DATA_COLUMN_WATER)+"ml");
-			maps.add(map);
+	        map.put("columnID", cursor.getLong(DBAdapter.DATA_COLUMN_ID));
+	        maps_day.add(map);
 		} while (cursor.moveToNext());
 		}
 		
@@ -337,7 +464,7 @@ public class FragmentHistory extends FragmentPack {
 			cursor.close();
 		}
 		mdbAdapter.close();
-		return maps;
+		return maps_day;
 	}
 	
 	private List<HashMap<String, Object>> getWeekData(boolean bMonth) {
@@ -345,7 +472,8 @@ public class FragmentHistory extends FragmentPack {
 		{
 			return null;
 		}
-		List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
+		//List<HashMap<String, Object>> maps = new ArrayList<HashMap<String,Object>>();
+		maps_weekAndmonth.clear();
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd"); 
 		String[] dataString = mClickDateString.split("-");
@@ -375,7 +503,7 @@ public class FragmentHistory extends FragmentPack {
 			        map.put("time", weekdataString[2]+"日");
 			        map.put("value", "已喝"+onedaywater+"ml");
 			        
-			        
+			        map.put("date",sf.format(date));
 					SharedPreferences p = Utils.getSharedPpreference(getActivity());
 					String planValue = p.getString(Utils.SHARE_PREFERENCE_CUP_PLAN, "null");
 					if(Integer.parseInt(planValue) == 0)
@@ -391,12 +519,12 @@ public class FragmentHistory extends FragmentPack {
 					}
 						map.put("percent", "完成 "+percent+"%");
 					}
-					maps.add(map);
+					maps_weekAndmonth.add(map);
 				}
 			}while(++i < days);
 		
 
-		return maps;
+		return maps_weekAndmonth;
 	}	
 	
 	

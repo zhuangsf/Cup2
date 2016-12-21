@@ -89,6 +89,13 @@ public class DBAdapter {
 	public boolean deleteDataByID(long rowId) {
 		return db.delete(DATABASE_TABLE, KEY_ROWID + "=" + rowId, null) > 0;
 	}
+	
+	
+	
+	public boolean deleteDataByDate(String date) {
+		//return db.delete(DATABASE_TABLE, KEY_DATA + "=" + date, null) > 0;
+		return db.delete(DATABASE_TABLE, KEY_DATA+"=?", new String[] {date})  > 0;
+	}
 
 	// ---检索所有数据----
 
