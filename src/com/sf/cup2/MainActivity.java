@@ -23,7 +23,6 @@ import android.bluetooth.BluetoothGattService;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
@@ -37,18 +36,18 @@ import android.text.TextUtils;
 import android.text.format.Time;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.ExpandableListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.RadioGroup.OnCheckedChangeListener;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sf.cup2.guide.SingleGuideView;
 import com.sf.cup2.login.LoginActivity;
 import com.sf.cup2.utils.Utils;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.umeng.analytics.MobclickAgent;
 import com.umeng.analytics.MobclickAgent.EScenarioType;
 
@@ -699,7 +698,7 @@ public class MainActivity extends Activity {
 		
 		//TODO  开发阶段先关闭了，发布测试再打开
 		//add bugly
-		//CrashReport.initCrashReport(getApplicationContext(), "3aad7025f9", false);
+		CrashReport.initCrashReport(getApplicationContext(), "3aad7025f9", false);
 	}
 
 	@Override
