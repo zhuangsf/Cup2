@@ -104,7 +104,7 @@ public class PercentView extends View{
     // 用于控制动画状态转换
     private Handler mAnimatorHandler;
     // 默认的动效周期 2s
-    private int defaultDuration = 2000;
+    private int defaultDuration = 500;
 
 
     public PercentView(Context context) {
