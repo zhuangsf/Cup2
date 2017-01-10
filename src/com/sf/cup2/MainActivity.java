@@ -96,11 +96,15 @@ public class MainActivity extends Activity {
 	private boolean mScanning;
 	AlertDialog connectFailAlertDialog;
 	AlertDialog timeUpAlertDialog;
+	
+
 	private Handler mHandler= new Handler()
  {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+			
+
 			case MSG_STOP_WAIT_BT:
 				if (progressDialog != null) {
 					progressDialog.dismiss();
@@ -188,6 +192,7 @@ public class MainActivity extends Activity {
     private boolean iServiceBind=true;
     private static ProgressDialog progressDialog;// 等待进度圈
     private static final int MSG_STOP_WAIT_BT=2;
+    private static final int MSG_WAIT_BT_RESPOND=3;
  // Stops waiting after 6 seconds.
     private static final long WAIT_PERIOD = 10000;//6000; //too short too connect
     
@@ -356,10 +361,24 @@ public class MainActivity extends Activity {
     private void handleWaterData(String[] responeStringArray)
     {
     	Utils.Log("handleWaterData start  responeStringArray[7] = "+responeStringArray[7]);
-    	if(!"AA".equals(responeStringArray[7]))
+    	
+    	if(!"AA".equals(responeStringArray[7]) )
     	{
     		return;
     	}
+    	
+		String currentCommand = responeStringArray[0]
+				+responeStringArray[1]+responeStringArray[2]+responeStringArray[3]
+						+responeStringArray[4]+responeStringArray[5]+responeStringArray[6]+responeStringArray[7];    	
+		Utils.Log("currentCommand = "+currentCommand);
+		SharedPreferences p = Utils.getSharedPpreference(this);
+		String savedLastCommand = p.getString(Utils.SHARE_PREFERENCE_CUP_LAST_COMMAND," ");
+    	
+		if(currentCommand.equals(savedLastCommand))
+		{
+			Utils.Log("handleWaterData start  currentCommand.equals(savedLastCommand) return");
+			return;
+		}
     	
     	Utils.Log("1+2+3+4+5 = "+(Integer.parseInt(responeStringArray[1], 16) + 
     			Integer.parseInt(responeStringArray[2], 16) + 
@@ -368,12 +387,13 @@ public class MainActivity extends Activity {
     			Integer.parseInt(responeStringArray[5], 16)) );
     	Utils.Log("Integer.parseInt(responeStringArray[6], 16) = "+Integer.parseInt(responeStringArray[6], 16));
     	
-    	if((Integer.parseInt(responeStringArray[1], 16) + 
-    			Integer.parseInt(responeStringArray[2], 16) + 
-    			Integer.parseInt(responeStringArray[3], 16) +
+    	int checkBit = Integer.parseInt(responeStringArray[1], 16) + Integer.parseInt(responeStringArray[2], 16) + Integer.parseInt(responeStringArray[3], 16) +
     			Integer.parseInt(responeStringArray[4], 16) +
-    			Integer.parseInt(responeStringArray[5], 16)) 
-    			== Integer.parseInt(responeStringArray[6], 16))
+    			Integer.parseInt(responeStringArray[5], 16);
+    	//防止校验位超过两字节
+    	
+    	Utils.Log("handleWaterData checkBit%0x100 = "+checkBit%0x100);
+    	if( (checkBit%0x100)	== Integer.parseInt(responeStringArray[6], 16))
     	{
     		int drinkWater = Integer.parseInt(responeStringArray[2], 16);
     		
@@ -392,6 +412,13 @@ public class MainActivity extends Activity {
     		{
     			return; //无效数据,返回
     		}
+    		
+    		//保存一下上次的数据
+			SharedPreferences.Editor edit = Utils.getSharedPpreferenceEdit(this);
+
+			
+			edit.putString(Utils.SHARE_PREFERENCE_CUP_LAST_COMMAND, currentCommand);
+			edit.commit();   
     		
     		String hour = Integer.parseInt(responeStringArray[3], 16)+"";
     		String minute = Integer.parseInt(responeStringArray[4], 16)+"";
