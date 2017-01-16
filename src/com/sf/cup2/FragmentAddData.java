@@ -298,6 +298,7 @@ public class FragmentAddData extends FragmentPack {
 					
     	String time = String.format("%02d:%02d", nHour,nMinute);
 	
+    	
     	id = db.insertWaterData(
 			date,
 			time,

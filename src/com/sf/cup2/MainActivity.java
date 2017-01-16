@@ -366,19 +366,7 @@ public class MainActivity extends Activity {
     		return;
     	}
     	
-		String currentCommand = responeStringArray[0]
-				+responeStringArray[1]+responeStringArray[2]+responeStringArray[3]
-						+responeStringArray[4]+responeStringArray[5]+responeStringArray[6]+responeStringArray[7];    	
-		Utils.Log("currentCommand = "+currentCommand);
-		SharedPreferences p = Utils.getSharedPpreference(this);
-		String savedLastCommand = p.getString(Utils.SHARE_PREFERENCE_CUP_LAST_COMMAND," ");
-    	
-		if(currentCommand.equals(savedLastCommand))
-		{
-			Utils.Log("handleWaterData start  currentCommand.equals(savedLastCommand) return");
-			return;
-		}
-    	
+   	
     	Utils.Log("1+2+3+4+5 = "+(Integer.parseInt(responeStringArray[1], 16) + 
     			Integer.parseInt(responeStringArray[2], 16) + 
     			Integer.parseInt(responeStringArray[3], 16) +
@@ -412,12 +400,6 @@ public class MainActivity extends Activity {
     			return; //无效数据,返回
     		}
     		
-    		//保存一下上次的数据
-			SharedPreferences.Editor edit = Utils.getSharedPpreferenceEdit(this);
-
-			
-			edit.putString(Utils.SHARE_PREFERENCE_CUP_LAST_COMMAND, currentCommand);
-			edit.commit();   
     		
     		String hour = Integer.parseInt(responeStringArray[3], 16)+"";
     		String minute = Integer.parseInt(responeStringArray[4], 16)+"";
@@ -437,19 +419,22 @@ public class MainActivity extends Activity {
     			Utils.Log("format.format(date) = "+format.format(date));
 	    		DBAdapter db = new DBAdapter(this);
 	    		db.open();
-	     		long id = db.insertWaterData(
-	     		format.format(date),
-	    		hour+":"+minute,
-	    		Integer.toString(drinkWater));
-	     			     		
+	    		
+	    		boolean bdataExist = db.dataExist(format.format(date), hour+":"+minute, Integer.toString(drinkWater));
+	    		
+	    		if(!bdataExist)
+	    		{
+		     		long id = db.insertWaterData(
+		     		format.format(date),
+		    		hour+":"+minute,
+		    		Integer.toString(drinkWater));
+	     		
+		     		if(fData != null)
+		     		{
+		     			fData.updateUI();
+		     		}
+	    		}
 	     		db.close();
-	     		
-	     		if(fData != null)
-	     		{
-	     			fData.updateUI();
-	     		}
-	     		
-	     		
     		} catch (ParseException e) {
     			e.printStackTrace();
     		}

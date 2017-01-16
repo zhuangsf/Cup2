@@ -172,6 +172,25 @@ public class DBAdapter {
 		return mCursor;
 	}	
 	
+	
+	public static boolean dataExist(String dateString,String timeString,String waterString)
+	{
+		Log.w(TAG, "dataExist dateString = "+dateString+" timeString = "+timeString+" waterString = "+waterString);
+		Cursor mCursor = db.rawQuery("select * from water_data where data=? and time=? and water=?", new String[]{dateString,timeString,waterString});  
+		if (mCursor != null) {
+			Log.w(TAG, "dataExist mCursor.getCount() = "+mCursor.getCount());
+			if(mCursor.getCount() >= 1)
+			{
+				Log.w(TAG, "dataExist return true count = "+mCursor.getCount());
+				return true;
+			}
+		}
+		Log.w(TAG, "dataExist return false");
+		return false;
+		
+		
+	}
+	
 //	public Cursor getDataByWeek(int weekNumber) throws SQLException {
 //	//	Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_WEEK+"="+weekNumber );  
 //		
