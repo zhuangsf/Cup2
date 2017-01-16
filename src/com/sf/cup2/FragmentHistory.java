@@ -763,35 +763,47 @@ public class FragmentHistory extends FragmentPack {
 	private LineData getLineData(Cursor cursor) {
 		ArrayList<String> x = new ArrayList<String>();
 		ArrayList<Entry> y = new ArrayList<Entry>();
-		int[] waters = new int[24];
 		boolean bEmptyData = false;
 		if (!cursor.moveToFirst()) {
 			bEmptyData = true;
+			
+			
+			for (int i = 0; i < 24; i++) {
+				String times = getString(R.string.times);
+				times = String.format(times, (i + 6)%24);
+				x.add(times);
+				
+				if(i == 0 || i == 23)
+				{
+					Entry entry = new Entry(0.0f, i);
+					y.add(entry);
+				}
+			}			
+			
+			
 		}
 		else
 		{
+			int dataCount = cursor.getCount();
+			int[] waters = new int[dataCount];
+			int i = 0;
 			if (cursor.moveToFirst()) {
 				do {			
-					String[] drinkTIme = cursor.getString(DBAdapter.DATA_COLUMN_TIME).split(":");
-					waters[(Integer.parseInt(drinkTIme[0]) + 18) % 24] += Integer.parseInt(cursor.getString(DBAdapter.DATA_COLUMN_WATER));
+					String drinkTime = cursor.getString(DBAdapter.DATA_COLUMN_TIME);
+					x.add(drinkTime);
+					waters[i] += Integer.parseInt(cursor.getString(DBAdapter.DATA_COLUMN_WATER));
+					Entry entry = new Entry((float)(waters[i]), i);
+					y.add(entry);
+					i++;
+					
+					if(dataCount == 1)
+					{
+						x.add(drinkTime);
+						Entry entry1 = new Entry((float)(waters[0]), i);
+						y.add(entry1);
+					}
+				//	waters[(Integer.parseInt(drinkTIme[0]) + 18) % 24] += Integer.parseInt(cursor.getString(DBAdapter.DATA_COLUMN_WATER));
 				} while (cursor.moveToNext());
-			}
-		}
-		
-		for (int i = 0; i < 24; i++) {
-			String times = getString(R.string.times);
-			times = String.format(times, (i + 6)%24);
-			x.add(times);
-			
-			if(bEmptyData && (i == 0 || i == 23))
-			{
-				Entry entry = new Entry(0.0f, i);
-				y.add(entry);
-			}else if(!bEmptyData)
-			{
-				Utils.Log("waters[" +i+ "] :"+waters[i]);
-				Entry entry = new Entry((float)(waters[i]), i);
-				y.add(entry);
 			}
 		}
 

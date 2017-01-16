@@ -164,7 +164,7 @@ public class DBAdapter {
 	
 	//获得某一天的数据
 	public static Cursor getDataByDate(String dateString) throws SQLException {
-		Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_DATA+"=?", new String[]{dateString});  
+		Cursor mCursor = db.rawQuery("select * from water_data where data=? ORDER BY time", new String[]{dateString});  
 		if (mCursor != null) {
 			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
 			mCursor.moveToFirst();
