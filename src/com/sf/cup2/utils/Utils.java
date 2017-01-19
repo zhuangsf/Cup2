@@ -194,6 +194,7 @@ public class Utils {
 	public static void Log(String s) {
 		if (isDebug) {
 			Log.i("jockey", s);
+			
 		}
 	}
 
@@ -204,7 +205,9 @@ public class Utils {
 	 * @param s
 	 */
 	public static void Log(String tag, String s) {
+		if (isDebug) {
 		Log.d(tag, s);
+		}
 	}
 
 

@@ -402,7 +402,17 @@ public class MainActivity extends Activity {
     		
     		
     		String hour = Integer.parseInt(responeStringArray[3], 16)+"";
-    		String minute = Integer.parseInt(responeStringArray[4], 16)+"";
+    		int nMinute = Integer.parseInt(responeStringArray[4], 16);
+    		String minute = null;
+    		
+    		if(nMinute > 9)
+    		{
+    			minute = nMinute+"";
+    		}
+    		else
+    		{
+    			minute = "0"+nMinute;
+    		}
     		
     		Utils.Log("drinkWater = "+drinkWater);
     		Utils.Log("hour = "+hour);
@@ -661,8 +671,8 @@ public class MainActivity extends Activity {
 		}
 		// 2,login first
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
-		if (TextUtils.isEmpty(phonenum)) {
-	//	if(false){
+	//	if (TextUtils.isEmpty(phonenum)) {
+		if(false){
 			Intent i = new Intent(this, LoginActivity.class);
 			startActivity(i);
 			finish();
