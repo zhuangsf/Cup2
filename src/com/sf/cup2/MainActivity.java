@@ -102,8 +102,21 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
-			
+			case MSG_SAVE_RECORDE_AGAIN:
+			{
+				String [] respone_arrays = null;
+				Bundle b = msg.getData();
+				respone_arrays = b.getStringArray("respone_string_array");
+				
+				Utils.Log("handleMessage MSG_SAVE_RECORDE_AGAIN respone_arrays=" + respone_arrays);
 
+				if(respone_arrays != null)
+				{
+					handleWaterData(respone_arrays);
+				}
+			}
+			break;
+			
 			case MSG_STOP_WAIT_BT:
 				if (progressDialog != null) {
 					progressDialog.dismiss();
@@ -192,6 +205,7 @@ public class MainActivity extends Activity {
     private static ProgressDialog progressDialog;// 等待进度圈
     private static final int MSG_STOP_WAIT_BT=2;
     private static final int MSG_WAIT_BT_RESPOND=3;
+    private static final int MSG_SAVE_RECORDE_AGAIN=4;
  // Stops waiting after 6 seconds.
     private static final long WAIT_PERIOD = 10000;//6000; //too short too connect
     
@@ -357,8 +371,8 @@ public class MainActivity extends Activity {
         }
     };
 
-    private void handleWaterData(String[] responeStringArray)
-    {
+	private void handleWaterData(String[] responeStringArray) {
+		synchronized (this) {
     	Utils.Log("handleWaterData start  responeStringArray[7] = "+responeStringArray[7]);
     	
     	if(!"AA".equals(responeStringArray[7]) )
@@ -443,6 +457,16 @@ public class MainActivity extends Activity {
 		     		{
 		     			fData.updateUI();
 		     		}
+					if(id < 0)
+					{
+						Utils.Log("insert fail ,send again");
+						Message msg = new Message();
+						Bundle data=new Bundle();
+						data.putStringArray("respone_string_array", responeStringArray);
+						msg.setData(data);
+						msg.what = MSG_SAVE_RECORDE_AGAIN;
+						mHandler.sendMessageDelayed(msg, 500);
+					}
 	    		}
 	     		db.close();
     		} catch (ParseException e) {
@@ -450,7 +474,7 @@ public class MainActivity extends Activity {
     		}
 
     	}
-    	
+		}
 
     }
     
