@@ -415,7 +415,8 @@ public class MainActivity extends Activity {
     		}
     		
     		
-    		String hour = Integer.parseInt(responeStringArray[3], 16)+"";
+    		int nHour = Integer.parseInt(responeStringArray[3], 16);
+    		String hour = null;
     		int nMinute = Integer.parseInt(responeStringArray[4], 16);
     		String minute = null;
     		
@@ -426,6 +427,16 @@ public class MainActivity extends Activity {
     		else
     		{
     			minute = "0"+nMinute;
+    		}
+    		
+    		
+    		if(nHour > 9)
+    		{
+    			hour = nHour+"";
+    		}
+    		else
+    		{
+    			hour = "0"+nHour;
     		}
     		
     		Utils.Log("drinkWater = "+drinkWater);
