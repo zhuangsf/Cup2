@@ -182,8 +182,10 @@ public class DBAdapter {
 			if(mCursor.getCount() >= 1)
 			{
 				Log.w(TAG, "dataExist return true count = "+mCursor.getCount());
+				mCursor.close();
 				return true;
 			}
+			mCursor.close();
 		}
 		Log.w(TAG, "dataExist return false");
 		return false;
