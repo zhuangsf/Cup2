@@ -88,6 +88,11 @@ public class MainActivity extends Activity {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+			case MSG_REFRASH_UI:
+			if (fData != null) {
+				fData.updateUI();
+			}
+			break;
 			case MSG_SAVE_RECORDE_AGAIN: {
 				String[] respone_arrays = null;
 				Bundle b = msg.getData();
@@ -194,6 +199,7 @@ public class MainActivity extends Activity {
 	private static final int MSG_STOP_WAIT_BT = 2;
 	private static final int MSG_WAIT_BT_RESPOND = 3;
 	private static final int MSG_SAVE_RECORDE_AGAIN = 4;
+	private static final int MSG_REFRASH_UI = 5;
 	// Stops waiting after 6 seconds.
 	private static final long WAIT_PERIOD = 10000;// 6000; //too short too
 													// connect
@@ -487,9 +493,10 @@ public class MainActivity extends Activity {
 						long id = db.insertWaterData(format.format(date), hour
 								+ ":" + minute, Integer.toString(drinkWater));
 						Utils.Log("insertWaterData return id = " + id);
-						if (fData != null) {
-							fData.updateUI();
-						}
+						
+						
+						
+						
 						if (id < 0) {
 							Utils.Log("insert fail ,send again");
 							Message msg = new Message();
@@ -499,6 +506,15 @@ public class MainActivity extends Activity {
 							msg.setData(data);
 							msg.what = MSG_SAVE_RECORDE_AGAIN;
 							mHandler.sendMessageDelayed(msg, 500);
+						}
+						else
+						{
+							    //UI尽量少刷新,2秒刷一次
+								mHandler.removeMessages(MSG_REFRASH_UI);
+								Message msg = new Message();
+								msg.what = MSG_REFRASH_UI;
+								mHandler.sendMessageDelayed(msg, 2000);
+							
 						}
 					}
 					db.close();
