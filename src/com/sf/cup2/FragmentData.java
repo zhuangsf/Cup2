@@ -63,6 +63,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 public class FragmentData extends FragmentPack {
 
 	static final int COLOR_PUBLIC = Color.parseColor("#ff00cd66");
