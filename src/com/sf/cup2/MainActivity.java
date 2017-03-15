@@ -83,7 +83,7 @@ public class MainActivity extends Activity {
 	private boolean mScanning;
 	AlertDialog connectFailAlertDialog;
 	AlertDialog timeUpAlertDialog;
-
+	StringBuffer responeStringArray_collect = new StringBuffer();;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
@@ -390,12 +390,26 @@ public class MainActivity extends Activity {
 							&& responeStringArray.length > 7) {
 						handleBatteryRespone(responeStringArray);
 					}
-					for (int i = 0; i < 13; i++) {
-						if ("55".equals(responeStringArray[i])
-								&& "01".equals(responeStringArray[i + 1])
-								&& "AA".equals(responeStringArray[i + 7])) {
+					
+					
+					//处理两个数组的数据
+					
+					if(responeStringArray_collect.length() > 120)
+					{
+						responeStringArray_collect.delete(0, 60);
+						Utils.Log("responeStringArray_collect after delete ="+responeStringArray_collect.toString());
+					}
+					
+					responeStringArray_collect.append(responeString);
+					String[] responeStringArrayWater = responeStringArray_collect.toString().split(" ");
+					
+					Utils.Log("responeStringArray_collect length = "+responeStringArray_collect.length() + "string="+responeStringArray_collect.toString());
+					for (int i = 0; i < responeStringArrayWater.length; i++) {
+						if ("55".equals(responeStringArrayWater[i])
+								&& "01".equals(responeStringArrayWater[i + 1])
+								&& "AA".equals(responeStringArrayWater[i + 7])) {
 							String[] responeStringArray_get = new String[8];
-							System.arraycopy(responeStringArray, i,
+							System.arraycopy(responeStringArrayWater, i,
 									responeStringArray_get, 0, 8);
 
 							Utils.Log("handleWaterData responeStringArray_get = "
@@ -411,6 +425,7 @@ public class MainActivity extends Activity {
 						}
 					}
 
+					
 					// if("55".equals(responeStringArray[0]) &&
 					// "01".equals(responeStringArray[1]) &&
 					// responeStringArray.length > 7){
@@ -425,7 +440,7 @@ public class MainActivity extends Activity {
 	};
 
 	private void handleWaterData(String[] responeStringArray) {
-		synchronized (this) {
+
 
 			int checkBit = Integer.parseInt(responeStringArray[1], 16)
 					+ Integer.parseInt(responeStringArray[2], 16)
@@ -523,7 +538,7 @@ public class MainActivity extends Activity {
 				}
 
 			}
-		}
+		
 
 	}
 
