@@ -153,7 +153,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:scaleType="centerInside"
+                    android:scaleType="fitXY"
                     android:src="@drawable/bg_water" >
                 </ImageView>
             </LinearLayout>
