@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.TimeZone;
 
+import com.sf.cup2.utils.Utils;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -53,7 +55,7 @@ public class DBAdapter {
 
 		@Override
 		public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-			Log.w(TAG, "Upgrading database from version " + oldVersion + " to "
+			Utils.Log("Upgrading database from version " + oldVersion + " to "
 					+ newVersion + ", which will destroy all old data");
 			db.execSQL("DROP TABLE IF EXISTS "+DATABASE_TABLE);
 			onCreate(db);
@@ -128,25 +130,25 @@ public class DBAdapter {
 		} while (c.moveToNext());
 		}
 		
-		Log.w(TAG, "getOneDayWater oneDayWater = "+oneDayWater);
+		Utils.Log("getOneDayWater oneDayWater = "+oneDayWater);
 		return oneDayWater;
 	}
 	
 	public void dumpData()
 	{
 		Cursor c = getAllData();
-		Log.w(TAG, "dumpData START-----------------");
+		Utils.Log("dumpData START-----------------");
 		if (c.moveToFirst())
 		{
 		do {
-			Log.w(TAG, "DATA_COLUMN_ID = "+c.getString(DATA_COLUMN_ID)
+			Utils.Log("DATA_COLUMN_ID = "+c.getString(DATA_COLUMN_ID)
 					+"DATA_COLUMN_DATA = "+c.getString(DATA_COLUMN_DATA)
 					+"DATA_COLUMN_TIME = "+c.getString(DATA_COLUMN_TIME)
 					+"DATA_COLUMN_WATER = "+c.getString(DATA_COLUMN_WATER)
 					);
 		} while (c.moveToNext());
 		}
-		Log.w(TAG, "dumpData END-----------------");
+		Utils.Log("dumpData END-----------------");
 	}
 	
 	// ---检索一个指定数据----
@@ -166,7 +168,7 @@ public class DBAdapter {
 	public static Cursor getDataByDate(String dateString) throws SQLException {
 		Cursor mCursor = db.rawQuery("select * from water_data where data=? ORDER BY time", new String[]{dateString});  
 		if (mCursor != null) {
-			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
+			Utils.Log("getDataByDate mCursor.getCount() = "+mCursor.getCount());
 			mCursor.moveToFirst();
 		}
 		return mCursor;
@@ -175,19 +177,19 @@ public class DBAdapter {
 	
 	public static boolean dataExist(String dateString,String timeString,String waterString)
 	{
-		Log.w(TAG, "dataExist dateString = "+dateString+" timeString = "+timeString+" waterString = "+waterString);
+		Utils.Log("dataExist dateString = "+dateString+" timeString = "+timeString+" waterString = "+waterString);
 		Cursor mCursor = db.rawQuery("select * from water_data where data=? and time=? and water=?", new String[]{dateString,timeString,waterString});  
 		if (mCursor != null) {
-			Log.w(TAG, "dataExist mCursor.getCount() = "+mCursor.getCount());
+			Utils.Log("dataExist mCursor.getCount() = "+mCursor.getCount());
 			if(mCursor.getCount() >= 1)
 			{
-				Log.w(TAG, "dataExist return true count = "+mCursor.getCount());
+				Utils.Log("dataExist return true count = "+mCursor.getCount());
 				mCursor.close();
 				return true;
 			}
 			mCursor.close();
 		}
-		Log.w(TAG, "dataExist return false");
+		Utils.Log("dataExist return false");
 		return false;
 		
 		
@@ -201,7 +203,7 @@ public class DBAdapter {
 //				+ "=" + weekNumber, null, null, null, null, null);
 //		
 //		if (mCursor != null) {
-//			Log.w(TAG, "getDataByWeek mCursor.getCount() = "+mCursor.getCount());
+//			Utils.Log("getDataByWeek mCursor.getCount() = "+mCursor.getCount());
 //			mCursor.moveToFirst();
 //		}
 //		return mCursor;
@@ -210,7 +212,7 @@ public class DBAdapter {
 //	public Cursor getDataByMonth(String monthString) throws SQLException {
 //		Cursor mCursor = db.rawQuery("select * from "+DATABASE_TABLE+" where "+KEY_MONTH+"=?", new String[]{monthString});  
 //		if (mCursor != null) {
-//			Log.w(TAG, "getDataByDate mCursor.getCount() = "+mCursor.getCount());
+//			Utils.Log("getDataByDate mCursor.getCount() = "+mCursor.getCount());
 //			mCursor.moveToFirst();
 //		}
 //		return mCursor;

@@ -111,7 +111,7 @@ public class FragmentHomePerson extends FragmentPack {
 					person_info.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, person_info.getRight(),
 							person_info.getRight() + 5, 0));
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					e.printStackTrace(); 
 				}
 
 				break;

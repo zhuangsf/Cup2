@@ -83,12 +83,28 @@ public class MainActivity extends Activity {
 	private boolean mScanning;
 	AlertDialog connectFailAlertDialog;
 	AlertDialog timeUpAlertDialog;
-	StringBuffer responeStringArray_collect = new StringBuffer();;
+	StringBuffer responeStringArray_collect = new StringBuffer();
+	
+	private boolean bReceivedEndMessage = false;
 	private Handler mHandler = new Handler() {
 		@Override
 		public void handleMessage(Message msg) {
 			switch (msg.what) {
+			case MSG_SEND_RESPOND_TO_CUP:
+			{
+				Utils.Log("start  MSG_SEND_RESPOND_TO_CUP messaged fData = "+fData);
+/*				int  sb_length = responeStringArray_collect.length();// 取得字符串的长度
+				responeStringArray_collect.delete(0,sb_length);  				
+				sentMsgToBt("5501010002AA");*/
+				bReceivedEndMessage = false;
+			}
+			break;
 			case MSG_REFRASH_UI:
+			Utils.Log("received  MSG_REFRASH_UI messaged fData = "+fData);
+			int  sb_length = responeStringArray_collect.length();// 取得字符串的长度
+			responeStringArray_collect.delete(0,sb_length);  	
+			
+			Utils.Log("received MSG_REFRASH_UI  responeStringArray_collect = "+responeStringArray_collect);
 			if (fData != null) {
 				fData.updateUI();
 			}
@@ -200,6 +216,7 @@ public class MainActivity extends Activity {
 	private static final int MSG_WAIT_BT_RESPOND = 3;
 	private static final int MSG_SAVE_RECORDE_AGAIN = 4;
 	private static final int MSG_REFRASH_UI = 5;
+	private static final int MSG_SEND_RESPOND_TO_CUP = 6;
 	// Stops waiting after 6 seconds.
 	private static final long WAIT_PERIOD = 10000;// 6000; //too short too
 													// connect
@@ -292,16 +309,16 @@ public class MainActivity extends Activity {
 				mConnected = false;
 				Utils.Log("xxxxxxxxxxxxxxxxxx BroadcastReceiver ACTION_GATT_DISCONNECTED mConnected:"
 						+ mConnected);
-				Toast.makeText(MainActivity.this, "蓝牙水杯已断开", Toast.LENGTH_SHORT)
+				Toast.makeText(MainActivity.this, "蓝牙水杯已断开", Toast.LENGTH_LONG)
 						.show();
 				if (progressDialog != null && progressDialog.isShowing()) {
 					progressDialog.dismiss();
 				}
-				// boolean result= MainActivity.this.reConnect();
-				// if(!result){
-				// Toast.makeText(MainActivity.this, "无法连接到蓝牙设备",
-				// Toast.LENGTH_SHORT).show();
-				// }
+			    boolean result= MainActivity.this.reConnect();
+				if(!result){
+				 Toast.makeText(MainActivity.this, "无法连接到蓝牙设备",
+				 Toast.LENGTH_SHORT).show();
+				 }
 			} else if (BluetoothLeService.ACTION_GATT_SERVICES_DISCOVERED
 					.equals(action)) {
 
@@ -392,6 +409,8 @@ public class MainActivity extends Activity {
 					}
 					
 					
+
+
 					//处理两个数组的数据
 					
 					if(responeStringArray_collect.length() > 120)
@@ -462,7 +481,20 @@ public class MainActivity extends Activity {
 						&& "00".equals(responeStringArray[4])
 						&& "0A".equals(responeStringArray[5])) {
 					Utils.Log("received data finish ,respond to cup here");
+					
+					if(bReceivedEndMessage == true)
+					{
+						return;
+					}
+					bReceivedEndMessage = true;
 					sentMsgToBt("5501010002AA");
+					
+					//2秒内不再处理结束事件
+					mHandler.removeMessages(MSG_SEND_RESPOND_TO_CUP);
+					Message msg = new Message();
+					msg.what = MSG_SEND_RESPOND_TO_CUP;
+					mHandler.sendMessageDelayed(msg, 2000);
+					
 					return;
 				}
 
@@ -524,11 +556,12 @@ public class MainActivity extends Activity {
 						}
 						else
 						{
+							Utils.Log("start send MSG_REFRASH_UI messaged");
 							    //UI尽量少刷新,2秒刷一次
 								mHandler.removeMessages(MSG_REFRASH_UI);
 								Message msg = new Message();
 								msg.what = MSG_REFRASH_UI;
-								mHandler.sendMessageDelayed(msg, 2000);
+								mHandler.sendMessageDelayed(msg, 5000);
 							
 						}
 					}
@@ -764,7 +797,7 @@ public class MainActivity extends Activity {
 		// direct. if can not connect bt try to scan
 		// #########################################
 		if (true) {
-			// if (false) {
+		//	 if (false) {
 			Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 

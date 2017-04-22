@@ -352,6 +352,8 @@ public class FragmentData extends FragmentPack {
 		DBAdapter db = new DBAdapter(getActivity());
 		db.open();
 		Cursor cursor = db.getDataByDate(currentDateString);
+		Utils.Log("reflashChartData cursor = "+cursor+" mChart = "+mChart);
+		
 		if (cursor != null && mChart != null) {
 			mChart.setData(getLineData(cursor));
 			mChart.notifyDataSetChanged();
@@ -590,8 +592,11 @@ public class FragmentData extends FragmentPack {
 	
 	public void updateUI()
 	{
+		Toast.makeText(getActivity(), "收到水杯发来的数据", Toast.LENGTH_SHORT).show();
+
 		try {
 			// 设置当前日历日期
+			Utils.Log("updateUI format = "+format);
 			if(format == null)
 			{
 				return;
@@ -604,9 +609,12 @@ public class FragmentData extends FragmentPack {
 
 			dateTime.setText(ymd[0] + "年" + ymd[1] + "月" + ymd[2]	+ "日");
 			
-
-			reflashChartData(format.format(date));
+			Utils.Log("start initWaterData");
 			initWaterData(format.format(date));
+			
+			Utils.Log("start reflashChartData");
+			reflashChartData(format.format(date));
+
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
@@ -620,11 +628,13 @@ public class FragmentData extends FragmentPack {
 
 	private void initWaterData(String currentDateString)
 	{
+		
+		Utils.Log("initWaterData start ");
 		DBAdapter db = new DBAdapter(getActivity());
 		db.open();
 		int currentWaterData = db.getOneDayWater(currentDateString);
 		db.close();
-		
+		Utils.Log("initWaterData currentWaterData = "+currentWaterData);
 		water_today.setText(currentWaterData+"");
 		
 		SharedPreferences p = Utils.getSharedPpreference(getActivity());
@@ -642,7 +652,7 @@ public class FragmentData extends FragmentPack {
 		{
 			planValue = "1666";
 		}
-
+		Utils.Log("initWaterData planValue = "+planValue);
 		water_target.setText(planValue);
 		if(Integer.parseInt(planValue) == 0)
 		{
