@@ -590,9 +590,12 @@ public class FragmentData extends FragmentPack {
 		return fd;
 	}
 	
-	public void updateUI()
+	public void updateUI(boolean bShowToast)
 	{
-		Toast.makeText(getActivity(), "收到水杯发来的数据", Toast.LENGTH_SHORT).show();
+		if(bShowToast)
+		{
+			Toast.makeText(getActivity(), "收到水杯发来的数据", Toast.LENGTH_SHORT).show();
+		}
 
 		try {
 			// 设置当前日历日期

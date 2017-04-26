@@ -106,7 +106,7 @@ public class MainActivity extends Activity {
 			
 			Utils.Log("received MSG_REFRASH_UI  responeStringArray_collect = "+responeStringArray_collect);
 			if (fData != null) {
-				fData.updateUI();
+				fData.updateUI(true);
 			}
 			break;
 			case MSG_SAVE_RECORDE_AGAIN: {
@@ -1041,7 +1041,7 @@ public class MainActivity extends Activity {
 						ft.show(mTab.get(i));
 
 						if (checkedId == R.id.rbData && fData != null) {
-							fData.updateUI();
+							fData.updateUI(false);
 						}
 						// ft.addToBackStack(null);
 						ft.commit();
