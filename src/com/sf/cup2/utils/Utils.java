@@ -808,12 +808,20 @@ public class Utils {
     {
     	
     	Log.e("jockeyTrack", "getSuggestPlan start ");
-		SharedPreferences p = context.getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
-		int height = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160"));
-		String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
-		int weight = Integer.parseInt(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
-		String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
-		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE,"");
+    	int height=160;
+    	int weight=45;
+    	SharedPreferences p = context.getSharedPreferences(Utils.SHARE_PREFERENCE_CUP,Context.MODE_PRIVATE);
+    	try{
+		Double heightDouble = Double.parseDouble(p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, "160"));
+		height=heightDouble.intValue();
+		Double weightDouble = Double.parseDouble(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
+		weight=weightDouble.intValue();
+    	}catch (Exception e) {
+    		//i dont care this error
+		}
+    	String sex = p.getString(Utils.SHARE_PREFERENCE_CUP_SEX, Utils.SHARE_PREFERENCE_CUP_SEX_FEMALE);
+    	String birthday = p.getString(Utils.SHARE_PREFERENCE_CUP_BIRTHDAY, "1990-01-01");
+    	String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE,"");
 		
 		return HealthPlanUtils.getSuggestPlan(sex, birthday, height, weight, null, phonenum);
     }
@@ -898,3 +906,4 @@ public class Utils {
         return metric.densityDpi;  
     }
 }
+
