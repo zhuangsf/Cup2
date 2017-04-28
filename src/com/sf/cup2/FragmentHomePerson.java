@@ -434,16 +434,30 @@ public class FragmentHomePerson extends FragmentPack {
 				textView.setVisibility(View.VISIBLE);
 				
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, Utils.SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT);
-				textView.setText(height);
+				String hight = p.getString(Utils.SHARE_PREFERENCE_CUP_HEIGHT, Utils.SHARE_PREFERENCE_CUP_HEIGHT_DEFAULT);
+				try{
+					Double hightDouble = Double.parseDouble(hight);
+					int hightInt=hightDouble.intValue();
+					hight=hightInt+"";
+			    	}catch (Exception e) {
+			    		//i dont care this error
+					}
+				textView.setText(hight);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
 			} else if (position == 4) {
 				textView.setVisibility(View.VISIBLE);
 				SharedPreferences p = Utils.getSharedPpreference(getActivity());
-				String height = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, Utils.SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT);
-				textView.setText(height);
+				String weight = p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, Utils.SHARE_PREFERENCE_CUP_WEIGHT_DEFAULT);
+				try{
+				Double weightDouble = Double.parseDouble(p.getString(Utils.SHARE_PREFERENCE_CUP_WEIGHT, "45"));
+				int weightInt=weightDouble.intValue();
+				weight=weightInt+"";
+				}catch (Exception e) {
+		    		//i dont care this error
+				}
+				textView.setText(weight);
 
 				imageView1.setVisibility(View.GONE);
 				imageView2.setVisibility(View.GONE);
