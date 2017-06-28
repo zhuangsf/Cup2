@@ -330,8 +330,18 @@ public class DeviceScanActivity extends Activity {
         }
 
         public void addDevice(BluetoothDevice device) {
+        	String deviceName = device.getName();
             if(!mLeDevices.contains(device)) {
-                mLeDevices.add(device);
+            	if(deviceName.startsWith("BT05"))
+            	{
+            		mLeDevices.add(device);
+            	}
+            }
+            else{
+            	if(!deviceName.startsWith("BT05"))
+            	{
+            		mLeDevices.remove(device);
+            	}
             }
         }
 
