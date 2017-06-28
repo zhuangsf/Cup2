@@ -12,7 +12,7 @@
         <item>饮水计划(ml)</item>
     </string-array>
     <string-array name="home_about_list_title">
-        <item>进入官网</item>
+  <!--       <item>进入官网</item> -->
         <item>购买</item>
     </string-array>
     <string-array name="person_list_title1">

@@ -97,15 +97,15 @@ public class FragmentHomeAbout extends FragmentPack {
 
 		@Override
 		public void onClick(View v) {
-			if (GO_WEB_INDEX == mPosition) {
+/*			if (GO_WEB_INDEX == mPosition) {*/
 				Uri uri = Uri.parse("http://www.heatmatetech.com");
 				Intent it = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(it);
-			} else if (GO_BUY_INDEX == mPosition) {
+/*			} else if (GO_BUY_INDEX == mPosition) {
 				Uri uri = Uri.parse("https://shop152288103.taobao.com");
 				Intent it = new Intent(Intent.ACTION_VIEW, uri);
 				startActivity(it);
-			}
+			}*/
 		}
 
 	}
