@@ -713,6 +713,13 @@ public class FragmentHomePerson extends FragmentPack {
 	private void doUpdate1() {
 		if (hlva1 != null) {
 			Utils.Log("doUpdate1:" + personList1);
+			
+			String planValue = Utils.getSuggestPlan(getActivity());    //这个值要根据健康管理来生成
+			SharedPreferences.Editor e = Utils.getSharedPpreferenceEdit(getActivity());
+			e.putString(Utils.SHARE_PREFERENCE_CUP_PLAN, planValue);
+			e.commit();
+			
+			
 			hlva1.notifyDataSetChanged();
 		}
 	}
