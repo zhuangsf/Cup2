@@ -35,6 +35,7 @@ import com.sf.cup2.view.CalendarView;
 import com.sf.cup2.view.CalendarView.OnItemClickListener;
 import com.sf.cup2.view.CricleProgressBar;
 import com.sf.cup2.view.PercentView;
+import com.umeng.analytics.MobclickAgent;
 
 import android.animation.ObjectAnimator;
 import android.app.Fragment;
@@ -251,6 +252,7 @@ public class FragmentData extends FragmentPack {
 		
 		return view;
 	}
+
 
 	
 	private String getScreenCaptureSavePath() {
@@ -626,7 +628,8 @@ public class FragmentData extends FragmentPack {
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		Utils.Log("FragmentData onResume");
+		updateUI(false);
 	}
 
 	private void initWaterData(String currentDateString)
