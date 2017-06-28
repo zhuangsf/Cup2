@@ -100,19 +100,23 @@ public class DeviceScanActivity extends Activity {
 						});
 						
 						TextView cancel = (TextView) layout.findViewById(R.id.cancel);
-						cancel.setText(R.string.quit);
+						cancel.setText("打开应用");
 						cancel.setOnClickListener(new OnClickListener() {
 							public void onClick(View v) {
 								
-								Intent intent = new Intent();
+/*								Intent intent = new Intent();
 								setResult(RESULT_CANCELED, intent);
 								alertDialog.dismiss();
-								finish();
-								
+								finish();*/
+								  Intent intent=new Intent();  
+							        intent.putExtra(MainActivity.EXTRAS_DEVICE_NAME, "");
+							        intent.putExtra(MainActivity.EXTRAS_DEVICE_ADDRESS, "");
+							        setResult(RESULT_OK, intent);  
+							        finish();
 							}
 						});
 						
-						cancel.setOnLongClickListener(new OnLongClickListener() {
+/*						cancel.setOnLongClickListener(new OnLongClickListener() {
 							@Override
 							public boolean onLongClick(View v) {
 								  Intent intent=new Intent();  
@@ -122,7 +126,7 @@ public class DeviceScanActivity extends Activity {
 							        finish();
 								return false;
 							}
-						});
+						});*/
 							
 						AlertDialog.Builder alertBuiler = new AlertDialog.Builder(DeviceScanActivity.this);
 						alertDialog = alertBuiler.create();

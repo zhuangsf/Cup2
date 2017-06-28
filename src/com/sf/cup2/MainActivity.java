@@ -785,7 +785,7 @@ public class MainActivity extends Activity {
 		// 2,login first
 		String phonenum = p.getString(Utils.SHARE_PREFERENCE_CUP_PHONE, null);
 	    if (TextUtils.isEmpty(phonenum)) {
-		//if (false) {
+	//	if (false) {
 			Intent i = new Intent(this, LoginActivity.class);
 			startActivity(i);
 			finish();
@@ -797,7 +797,6 @@ public class MainActivity extends Activity {
 		// direct. if can not connect bt try to scan
 		// #########################################
 		if (true) {
-		//	 if (false) {
 			Intent i = new Intent(this, DeviceScanActivity.class);
 			startActivityForResult(i, DeviceScanActivity.REQUEST_SELECT_BT);
 
